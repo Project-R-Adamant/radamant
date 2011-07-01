@@ -1,7 +1,7 @@
 ###
 TSClust = function(x, ...) UseMethod("TSClust")
 
-TSClust.default = function(X,y=NULL, n_clust=5, bk.type=c("quantile","volatility","uniform","custom"), pc_vol=0.1, win.size=10,  custom_breaks=NULL, lab.dig=0){
+TSClust.default = function(x, y=NULL, n_clust=5, bk.type=c("quantile","volatility","uniform","custom"), pc_vol=0.1, win.size=10,  custom_breaks=NULL, lab.dig=0, ...){
 	
 	# check for NAs values
 	if(any(is.na(X)))
@@ -117,19 +117,19 @@ TSClust.default = function(X,y=NULL, n_clust=5, bk.type=c("quantile","volatility
 }
 
 
-summary.TSClust = function(cluster, funs = summary, ...){
+summary.TSClust = function(object, funs = summary, ...){
 	
 	# check object class
-	if(class(cluster) != "TSClust"){
+	if(class(object) != "TSClust"){
 		cat("'~' Provide an object of class \"TSClust\" \n")
 		return(NULL)
 		}
 
 	# number of clusters
-	nc = length(cluster)
+	nc = length(object)
 	
-	# apply specified function to each cluster
-	res = 	(lapply(cluster, funs, ...))
+	# apply specified function to each x
+	res = 	(lapply(object, funs, ...))
 	
 	# assign class and attributes 
 	attr(res, "Call") = deparse(substitute(funs))
@@ -141,30 +141,30 @@ summary.TSClust = function(cluster, funs = summary, ...){
 
 
 ### plot TS custers ###
-plot.TSClust = function(cluster, smooth=FALSE, ...){
+plot.TSClust = function(x, smooth=FALSE, ...){
 
 	# check object class
-	if(class(cluster) != "TSClust"){
+	if(class(x) != "TSClust"){
 		cat("'~' Provide an object of class \"TSClust\" \n")
 		return(NULL)
 		}
 	
 	# smooth series plot
 	if(smooth){
-		X = sma(unlist(cluster), na.rm=TRUE, ...) 
+		X = sma(unlist(x), na.rm=TRUE, ...) 
 	} else {
-		X = unlist(cluster)
+		X = unlist(x)
 	}
 		
 	# get breaks
-	bk = attr(cluster, "Breaks")
+	bk = attr(x, "Breaks")
 	
-	# special plot for volatility cluster
-	if(attr(cluster, "Type") == "volatility"){
+	# special plot for volatility x
+	if(attr(x, "Type") == "volatility"){
 		par(mfrow=c(2,1))
 		plot(X,type="l")
 		abline(v = bk, col="red")
-		plot(attr(cluster,"Vol_info")[,1], type="l")
+		plot(attr(x,"Vol_info")[,1], type="l")
 		abline(v = bk, col="red")
 	
 	} else {
