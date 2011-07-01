@@ -7,11 +7,6 @@ cramv = function(x, y) {
 	# return result
 	res
 }
-
-
-
-
-
 #######################################################################################################################
 # FUNCTION: cross.plot
 #
@@ -40,11 +35,9 @@ cross.plot = function(Y
                     , shaded.first = FALSE
                     , overrides = NULL
                     ) {
-
     # Get Names for X and Y
     Y.name = get.col.names(Y, default = "Y")[1];
     X.names = get.col.names(X);
-
 	# Number of observations.
     N = NROW(X);
 	# Number of independent variables.
@@ -55,22 +48,18 @@ cross.plot = function(Y
 	
     if(two.axis)
         overrides[["side"]] = c(1,2);
-
     # Get plot layout
     plot.layout = get.plot.layout(N = NCOL(X), theme.params = theme.params, overrides = overrides);
     plots.per.window = prod(plot.layout);
-
 	v = 0;
 	while(v < V) {
 		v = v + 1;
-
         # Multiple plots on one window
         if( ((v %% plots.per.window) ==1) || plots.per.window == 1) {
             dev.new();
             # Set the number of plottable areas in the window
             par(mfrow = plot.layout);
         }
-
         # Plot series (Y and X[, v])
         cplot(cbind(Y, X[, v])
                     , theme.params = theme.params
@@ -84,12 +73,8 @@ cross.plot = function(Y
                     , overrides = overrides
                     , new.device = FALSE
                 );
-
     }
-
 }
-
-
 #######################################################################################################################
 # FUNCTION: get.acf.ci
 #
@@ -107,7 +92,6 @@ cross.plot = function(Y
 #
 #######################################################################################################################
 get.acf.ci = function (X, ci = 0.95) {
-
     # C.I. is calculated only for Correlation or Partial correlation
     if (ci > 0 && ci < 1 && X$type != "covariance") {
         # White noise assumption for Confidence Interval
@@ -117,11 +101,8 @@ get.acf.ci = function (X, ci = 0.95) {
         # Default to zero
         ci.lims = c(0, 0);
     }
-
     ci.lims
 }
-
-
 #######################################################################################################################
 # FUNCTION: cross.ccf
 #
@@ -141,33 +122,29 @@ get.acf.ci = function (X, ci = 0.95) {
 # RETURNS:
 # - A list of Ny*Nx cross correlation objects of the class 'cool.acf'
 #######################################################################################################################
-cross.ccf = function(Y
+cross.ccf = function(Y, X, ...) UseMethod("cross.ccf")
+cross.ccf.default = function(Y
                     , X
                     , lag.max = 10
                     , ci = 0.95
                     , plot = TRUE
 					, ...
                     ) {
-
     # Get Names for X and Y
     Y.names = get.col.names(Y, default = "Y");
     X.names = get.col.names(X);
-
     # Get dimensions for X
     Nx = NROW(X);
     Vx = NCOL(X);
     if(is.null(dim(X)))
         dim(X) = c(Nx, Vx);
-
     # Get dimensions for Y
     Ny = NROW(Y);
     Vy = NCOL(Y);
     if(is.null(dim(Y)))
         dim(Y) = c(Ny, Vy);
-
     # Allocate output result
     out.ccf = vector("list", Vy*Vx);
-
 	vy = 0;
 	while(vy < Vy) {
 		vy = vy + 1;
@@ -181,26 +158,19 @@ cross.ccf = function(Y
                             , lag.max = lag.max
                             , plot = FALSE
                             );
-
             # Set Title for plotting
             out.ccf[[vx + Vy*(vy-1)]]$snames = paste("Xcorr:", Y.names[vy], "Vs", X.names[vx]);
-
             # Compute Confidence  interval
             out.ccf[[vx + Vy*(vy-1)]]$ci = get.acf.ci(out.ccf[[vx + Vy*(vy-1)]], ci = ci);
-
             class(out.ccf[[vx + Vy*(vy-1)]]) = "cool.acf";
         }
     }
     class(out.ccf) = "cross.ccf";
     attr(out.ccf, "lag.max") = lag.max;
-
     if(plot)
         plot(out.ccf, ...);
-
     out.ccf
 }
-
-
 #######################################################################################################################
 # FUNCTION: mcf
 #
@@ -228,59 +198,45 @@ mcf = function(X
                , plot = TRUE
 			   , ...
                ) {
-
     # Get Names for X
     X.names = get.col.names(X);
-
     # Get dimensions for  X
     N = NROW(X);
     V = NCOL(X);
     if(is.null(dim(X)))
         dim(X) = c(N, V);
-
-
     # Allocate output results
     out.acf = vector("list", V);
     out.pacf = vector("list", V);
-
 	v = 0;
 	while(v < V) {
 		v = v + 1;
-
         # Run ACF
         out.acf[[v]] = acf(X[, v], na.action = na.exclude, lag.max = lag.max, plot = FALSE);
         # Run PACF
         out.pacf[[v]] = pacf(X[, v], na.action = na.exclude, lag.max = lag.max, plot = FALSE);
-
         # Set Title for ACF plotting
         out.acf[[v]]$snames = paste("ACF:" , X.names[v]);
         # Set Title for PACF plotting
         out.pacf[[v]]$snames = paste("PACF:", X.names[v]);
-
         # Compute ACF Confidence  interval
         out.acf[[v]]$ci = get.acf.ci(out.acf[[v]], ci = ci);
         # Compute PACF Confidence interval
         out.pacf[[v]]$ci = get.acf.ci(out.pacf[[v]], ci = ci);
-
         # Assign class
         class(out.acf[[v]]) = "cool.acf";
         class(out.pacf[[v]]) = "cool.acf";
-
     }
-
     class(out.acf) = "cross.ccf";
     attr(out.acf, "lag.max") = lag.max;
     class(out.pacf) = "cross.ccf";
     attr(out.pacf, "lag.max") = lag.max;
     res = list(ACF = out.acf, PACF = out.pacf);
     class(res) = "mcf";
-
     if(plot)
         plot(res, ...);
-
     res
 }
-
 #######################################################################################################################
 # FUNCTION: plot.cool.acf
 #
@@ -298,14 +254,13 @@ mcf = function(X
 #  Void
 #
 #######################################################################################################################
-plot.cool.acf = function(X
+plot.cool.acf = function(x
                         , theme.params = getCurrentTheme()
                         , xtitle = "Lag"
                         , ytitle = expression(rho)
                         , overrides = list(...)
 						, ...
                         ) {
-
     # Set defaults parameters for ccf plots
     default.parms = list(projection.lty = 1
                          , xlab.srt = 0
@@ -315,43 +270,34 @@ plot.cool.acf = function(X
                         );
     # Combine acf default parms with overrides, giving precedence to overrides
     overrides = override.list(what = default.parms, overrides = overrides, append = TRUE);
-
     # Override theme parameters if necessary
     theme.params = override.list(what = theme.params, override = overrides);
-
     # Plot the Cross-Correlation diagram
-    cplot(cbind(X$acf, X$ci[1], X$ci[2])
+    cplot(cbind(x$acf, x$ci[1], x$ci[2])
                 , theme.params = theme.params
                 , xtitle = xtitle
-                , xlabels = X$lag
+                , xlabels = x$lag
                 , ytitle = ytitle
-                , main = X$snames
+                , main = x$snames
                 , show.legend = FALSE
                 , shaded.first = FALSE
                 , overrides = overrides
                 , new.device = FALSE
                 , append = FALSE
                 );
-
     # Shade
-    shade.plot(X$acf, rep(0, length(X$acf)), theme.params = theme.params);
-
+    shade.plot(x$acf, rep(0, length(x$acf)), theme.params = theme.params);
     # Draw horisontal line on the origin
     abline(h = 0, col = theme.params[["axis.col"]], lwd = 2);
-
     # Draw stem plot
-    draw.projections(1:length(X$acf)
-                    , X$acf
-                    , rep(0, length(X$acf))
+    draw.projections(1:length(x$acf)
+                    , x$acf
+                    , rep(0, length(x$acf))
                     , col = theme.params[["projection.col"]][1]
                     , type = theme.params[["projection.type"]][1]
                     , lty = theme.params[["projection.lty"]][1]
                     );
-
-
 }
-
-
 #######################################################################################################################
 # FUNCTION: print.cool.acf
 #
@@ -367,15 +313,13 @@ plot.cool.acf = function(X
 #  Void 
 #
 #######################################################################################################################
-print.cool.acf = function(X) {
+print.cool.acf = function(x, ...) {
     # Wrapper for ACF printing class
-    x = cbind(X$lag, X$acf);
-    colnames(x) = c("Lag", "Rho");
-    cat(X$snames, "\n");
-    show(x);
+    xx = cbind(x$lag, x$acf);
+    colnames(xx) = c("Lag", "Rho");
+    cat(x$snames, "\n");
+    show(xx);
 }
-
-
 #######################################################################################################################
 # FUNCTION: print.cross.ccf
 #
@@ -389,32 +333,26 @@ print.cool.acf = function(X) {
 #  Void 
 #
 #######################################################################################################################
-print.cross.ccf = function(X) {
+print.cross.ccf = function(x, ...) {
     # Number of independent variables.
-    V = length(X);
-
-    if(V > 0 && class (X) == "cross.ccf") {
-        res = matrix(NA, nrow = length(X[[1]]$acf), ncol = V+1);
+    V = length(x);
+    if(V > 0 && class (x) == "cross.ccf") {
+        res = matrix(NA, nrow = length(x[[1]]$acf), ncol = V+1);
         res.names = character(V);
-        res[, 1] = X[[1]]$lag;
-
+        res[, 1] = x[[1]]$lag;
     	v = 0;
 		while(v < V) {
 			v = v + 1;
-            res[, v+1] = X[[v]]$acf;
-            res.names[v] = X[[v]]$snames
+            res[, v+1] = x[[v]]$acf;
+            res.names[v] = x[[v]]$snames
         }
         colnames(res) = c("Lag", res.names);
         show(res);
-
     } else {
         warning("Argument is not an instance of the class 'cross.ccf'");
-        print.default(X);
+        print.default(x);
     }
-
 }
-
-
 #######################################################################################################################
 # FUNCTION: plot.cross.ccf
 #
@@ -432,42 +370,35 @@ print.cross.ccf = function(X) {
 #  Void
 #
 #######################################################################################################################
-plot.cross.ccf = function(X
+plot.cross.ccf = function(x
                         , theme.params = getCurrentTheme()
                         , xtitle = "Lag"
                         , ytitle = expression(rho)
                         , overrides = list(...)
 						, ...
                         ) {
-
     # Number of  independent variables.
-    V = length(X);
-
+    V = length(x);
     # Get plot layout
     plot.layout = get.plot.layout(N = V, theme.params = theme.params, overrides = overrides);
     plots.per.window = prod(plot.layout);
-
 	v = 0;
 	while(v < V) {
 		v = v + 1;
-
         # Multiple plots on one window
         if( ((v  %% plots.per.window) == 1) || plots.per.window == 1 ) {
             dev.new();
             # Set the number of plottable areas in the window
             par(mfrow = plot.layout);
         }
-
-        plot.cool.acf(X[[v]]
+        plot.cool.acf(x[[v]]
                         , theme.params = theme.params
                         , xtitle = xtitle
                         , ytitle = ytitle
                         , overrides = overrides
                         );
-
     }
 }
-
 #######################################################################################################################
 # FUNCTION: print.mcf
 #
@@ -483,21 +414,17 @@ plot.cross.ccf = function(X
 #  Void 
 #
 #######################################################################################################################
-print.mcf = function(X) {
+print.mcf = function(x, ...) {
     # Number of independent variables.
-    V = length(X);
-
+    V = length(x);
     # Print all entries
 	v = 0;
 	while(v < V) {
 		v = v + 1;
-        print(X[[v]]);
+        print(x[[v]]);
         cat ("\n");
     }
-
 }
-
-
 #######################################################################################################################
 # FUNCTION: plot.mcf
 #
@@ -517,47 +444,37 @@ print.mcf = function(X) {
 #  Void
 #
 #######################################################################################################################
-plot.mcf = function(X
+plot.mcf = function(x
                     , theme.params = getCurrentTheme()
                     , xtitle = "Lag"
                     , ytitle = expression(rho)
                     , overrides = NULL
-                    ) {
-
-
+                    , ...) {
     # Number of independent variables.
-    V = length(X[[1]]);
-
+    V = length(x[[1]]);
 	v = 0;
 	while(v < V) {
 		v = v + 1;
-
         # Multiple plots on one window
         dev.new();
         # Set the number of plottable areas  in the window
         par(mfrow = c(2, 1));
-
         # Plot ACF
-        plot.cool.acf(X[[1]][[v]]
+        plot.cool.acf(x[[1]][[v]]
                       , theme.params = theme.params
                       , xtitle = xtitle
                       , ytitle = ytitle
                       , overrides = overrides
                       );
-
         # Plot PACF
-        plot.cool.acf(X[[2]][[v]]
+        plot.cool.acf(x[[2]][[v]]
                       , theme.params = theme.params
                       , xtitle = xtitle
                       , ytitle = ytitle
                       , overrides = overrides
                       );
-
     }
-
 }
-
-
 #######################################################################################################################
 # FUNCTION: univar
 #
@@ -590,7 +507,6 @@ univar = function(Y
                 , overrides = list(...)
 				, ...
                 ) {
-
 	if(NCOL(Y) != 1)
 		stop("Arguments Y must be a single data series");
 				
@@ -601,23 +517,16 @@ univar = function(Y
 	
 	if(N != NROW(Y))
 		stop("Arguments Y and X have different length");
-
 	if(is.null(dim(X)))
 		dim(X) = c(N, V);
-
     # Get Names for X and Y
     Y.name = get.col.names(Y, default = "Y")[1];
     X.names = get.col.names(X);
-
-
     colnames(X) = X.names;
-
     if(Y.logit) {
         Y.name = paste("Logit.", Y.name, sep="");
         Y = logit(Y, Y.logit.adj);
     }
-
-
     # Initialise output variables
     out.model = list();
     out.formula = matrix("", nrow = V, ncol = 1);
@@ -625,41 +534,31 @@ univar = function(Y
     out.sigma.squared = matrix(NA, nrow = V, ncol = 1);
     out.adj.r.squared = matrix(NA, nrow = V, ncol = 1);
     out.pvalue = matrix(NA, nrow = V, ncol = 1);
-
-
 	v = 0;
 	while(v < V) {
 		v = v + 1;
-
         ## Stress Period modelling
         if(length(stress.period.idx)> 1) {
-
             # Design Matrix
             curr.X = cbind(X[, v] , 0);
             curr.X[stress.period.idx, 2] = X[stress.period.idx, v];
             curr.X[stress.period.idx, 1] = 0;
             colnames(curr.X) = c(X.names[v], paste(X.names[v], "Stress", sep="."));
-
         }  else {
             curr.X = X[, v, drop = FALSE];
         }
-
         #  Model Data Frame
         curr.mod.df = as.data.frame(cbind(Y, curr.X));
         colnames(curr.mod.df) = c(Y.name, colnames(curr.X));
         curr.formula = as.formula(paste(Y.name, "~ ."));
-
         #  Compute LS
         curr.mod = lm(curr.formula, data = curr.mod.df);
-
         out.model[[v]] = curr.mod;
         out.formula[v] = deparse(formula(curr.mod));
         out.sigma.squared[v] = var(resid(curr.mod));
-
         curr.summary = summary(curr.mod);
         out.adj.r.squared[v] = curr.summary$adj.r.squared;
         out.pvalue[v] = curr.summary$coefficients[2, 4];
-
         beta.sign = rep(" ", dim(curr.X)[2]);
         beta.sign[which(coef(curr.mod)[-1] > 0)] = " + ";
         out.eq[v] = paste(Y.name
@@ -676,7 +575,6 @@ univar = function(Y
                             , sep = "" 
 							);
     }
-
     # Return output
     out.df = data.frame(regressor = X.names
                         , formula = out.formula
@@ -691,15 +589,11 @@ univar = function(Y
                 , summary = out.df[with(out.df, order(adj.r.squared, decreasing = TRUE)), ]
                 );
     class(res) = "univar";
-
 	if(plot)
 		plot(res, theme.params = theme.params, overrides = overrides);
 		
     res
-
 }
-
-
 #######################################################################################################################
 # FUNCTION: print.univar
 #
@@ -715,22 +609,20 @@ univar = function(Y
 #  Void 
 #
 #######################################################################################################################
-print.univar = function(X) {
-    show(X$summary[, -3])
+print.univar = function(x, ...) {
+    show(x$summary[, -3])
 }
-
-summary.univar = function(X) {
-	V = length(X$model);
+summary.univar = function(object, ...) {
+	V = length(object$model);
 	v = 0;
 	while(v < V) {
 		v = v + 1;
 		cat("\n===========================================\n");
-		cat(as.character(X$summary$formula[v]), ":\n")
-		show(summary(X$model[[v]]))
+		cat(as.character(object$summary$formula[v]), ":\n")
+		show(summary(object$model[[v]]))
 		cat("===========================================\n");
 	}
 }
-
 #######################################################################################################################
 # FUNCTION: plot.univar
 #
@@ -748,14 +640,11 @@ summary.univar = function(X) {
 #  Void
 #
 #######################################################################################################################
-plot.univar = function(X, theme.params = getCurrentTheme(), overrides = NULL) {
-
+plot.univar = function(x, theme.params = getCurrentTheme(), overrides = NULL, ...) {
     # Number of models
-    V = length(X$model);
-
+    V = length(x$model);
     # Number of data points
-    N = dim(X$model[[1]]$model)[1];
-
+    N = dim(x$model[[1]]$model)[1];
     # Set defaults parameters  for univar plots
     default.parms = list(projection.lty = 2
                         , xlab.srt = 0
@@ -765,70 +654,58 @@ plot.univar = function(X, theme.params = getCurrentTheme(), overrides = NULL) {
                         , grid.vlines = 6
                         , cex = c(0.8, 0.5, 0.5)
                         )
-
     # Combine univar default parms with overrides, giving precedence to overrides
     overrides = override.list(what = default.parms, overrides = overrides, append = TRUE);
-
     # Override theme parameters if necessary
     theme.params = override.list(what = theme.params, overrides = overrides);
-
-
     # Get plot layout
     plot.layout = get.plot.layout(N = V, theme.params = theme.params, overrides = overrides);
     plots.per.window = prod(plot.layout);
-
 	v = 0;
 	while(v < V) {
 		v = v + 1;
-
-        Y.name = colnames(X$model[[v]]$model)[1];
-        X.names = colnames(X$model[[v]]$model)[-1] ;
-
-        if(length(X$stress.idx) > 0) {
+        Y.name = colnames(x$model[[v]]$model)[1];
+        x.names = colnames(x$model[[v]]$model)[-1] ;
+        if(length(x$stress.idx) > 0) {
             # Data matrix for the plot (Columns structure: [Y, Y.fit, Y.stress, Y.fit.Stress])
-            plotdata = cbind(X$model[[v]]$model[, 1]
-                              , fitted(X$model[[v]])
-                              , fitted(X$model[[v]])
+            plotdata = cbind(x$model[[v]]$model[, 1]
+                              , fitted(x$model[[v]])
+                              , fitted(x$model[[v]])
                               );
             # Manage stress data  points
-            plotdata[X$stress.idx, 2] = NA;
-            plotdata[-X$stress.idx, 3] = NA;
-
-            curr.legend = c(Y.name, paste(Y.name, X.names[1], sep = " ~ "), "Regime Change");
-
+            plotdata[x$stress.idx, 2] = NA;
+            plotdata[-x$stress.idx, 3] = NA;
+            curr.legend = c(Y.name, paste(Y.name, x.names[1], sep = " ~ "), "Regime Change");
          } else {
             # Data matrix for the plot (Columns structure: [Y, Y.fit])
-            plotdata = cbind(X$model[[v]]$model[, 1], fitted(X$model[[v]]) );
-            curr.legend = c(Y.name, paste(Y.name, X.names[1], sep = " ~ "));
+            plotdata = cbind(x$model[[v]]$model[, 1], fitted(x$model[[v]]) );
+            curr.legend = c(Y.name, paste(Y.name, x.names[1], sep = " ~ "));
          }
-
         # Sort model data by ascending values of the current regressor
-        X.values = apply(X$model[[v]]$model[, -1, drop = FALSE]
+        x.values = apply(x$model[[v]]$model[, -1, drop = FALSE]
 						, 1
                         , sum
                         , na.rm = TRUE
                         );
-
         # Multiple plots on one window
          if(  ((v %% plots.per.window) ==1) || plots.per.window == 1 ) {
             dev.new();
             # Set the number  of plottable areas  in the window
             par(mfrow = plot.layout);
          }
-
         # Univariate plot
         cplot(plotdata
-                , base = X.values
+                , base = x.values
                 , theme.params = theme.params
-                , xtitle = X.names[1]
+                , xtitle = x.names[1]
                 , ytitle = Y.name
                 , main = bquote(paste(R^2
 									, "= "
-									, .(round(X$summary[v, "adj.r.squared"], digit = 3))
+									, .(round(x$summary[v, "adj.r.squared"], digit = 3))
 									, " "
 									, sigma^2 
 									, "= "
-									, .(X$summary[v, "sigma.squared"]) 
+									, .(x$summary[v, "sigma.squared"]) 
 									) 
 								)
                 , show.legend = FALSE
@@ -837,44 +714,36 @@ plot.univar = function(X, theme.params = getCurrentTheme(), overrides = NULL) {
                 , new.device = FALSE
                 , append = FALSE
                 );
-
-        if(length(X$stress.idx) > 0) {
-
+        if(length(x$stress.idx) > 0) {
             # Draw projections (Standard Regime)
-            draw.projections(X = X.values[-X$stress.idx]
-                             , Y = plotdata[-X$stress.idx, 1]
-                             , Y.fit = plotdata[-X$stress.idx, 2]
+            draw.projections(X = x.values[-x$stress.idx]
+                             , Y = plotdata[-x$stress.idx, 1]
+                             , Y.fit = plotdata[-x$stress.idx, 2]
                              , col = theme.params[["projection.col"]][2]
                              , type = theme.params[["projection.type"]][1]
                              , lty = theme.params[["projection.lty"]][1]
                             );
-
             # Draw projections (Regime Change)
-            draw.projections(X = X.values[X$stress.idx]
-                             , Y = plotdata[X$stress.idx, 1]
-                             , Y.fit = plotdata[X$stress.idx, 3]
+            draw.projections(X = x.values[x$stress.idx]
+                             , Y = plotdata[x$stress.idx, 1]
+                             , Y.fit = plotdata[x$stress.idx, 3]
                              , col = theme.params[["projection.col"]][3]
                              , type = theme.params[["projection.type"]][1]
                              , lty = theme.params[["projection.lty"]][1]
                             );
         } else {
             # Draw projections  (Standard  Regime)
-            draw.projections(X = X.values
+            draw.projections(X = x.values
                              , Y = plotdata[, 1]
                              , Y.fit = plotdata[, 2]
                              , col = theme.params[["projection.col"]][2]
                              , type = theme.params[["projection.type"]][1]
                              , lty = theme.params[["projection.lty"]][1]
                             );
-
         }
-
         draw.legend(curr.legend, theme.params);
-
     }
 }
-
-
 #######################################################################################################################
 # FUNCTION: colin.pairs
 #
@@ -901,18 +770,14 @@ colin.pairs = function(X, trsh = 0.8) {
     V = NCOL(X);
     if(is.null(dim(X)))
         dim(X) = c(N, V);
-
-
     # Compute Colinearity Matrix
     coLinMat = cor(X, X, use = "pairwise.complete.obs");
     coLinMat[upper.tri(coLinMat, diag = TRUE)] = 0;
     # ###########################
     # Compute Colinearity Pairs
     # ###########################
-
     # Get Variable names
     X.names = get.col.names(X);
-
     # Find highly correlated variables
     pairs.idx = which(abs(coLinMat) > trsh, arr.ind = TRUE);
     # Collate result
@@ -920,23 +785,17 @@ colin.pairs = function(X, trsh = 0.8) {
                             , Var2 = X.names[pairs.idx[, 2]]
                             , Rho = coLinMat[which(abs(coLinMat) > trsh)]
                             );
-
     # Declare output
     res = list(coLinMat = coLinMat
                 # Sort pairs by correlation
                 , coLinPairs = coLinPairs[order(abs(coLinPairs[, 3]), decreasing = TRUE), , drop = FALSE ]
                 );
     rownames(res$coLinPairs) = NULL;
-
     # Cleanup memory
     cleanup(keep = "res");
-
     # Return result
     res
 }
-
-
-
 #######################################################################################################################
 # FUNCTION: cross.colin
 #
@@ -967,24 +826,19 @@ cross.colin = function(Y, X, max.lag = 8, trsh = 0.8) {
     Vx = NCOL(X);
     if(is.null(dim(X)))
         dim(X) = c(Nx, Vx);
-
     # Get Y dimensions
     Ny = NROW(Y);
     Vy = NCOL(Y);
     if(is.null(dim(Y)))
         dim(Y) = c(Ny, Vy);
-
     # Declare output
     res = vector("list", Vy + 2);
     names(res) = c(get.col.names(Y, default = "Y"), "CoLinMat", "CoLinPairs");
-
     # Compute lagged matrix of X
     xlags = MLag(X, lag = abs(max.lag), autolag.start = 0);
-
 	v = 0;
 	while(v < Vy) {
 		v = v + 1;
-
         # Compute lagged correlation matrix
         lcm = matrix(cor(Y[, v, drop = FALSE]
                         , xlags
@@ -993,7 +847,6 @@ cross.colin = function(Y, X, max.lag = 8, trsh = 0.8) {
                     , nrow = Vx
                     , ncol = max.lag + 1
                     );
-
         # Sort variables by correlation
         sort.idx = order(abs(lcm[, 1]), decreasing = TRUE);
         # Assign correlation matrix to result
@@ -1002,17 +855,13 @@ cross.colin = function(Y, X, max.lag = 8, trsh = 0.8) {
         colnames(res[[v]]) = paste("Lag", 0:max.lag);
         rownames(res[[v]]) = get.col.names(X)[sort.idx];
     }
-
     # Compute CoLinearity analysis
     res[Vy + 1:2 ] = colin.pairs(X, trsh);
-
     # Cleanup memory
     cleanup(keep = "res");
-
     # Return result
     res
 }
-
 #######################################################################################################################
 # FUNCTION: colin.reduce
 #
@@ -1036,77 +885,59 @@ cross.colin = function(Y, X, max.lag = 8, trsh = 0.8) {
 #
 #######################################################################################################################
 colin.reduce = function(Y, X, max.iter=100, trsh = 0.85) {
-
     # Get X dimensions
     Nx = NROW(X);
     Vx = NCOL(X);
     if(is.null(dim(X)))
         dim(X) = c(Nx, Vx);
-
     # Get Y dimensions
     Ny = NROW(Y);
     Vy = NCOL(Y);
     if(is.null(dim(Y)))
         dim(Y) = c(Ny, Vy);
-
     # Variable column names
     Y.names = get.col.names(Y);
     # Make sure columns of Y are named
     colnames(Y) = Y.names;
-
-
     # Variable column names
     X.names = get.col.names(X);
     # Make sure columns of X are named
     colnames(X) = X.names;
-
     # Total number of starting columns
     Tot.cols = Vx;
-
     # Cross correlation matrix
     xcorrMat = cor(Y, X);
-
     # Perform column reduction for each column of Y
     res = vector("list", Vy);
     names(res) = Y.names;
-
 	v = 0;
 	while(v < Vy) {
 		v = v + 1;
-
         # Init list of columns
         REDUCED_LIST = list();
         REDUCED_LIST[[1]] = X.names[order(X.names)];
-
         # Get pairs of linearly dependent columns
         coLinPairs = as.matrix(colin.pairs(X, trsh)$coLinPairs);
-
         # List of all problematic variables
         cp.all = unique(c(coLinPairs[, 1], coLinPairs[, 2]));
-
         # Select best variable  for  each couple (the one  wich has  higher correlation to Y[, v])
         cp.best = coLinPairs[, 1, drop = FALSE];
         best.idx = which(abs(xcorrMat[v, coLinPairs [, 2]]) > abs(xcorrMat[v, coLinPairs[, 1]]));
         names(best.idx) = NULL;
         cp.best[best.idx] = coLinPairs[best.idx, 2];
-
         # Unique list from cp.best
         cp.left = unique(cp.best);
-
         cat("Performing variable reduction for target variable '", Y.names[v], "' (rho > ", trsh, "):\n", sep = "");
-        flush.console ();
-
+        flush.console();
         j = 2;
         finished = FALSE;
         while(j <= max.iter && NROW(coLinPairs) > 0 && !finished) {
-
             # Find which variables  from the  previous  step are  not problematic  at all
             keep.idx = which(!(REDUCED_LIST[[j-1]] %in% cp.all));
             # Create current reduced list (non colinear vars + best vars from colinear vars)
             REDUCED_LIST[[j]] = c(REDUCED_LIST[[j-1]][keep.idx], cp.left);
             # Sort
             REDUCED_LIST[[j]] = REDUCED_LIST[[j]][order(REDUCED_LIST[[j]])];
-
             # Check if the new  list has the  same  length  of the previous
             if(length(REDUCED_LIST[[j]]) == length(REDUCED_LIST[[j-1]])) {
                 # Check  if the  two  lists are the  same
@@ -1117,52 +948,35 @@ colin.reduce = function(Y, X, max.iter=100, trsh = 0.85) {
             }
             cat("\t = >From ", Tot.cols, " to ", length(REDUCED_LIST[[j]]), "        \r", sep = "");
             flush.console();
-
             # Recalculate list of co-linear columns
             coLinPairs = as.matrix(colin.pairs(X[, REDUCED_LIST[[j]], drop = FALSE], trsh)$coLinPairs);
-
             # List of all problematic variables
             cp.all = unique(c(coLinPairs[, 1], coLinPairs[, 2]));
-
             # Select best variable for  each  couple  (the  one  wich has  higher  correlation to Y[, v] )
             cp.best = coLinPairs[, 1, drop = FALSE];
             best.idx = which(abs(xcorrMat[v, coLinPairs[, 2]]) > abs(xcorrMat[v, coLinPairs [, 1]]));
             names(best.idx) = NULL;
             cp.best[best.idx] = coLinPairs [best.idx, 2];
-
             # Unique list from cp.best
             cp.left = unique(cp.best);
-
             j = j + 1
         }
-
         cat("\nVariable reduction completed!\n\n");
-
         if(j > max.iter) {
             warning("Maximum number of iterations reached!")
         }
-
         if(length(REDUCED_LIST[[j-1]]) == 0) {
             warning("Reduction process removed all variables!\n");
             cat("\t\t\t => Current value for the threshold (trsh = ", trsh, ") is too low. Run again using a higher threshold. \n", sep = "");
         }
-
         # Save result
         res[[v]] = X[, REDUCED_LIST[[j-1]], drop = FALSE];
-
     }
-
     # Cleanu memory
     cleanup(keep = "res");
-
     # Return output
     res
-
 }
-
-
-
-
 #######################################################################################################################
 # FUNCTION: mcplot
 #
@@ -1191,7 +1005,6 @@ mcplot = function(X
 				, new.device = FALSE
 				, ...
 				) {
-
 	N = NROW(X);
 	V = NCOL(X);
 	if(is.null(dim(X)))
@@ -1237,7 +1050,6 @@ mcplot = function(X
 				, transition = theme.params[["bg.transition"]]
 				, stripes = theme.params[["bg.stripes"]]
 				);		 
-
 		# Draw text
 		txt.col = ifelse(coLin, rgb(abs(r), 1-abs(r), 0), rgb(1-abs(r), abs(r), 0));
         text(0.5, 0.5, txt, cex = cex.cor, col = txt.col);
@@ -1263,8 +1075,6 @@ mcplot = function(X
 		# Draw box
 		box(col = theme.params[["axis.col"]]);
 	}
-
-
 	# Open new device if necessary
 	if(new.device)
 		dev.new();
@@ -1291,8 +1101,6 @@ mcplot = function(X
 	options(ow);
 	title(main = main, col.main = theme.params[["col.main"]]);
 }
-
-
 chist = function(x
 				, nclass = min(max(round(NROW(x)/10), 10), NROW(x))
 				, density = c("kernel", "normal")
@@ -1359,12 +1167,9 @@ chist = function(x
 			, ...
 			)
 }
-
-
 get.predictors = function(mod) {
 	colnames(attr(mod$terms, "factors"))
 }
-
 get.lm.weights = function (mod, pct = FALSE) {
 	# Get the number of regressors
 	N = length(get.predictors(mod));
@@ -1381,10 +1186,9 @@ get.lm.weights = function (mod, pct = FALSE) {
 	
 	coeff.weights	
 }
-
-formula.mreg = function(mod, ...) {
+formula.mreg = function(x, ...) {
 	# Number of Linear models
-	Vy = length(mod);
+	Vy = length(x);
 	# Declare output
 	res = vector("list", Vy);
 	
@@ -1392,21 +1196,17 @@ formula.mreg = function(mod, ...) {
 	while(vy < Vy) {
 		vy = vy + 1;
 		# Compute prediction
-		res[[vy]] = formula(mod[[vy]], ...);
+		res[[vy]] = formula(x[[vy]], ...);
 	}
 	
 	res
 }
-
-
-formula.reg = function(mod, ...) {
-	mod$formula
+formula.reg = function(x, ...) {
+	x$formula
 }
-
-
-predict.mreg = function(mod, ...) {
+predict.mreg = function(object, ...) {
 	# Number of Linear models
-	Vy = length(mod);
+	Vy = length(object);
 	# Declare output
 	res = vector("list", Vy);
 	
@@ -1414,12 +1214,12 @@ predict.mreg = function(mod, ...) {
 	while(vy < Vy) {
 		vy = vy + 1;
 		# Compute prediction
-		res[[vy]] = predict.reg(mod[[vy]], ...);
+		res[[vy]] = predict.reg(object[[vy]], ...);
 	}
 	
 	res
 }
-predict.reg = function(mod
+predict.reg = function(object
 						, newdata = NULL
 						, ci = 0.95
 						, mode = c("response", "link")
@@ -1435,28 +1235,25 @@ predict.reg = function(mod
 						, legend = NULL
 						, ...
 						) {
-
-	if(any(class(mod) == "reg")) {
+	if(any(class(object) == "reg")) {
 		# Extract Linear Model object
-		mod = mod$lm;
+		object = object$lm;
 	}
 	
 	mode = match.arg(mode[1], choice = c("response", "link"));
 	
 	res = NULL;
-	if(class(mod)[1] == "lm") {
+	if(class(object)[1] == "lm") {
 		# Compute lm predition
-		res = predict(mod, newdata = newdata, se.fit = FALSE, interval = "confidence", level = ci);
-	} else if(class(mod)[1] == "glm"){
+		res = predict(object, newdata = newdata, se.fit = FALSE, interval = "confidence", level = ci);
+	} else if(class(object)[1] == "glm"){
 		
-		base = predict(mod, newdata = newdata, se.fit = TRUE, type = "link");
-		response = predict(mod, newdata = newdata, se.fit = FALSE, type = "response");
-
+		base = predict(object, newdata = newdata, se.fit = TRUE, type = "link");
+		response = predict(object, newdata = newdata, se.fit = FALSE, type = "response");
 		# Threshold for Normal errors
 		trsh = qnorm((1+ci)/2);
-
 		# Extract model weights
-		w = weights(mod);
+		w = weights(object);
 		if(is.null(w))
 			w = 1;
 			
@@ -1466,13 +1263,13 @@ predict.reg = function(mod
 		# Define output
 		res = matrix(NA, nrow = length(response), ncol = 3);
 		colnames(res) = c("fit", "lwr", "upr");
-		rownames(res) = if(is.null(newdata)) get.row.names(mod$model) else get.row.names(newdata);
+		rownames(res) = if(is.null(newdata)) get.row.names(object$model) else get.row.names(newdata);
 		
 		# Compute Confidence intervals
 		if(mode == "response") {
 			res[, 1] = response;
-			res[, 2] = mod$family$linkinv(base$fit - trsh*wse);
-			res[, 3] = mod$family$linkinv(base$fit + trsh*wse);
+			res[, 2] = object$family$linkinv(base$fit - trsh*wse);
+			res[, 3] = object$family$linkinv(base$fit + trsh*wse);
 		} else {
 			res[, 1] = base$fit;
 			res[, 2] = base$fit - trsh*wse;
@@ -1488,19 +1285,19 @@ predict.reg = function(mod
 		if(is.null(legend)) {
 			# Set default Legend
 			ci.pct = sprintf("%.5g%%", ci*100);
-			legend = c(formula(mod), paste("C.I.", ci.pct));
+			legend = c(formula(object), paste("C.I.", ci.pct));
 		}
 		
 		if(is.null(newdata)) {
 			fulldata = res;
 		} else {
 			# Extract base fit
-			basefit = fitted(mod);
+			basefit = fitted(object);
 			# Create full matrix with base fit + prediction
 			fulldata = rbind(cbind(basefit, NA, NA)
 							, res);
 			fulldata[NROW(basefit), 2:3] = fulldata[NROW(basefit), 1];
-			rownames(fulldata) = c(get.row.names(mod$model), rownames(res));
+			rownames(fulldata) = c(get.row.names(object$model), rownames(res));
 		}
 		
 		if(is.null(xlabels))
@@ -1522,9 +1319,7 @@ predict.reg = function(mod
 	}
 	res
 }
-
 dropn = function(mod, N = 1, ...) {
-
 	Nvars = length(get.predictors(mod));
 	if(N > Nvars) {
 		warning("Number of variables to drop is greater than the total number of variables available!\nAll variables will be removed.");
@@ -1540,7 +1335,6 @@ dropn = function(mod, N = 1, ...) {
 			
 			# List of droppable variables
 			droplist = get.predictors(mod);
-
 			# Check marginal contribution to AIC
 			aod = drop1(mod, scope = droplist, ...);
 			rn = row.names(aod);
@@ -1572,11 +1366,8 @@ dropn = function(mod, N = 1, ...) {
 			
 		}
 	}
-
 	mod
-
 }
-
 decimals <- function(x, max.digits = 10, ...) {
 	if ((x %% 1) != 0) {
 		str = sprintf(paste("%.", max.digits, "f", sep = ""), x);
@@ -1591,9 +1382,6 @@ decimals <- function(x, max.digits = 10, ...) {
 	}
 	res
 }
-
-
-
 mreg = function(Y
 				, X
 				, xlabels = NULL
@@ -1612,23 +1400,19 @@ mreg = function(Y
 				, trace = FALSE
 				, ...
 				) {
-
     # Get Names for X and Y
     Y.names = get.col.names(Y, default = "Y");
     X.names = get.col.names(X);
-
     # Get dimensions for X
     Nx = NROW(X);
     Vx = NCOL(X);
     if(is.null(dim(X)))
         dim(X) = c(Nx, Vx);
-
     # Get dimensions for Y
     Ny = NROW(Y);
     Vy = NCOL(Y);
     if(is.null(dim(Y)))
         dim(Y) = c(Ny, Vy);
-
 	if(Nx != Ny)
 		stop("Input arguments 'X' and 'Y' must have the same number of rows.");
 	
@@ -1666,7 +1450,6 @@ mreg = function(Y
 	
     # Allocate output result
     res = vector("list", Vy);		
-
 	# Stress modelling
 	if(length(stress.idx) > 0) {
 		# Expand the regression matrix
@@ -1682,10 +1465,8 @@ mreg = function(Y
 		regMat = X;
 		colnames(regMat) = X.names;
 	}
-
 	# Create data frame structure to be used in the regression
 	fulldata.df = as.data.frame(cbind(NA, regMat));
-
 	vy = 0;
 	while(vy < Vy) {
 		vy = vy + 1;
@@ -1728,7 +1509,6 @@ mreg = function(Y
 						, family = family[vy]
 						, ...
 						);
-
 		} else {
 			# Check if the scope is available
 			if(is.null(scope)) {
@@ -1777,16 +1557,15 @@ mreg = function(Y
 		coeff.weights = get.lm.weights(mod);
 		# Compute residuals
 		mod.residuals = curr.Y - mod.fit[, "fit", drop = FALSE];
-
 		# Run back testing if required
 		if(abs(backtest[vy]) > 0) {
 		
 			# Define development and validation data samples
 			if(backtest[vy] > 0) {
 				dev.idx = 1:backtest[vy];
-				test.idx = (backtest[vy]+1):N;
+				test.idx = (backtest[vy]+1):Ny;
 			} else {
-				dev.idx = (abs(backtest[vy])+1):N;
+				dev.idx = (abs(backtest[vy])+1):Ny;
 				test.idx = 1:abs(backtest[vy]);
 			}
 			
@@ -1797,7 +1576,6 @@ mreg = function(Y
 			
 			# Fit the model on the development sample
 			mod.dev = regfun(mod.formula, data = dev.data.df, ...);
-
 			fcast = predict.reg(mod.dev, newdata = fulldata.df, ci = ci);
 			
 			fcast.residuals = curr.Y - fcast[, "fit", drop = FALSE];
@@ -1833,50 +1611,40 @@ mreg = function(Y
 	}
 	# Assign class to the result
 	class(res) = "mreg";
-
 	# Plot results if required
     if(plot)
         plot(res, ...);
-
 	# Return result
     res		
-
 }
-
-print.mreg = function(X) {
-	V = length(X);
+print.mreg = function(x, ...) {
+	V = length(x);
 	v = 0;
 	while(v < V) {
 		v = v + 1;
 		cat("\n===========================================\n");
-		print(X[[v]])
+		print(x[[v]])
 		cat("===========================================\n");
 	}
 }
-
-
-summary.mreg = function(X) {
-	V = length(X);
+summary.mreg = function(object, ...) {
+	V = length(object);
 	v = 0;
 	while(v < V) {
 		v = v + 1;
 		cat("\n===========================================\n");
-		summary(X[[v]])
+		summary(object[[v]])
 		cat("===========================================\n");
 	}
 }
-
-print.reg = function(X) {
-	cat("Formula: ", deparse(X$formula), "\n");
-	show(X$lm)
+print.reg = function(x, ...) {
+	cat("Formula: ", deparse(x$formula), "\n");
+	show(x$lm)
 }
-
-summary.reg = function(X) {
-	cat("Formula: ", deparse(X$formula), "\n");
-	show(X$summary)
+summary.reg = function(object, ...) {
+	cat("Formula: ", deparse(object$formula), "\n");
+	show(object$summary)
 }
-
-
 norm.fit = function(x, n = 200, range = NULL, ...) {
 	mi = mean(x);
 	sigma = sd(x);
@@ -1894,23 +1662,19 @@ norm.fit = function(x, n = 200, range = NULL, ...) {
 		, y = y
 		)
 }
-
-
-plot.mreg = function(X, ...) {
-	V = length(X);
+plot.mreg = function(x, ...) {
+	V = length(x);
 	v = 0;
 	while(v < V) {
 		v = v + 1;
 		if(v > 1)
 			dev.new();
-		plot(X[[v]], ...);
+		plot(x[[v]], ...);
 	}
 }
-
-
-plot.reg = function(X
+plot.reg = function(x
 					, mode = c("response", "link")
-					, title = ifelse(X$model.type == "lm", "LS Regression", "GLM Regression")
+					, title = ifelse(x$model.type == "lm", "LS Regression", "GLM Regression")
 					, theme.params = getCurrentTheme()
 					, overrides = list(...)
 					, ...) {
@@ -1919,42 +1683,40 @@ plot.reg = function(X
 	
 	par(mfrow = c(2, 2));
 	# Extract model weights
-	weights = weights(X$lm);
+	weights = weights(x$lm);
 	if(is.null(weights))
 		weights = 1;
 		
 	# Error term of the linear model (Residuals)
-	lin.err = sqrt(weights) * X$linear.residuals;
+	lin.err = sqrt(weights) * x$linear.residuals;
 	# Fitted Values of the linear model
-	lin.fit = X$linear.predictors;
+	lin.fit = x$linear.predictors;
 	
 	
 	mode = match.arg(mode, choice = c("response", "link"));
 	if(mode == "response") {
-		plotmat = cbind(X$target, X$response);
-		Y.name = colnames(X$target);
+		plotmat = cbind(x$target, x$response);
+		Y.name = colnames(x$target);
 	} else {
-		plotmat = cbind(X$linear.target, lin.fit);
-		if(X$model.type == "glm") {
-			Y.name = paste(X$lm$family$link, "(", colnames(X$target) , ")", sep = "");
+		plotmat = cbind(x$linear.target, lin.fit);
+		if(x$model.type == "glm") {
+			Y.name = paste(x$lm$family$link, "(", colnames(x$target) , ")", sep = "");
 		} else {
-			Y.name = colnames(X$target);
+			Y.name = colnames(x$target);
 		}
 	}
-
-	ci.pct = sprintf("%.5g%%", X$ci*100);
+	ci.pct = sprintf("%.5g%%", x$ci*100);
 	
-	legend = c(Y.name, X$formula, paste("C.I.", ci.pct));
+	legend = c(Y.name, x$formula, paste("C.I.", ci.pct));
 	# Plot Fitted vs actual
 	cplot(plotmat
 		, col = theme.params[["col"]][c(1, 2, 3, 3)]
 		, legend = legend
 		, theme.params = theme.params
 		, main = title
-		, xlabels = get.row.names(X$target)
+		, xlabels = get.row.names(x$target)
 		, ...
 		)
-
 	# Residuals vs Fitted
 	cplot(lin.err
 		, base = lin.fit[, 1]
@@ -1973,7 +1735,6 @@ plot.reg = function(X
 			, append = TRUE
 			, ...
 			)
-
 	# Q-Q Plot
 	qq = qqnorm(lin.err, plot.it = FALSE)
 	cplot(qq$y, base = qq$x
@@ -1990,11 +1751,7 @@ plot.reg = function(X
 			, main = "Residuals Distribution"
 			, ...
 			);
-
 }
-
-
-
 splitWindow = function(N
 						, direction = c("forward", "backward")
 						, mode = c("EW", "SW")
@@ -2004,7 +1761,6 @@ splitWindow = function(N
 						, labels = 1:N
 						, ...
 						) {
-
 	# Check for window size
 	if(length(win.size) != 1) {
 		if(is.null(win.size) || length(win.size) == 0) {
@@ -2015,7 +1771,6 @@ splitWindow = function(N
 			win.size = win.size[1];
 		}
 	}
-
 	mode = match.arg(mode, choice = c("EW", "SW"));
 	direction = match.arg(direction, c("forward", "backward"));
 	
@@ -2095,7 +1850,6 @@ splitWindow = function(N
 		}
 		
 	}
-
 	# Collate results
 	res = cbind(start.idx, end.idx);
 	colnames(res) = c("start.idx", "end.idx");
@@ -2106,25 +1860,20 @@ splitWindow = function(N
 	res
 						
 }
-
-
 sensAnalysis = function(X, ...) {
 		UseMethod("sensAnalysis");
 }
-
 sensAnalysis.default = function(X
 								, win.size = length(coef(X))
 								, plot = FALSE
 								, ...
 								) {
-
 	if(!inherits(X, c("lm", "glm")))
 		stop("Default method expect input to be 'lm' or 'glm' object");
 	
 	if(length(coef(X)) == 0)
 		stop("Model has no intercept or regressors!");
 		
-
 	# Number of data points
 	N = NROW(X$model);
 	
@@ -2142,10 +1891,8 @@ sensAnalysis.default = function(X
 		warning("Argument 'win.size' cannot be smaller than the number of model coefficients. \n\t -> Minimum allowed value will be used instead..");
 		win.size = length(coef(X));
 	}
-
 	# Extract row labels from the model
 	X.rownames = get.row.names(fitted(X));
-
 	# Compute window indexes
 	win.idx = splitWindow(N, win.size = win.size, labels = X.rownames, ...);
 	# Extract index components
@@ -2210,12 +1957,9 @@ sensAnalysis.default = function(X
 	# Return result
 	res;
 }
-
 sensAnalysis.lm = function(X, ...) {
 	sensAnalysis.default(X, ...);
 }
-
 sensAnalysis.reg = function(X, ...) {
 	sensAnalysis.default(X$lm, ...);
 }
-
