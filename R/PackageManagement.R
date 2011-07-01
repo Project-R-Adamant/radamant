@@ -1,9 +1,6 @@
 # FUNCTION: cleanup
 #######################################################################
 #
-# AUTHOR: Rocco Claudio Cannizzaro
-# DATE: 10/08/2010
-#
 # DESCRIPTION:
 # Cleanup environment and (optionally) performs Garbage Collection
 #
@@ -17,7 +14,6 @@
 #
 # {Boolean} gc = FALSE
 # - If TRUE, garbage collection is performed to release memory.
-#
 #
 # RETURNS: VOID
 #
@@ -38,22 +34,15 @@ cleanup = function(keep = c()
 	} else {
 		rm(list = obj.list, envir = env);
 	}
-
 	# Remove all objects from the current environment (this function)
 	rm(list = c("keep", "env", "obj.list", "keep.idx"));
-
 	# Perform gc() if required
 	if(gc) {
 		gc(verbose = TRUE, reset = TRUE);
 	}
 }
-
-
 #######################################################################
 # FUNCTION: func.line.cnt
-#
-# AUTHOR: Rocco Claudio Cannizzaro
-# DATE: 10/08/2010
 #
 # DESCRIPTION:
 # Given a package name or a list of functions, for each function X in
@@ -96,9 +85,7 @@ cleanup = function(keep = c()
 # - $fcn.called = Number of function calling the function
 #
 #######################################################################
-
 func.line.cnt = function(package = NULL, plot = TRUE, qtz.type = "NONE", qtz.nbins = 10, qtz.cutoff = 30) {
-
 	stopifnot(package != NULL);
 	
 	is.pkg = FALSE;
@@ -205,7 +192,6 @@ func.line.cnt = function(package = NULL, plot = TRUE, qtz.type = "NONE", qtz.nbi
 		} else {
 			# Lines of code distribution
 			code.lines = 100*table(fcn.stats[,2])/N;
-
 		}
 		
 		if (qtz.x.labels) {
@@ -250,10 +236,8 @@ func.line.cnt = function(package = NULL, plot = TRUE, qtz.type = "NONE", qtz.nbi
 			, labels = x.labels
 			, xpd = TRUE
 			);
-
 		axis(side = 2, at = y.labels, labels = paste(y.labels, "%", sep=""), las=1); 
 		grid();
-
 		# Calls distribution
 		subcalls = 100*table(fcn.stats[,3])/N;
 		y.max = max(subcalls);
@@ -270,7 +254,6 @@ func.line.cnt = function(package = NULL, plot = TRUE, qtz.type = "NONE", qtz.nbi
 				);
 		axis(side = 2, at = y.labels, labels = paste(y.labels, "%", sep=""), las=1); 
 		grid();
-
 		# Lines of code distribution
 		called = 100*table(fcn.stats[,4])/N;
 		y.max = max(called);
@@ -289,7 +272,6 @@ func.line.cnt = function(package = NULL, plot = TRUE, qtz.type = "NONE", qtz.nbi
 		grid();
 		
 	}
-
 	if(is.pkg) {
 		# Unload the package
 		detach(paste("package", package, sep=":"), character.only=TRUE);
@@ -301,22 +283,9 @@ func.line.cnt = function(package = NULL, plot = TRUE, qtz.type = "NONE", qtz.nbi
 			, called.list = called.list
 		)
 }
-
-
-## Example (using package)
-#func.line.cnt("lattice")
-#func.line.cnt("lattice", qtz.type="lin")
-#func.line.cnt("lattice", qtz.type="log")
-
-## Example (using list of functions)
-#func.line.cnt(c("sd", "lm", "glm", "whatever"))
-
-
 #######################################################################
 # FUNCTION: func.comment.idx
 #
-# AUTHOR: Rocco Claudio Cannizzaro
-# DATE: 10/08/2010
 #
 # DESCRIPTION:
 # Given an input file, this functions created an index based commented
@@ -463,7 +432,6 @@ func.comment.idx = function(
 	
 	# Number of rows
 	N = length(code);
-
 	# Declare output vector
 	output.code = matrix("", nrow=2*N, ncol=1);
 	colnames(output.code) = "Code";
@@ -518,7 +486,6 @@ func.comment.idx = function(
 			# Copy line of code to the output
 			j = j + 1;
 			output.code[j] = code[n];
-
 		}
 		j = j + 1;
 	}
@@ -534,7 +501,6 @@ func.comment.idx = function(
 	# Write output file if requested
 	if(length(outfile) > 0)
 		write.table(output.code, file = outfile, col.names = FALSE, row.names = FALSE, quote = FALSE);
-
 	if(is.null(outfile)) {
 		# Cleanup
 		cleanup(keep = "output.code");
@@ -545,20 +511,3 @@ func.comment.idx = function(
 		cleanup();
 	}
 }
-
-#### EXAMPLE #####
-#tst = data.frame(FNAME = c("sd", "lm")
-#				, FCODE = c("SD", "LM")
-#				, AREA = c("s5", "s2")
-#				, SECTION = c("s1", "s1")
-#				, CLASS = c("c1", "c2")
-#				);
-#				
-#incode = rbind(paste("sd =", as.character(deparse(args(sd)))[1])
-#				, as.matrix(deparse(body(sd)))
-#				, ""
-#				, ""
-#				, paste("lm =", as.character(deparse(args(lm)))[1])
-#				, as.matrix(deparse(body(lm)))
-#			   )
-#func.comment.idx(tst, incode = incode, max.dgt=3)
