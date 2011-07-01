@@ -304,34 +304,36 @@ kaiser = function(N, normalized = TRUE, alpha = 3) {
 # - plot: LOGICAL. If TRUE, spectrum is plotted
 #
 # RETURNS:
-#  Instance of class 'fft': Matrix of fft data and attributes: Window, frequencies and indices to select the data for plotting
+#  Instance of class 'FFT': Matrix of FFT data and attributes: Window, frequencies and indices to select the data for plotting
 #
 #######################################################################################################################
-FFT = function(X, Fs = 1, half = FALSE, window = NULL, plot = TRUE, optimised = TRUE, ...) {
+FFT = function(x, ...) UseMethod("FFT")
+
+FFT.default = function(x, Fs = 1, half = FALSE, window = NULL, plot = TRUE, optimised = TRUE, ...) {
 
 	# Check if input is an instance of the Financial Series class
-	if(class(X) == "fs") {
+	if(class(x) == "fs") {
 		# Take a copy
-		Y = X;
+		Y = x;
 		# Process Close data
-		X = Y[, "Close", drop = FALSE];
+		x = Y[, "Close", drop = FALSE];
 		# Assign Column Name
-		colnames(X) = attr(Y, "SName");
+		colnames(x) = attr(Y, "SName");
 	}
 
 	# Frequency points
-	N = NROW(X);
+	N = NROW(x);
 	# Number of time series
-	V = NCOL(X);
-	if(is.null(dim(X)))
-		dim(X) = c(N, V);
+	V = NCOL(x);
+	if(is.null(dim(x)))
+		dim(x) = c(N, V);
 	
 	if(optimised) {
 		# Compute number of FFT points that would allow for a true FFT algorithm
 		Nfft = 2^ceiling(log2(N));
 		if(Nfft != N) {
 			# Padding data
-			X = rbind(X, matrix(0, nrow = Nfft-N, ncol = V));
+			x = rbind(x, matrix(0, nrow = Nfft-N, ncol = V));
 			N = Nfft;
 		}
 	}
@@ -346,13 +348,13 @@ FFT = function(X, Fs = 1, half = FALSE, window = NULL, plot = TRUE, optimised = 
 	# Compute Unitary FFT
 	if(is.null(window)) {
 		# Rectangular window
-		Xf = mvfft(X)/sqrt(N);
+		Xf = mvfft(x)/sqrt(N);
 	} else {
 		# Use specified window
 		w = window(N);
-		Xf = mvfft(w * X)/sqrt(N);
+		Xf = mvfft(w * x)/sqrt(N);
 	}
-	colnames(Xf) = get.col.names(X);
+	colnames(Xf) = get.col.names(x);
 	
 	# Generate frequency interval (-Fs/2:Fstep:Fs/2)
 	fstep = Fs/N;
@@ -369,7 +371,7 @@ FFT = function(X, Fs = 1, half = FALSE, window = NULL, plot = TRUE, optimised = 
 		fpoints = c( (ceiling(N/2)+1):N, 1:ceiling(N/2) ) ;
 	}
 
-	class(Xf) = "fft";
+	class(Xf) = "FFT";
 	# Sampling frequency
 	attr(Xf, "Fs") = Fs;
 	# Windowing function
@@ -396,25 +398,25 @@ FFT = function(X, Fs = 1, half = FALSE, window = NULL, plot = TRUE, optimised = 
 }
 
 #######################################################################################################################
-# FUNCTION: print.fft
+# FUNCTION: print.FFT
 #
 # AUTHOR: RCC
 #
 # SUMMARY:
-# Print function for class 'fft'
+# Print function for class 'FFT'
 #
 # PARAMETERS:
-# - Xf: Instance of class 'fft'
+# - Xf: Instance of class 'FFT'
 #
 # RETURNS:
 #  Void
 #
 #######################################################################################################################
-print.fft = function(Xf) {
-	show(Xf[, , drop = FALSE]);
-	cat("\nClass: fft");
-	cat("\nSampling Frequency: ", attr(Xf, "Fs"), " Hz\n", sep="");
-	cat("Windowing function: ", attr(Xf, "window"), " \n", sep="");
+print.FFT = function(x, ...) {
+	show(x[, , drop = FALSE]);
+	cat("\nClass: FFT");
+	cat("\nSampling Frequency: ", attr(x, "Fs"), " Hz\n", sep="");
+	cat("Windowing function: ", attr(x, "window"), " \n", sep="");
 }
 
 #######################################################################################################################
@@ -423,13 +425,13 @@ print.fft = function(Xf) {
 # AUTHOR: RCC
 #
 # SUMMARY:
-# Plot function for class 'fft'. Plots Modulus and Phase for each column of the fft object Xf
+# Plot function for class 'FFT'. Plots Modulus and Phase for each column of the FFT object x
 #
 # PARAMETERS:
-# - Xf: Instance of class 'fft'
+# - x: Instance of class 'FFT'
 # - theme.params: theme parameters (DEFAULT: getCurrentTheme())
 # - overrides: list of parameters to override the theme. Must match by name the parameters defined by the theme (DEFAULT: NULL)
-# - shaded: LOGICAL. If TRUE, the modulus of Xf is shaded.
+# - shaded: LOGICAL. If TRUE, the modulus of x is shaded.
 # - show.periodicity: LOGICAL. If TRUE, Periods (1/frequencies) are showed instead of frequencies on the x-axis (DEFAULT = FALSE)
 # - show.legend: LOGICAL. If TRUE, legend is added to the plot (DEFAULT = FALSE)
 #
@@ -437,7 +439,7 @@ print.fft = function(Xf) {
 #  Void
 #
 #######################################################################################################################
-plot.fft = function(Xf
+plot.FFT = function(x
 					, theme.params = getCurrentTheme()
 					, overrides = list(...)
 					, shaded = TRUE
@@ -447,12 +449,9 @@ plot.fft = function(Xf
 					, semilog = FALSE
 					, new.device = FALSE
 					, ...) {
-
-	if(class(Xf) != "fft")
-		stop("Argument is not an istance of the class fft");
-			
+		
 	# Get series names
-	X.names = get.col.names(Xf);
+	X.names = get.col.names(x);
 	
     # Set defaults parameters for spectral domain plots
     default.parms = list(xlab.srt = 0
@@ -472,16 +471,16 @@ plot.fft = function(Xf
 	
 
 	# Number of frequency series to plot
-	V = NCOL(Xf);
+	V = NCOL(x);
 	
 	# Get frequency points
-	fpoints = attr(Xf, "fpoints");
-	freq = attr(Xf, "freq");
+	fpoints = attr(x, "fpoints");
+	freq = attr(x, "freq");
 	
 	if(zoom < 100) {
 		# Number of available frequency points
 		N = length(fpoints);
-		if(attr(Xf, "half")) {
+		if(attr(x, "half")) {
 			# Compute number of points to show, (percentage of the full frequency spectrum)
 			Nzoom = max(round(zoom*N/100), 2);
 			# Subset frequency points
@@ -518,22 +517,22 @@ plot.fft = function(Xf
         # Set the number of plottable areas in the window
         par(mfrow = c(2, 1));
 
-        # Plot |Xf|
+        # Plot |x|
 		if(semilog) {
 			# Plot in decibel scale
-			Xf.Mod = 10*log10(Mod(Xf[fpoints, v, drop = FALSE]));
+			x.Mod = 10*log10(Mod(x[fpoints, v, drop = FALSE]));
 			# Adjust suffix for y-axis labels in case of semilog scale
 			overrides[["ylab.suffix"]] = "dB";
-			yrange = range(Xf.Mod, na.rm = TRUE);
+			yrange = range(x.Mod, na.rm = TRUE);
 		} else {
 			# Plot on linear scale
-			Xf.Mod = Mod(Xf[fpoints, v, drop = FALSE]);
-			yrange = c(0, max(Xf.Mod, na.rm = TRUE));
+			x.Mod = Mod(x[fpoints, v, drop = FALSE]);
+			yrange = c(0, max(x.Mod, na.rm = TRUE));
 		}
-        cplot(Xf.Mod
+        cplot(x.Mod
 			, yrange = yrange
 			, theme.params = theme.params
-			, main = paste("FFT: |", X.names[v], "| (", attr(Xf, "window"), ")", sep = "")
+			, main = paste("FFT: |", X.names[v], "| (", attr(x, "window"), ")", sep = "")
 			, xlabels = xlabels
 			, xtitle = xtitle
 			, legend = X.names[v]
@@ -547,8 +546,8 @@ plot.fft = function(Xf
 		# Restore suffix on y-axis labels for Arg plot
 		overrides[["ylab.suffix"]] = theme.params[["ylab.suffix"]];
 
-        # Plot Arg(Xf)
-        cplot(Arg(Xf[fpoints, v, drop = FALSE])
+        # Plot Arg(x)
+        cplot(Arg(x[fpoints, v, drop = FALSE])
 					, yrange = c(-pi, pi)
                     , theme.params = theme.params
                     , xlabels = xlabels
