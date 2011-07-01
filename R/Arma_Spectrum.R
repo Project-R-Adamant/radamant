@@ -1,7 +1,7 @@
 Arma.Spec = function(X, ar_ord = 1, ma_ord = 1, vfreq=NULL){
 	
 	N = length(X)
-	sigma = var(g1,na.rm=TRUE)
+	sigma = var(X,na.rm=TRUE)
 	
 	# check and assign vector of frequencies
 	if(is.null(vfreq)){
@@ -75,4 +75,3 @@ Arma.Spec = function(X, ar_ord = 1, ma_ord = 1, vfreq=NULL){
 	
 }
 
-#Arma_spec(g1[-1,],2,2,vfreq=20:70)
