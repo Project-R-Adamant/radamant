@@ -604,7 +604,7 @@ sme = function(X, plot = TRUE, ...) {
 	rownames(res) = get.row.names(X);
 	
 	# Sort oeac column separately
-	X.sort = sort.each.col(X);
+	X.sort = SORT(X);
 	
 	v = 0;
 	while(v < V) {
@@ -628,20 +628,20 @@ sme = function(X, plot = TRUE, ...) {
 	res
 }
 
-print.sme = function(X) {
-	print.default(X[, , drop = FALSE]);
+print.sme = function(x, ...) {
+	print.default(x[, , drop = FALSE]);
 }
-plot.sme = function(X
-					, main = attr(X, "desc")
-					, xtitle = get.col.names(attr(X, "data"))
+plot.sme = function(x
+					, main = attr(x, "desc")
+					, xtitle = get.col.names(attr(x, "data"))
 					, ...
 					) {
-	V = NCOL(X);
+	V = NCOL(x);
 	v = 0;
 	while(v < V) {
 		v = v + 1;
-		cplot(X[, v, drop = FALSE]
-			, base = attr(X, "data")[, v, drop = FALSE]
+		cplot(x[, v, drop = FALSE]
+			, base = attr(x, "data")[, v, drop = FALSE]
 			, main = main
 			, xtitle = xtitle
 			, type = "p"
@@ -1201,7 +1201,7 @@ plike.contour = function(ML.init = c(), flike = NULL, alpha = 0.01, df = NULL, f
 }
 
 
-gpd.xi.constraint = function(parms, type = c("left", "right", "both"), Xtail, trsh = 0, parm.type = c("sigma", "VaR", "ES"), prob = 0.01, ...) {
+gpd.xi.constraint = function(parms, type = c("left", "right", "both"), Xtail, trsh = 0, N, parm.type = c("sigma", "VaR", "ES"), prob = 0.01, ...) {
 
 	# Set working parameters
 	type = type[1];
