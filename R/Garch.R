@@ -5,26 +5,26 @@ Garch = function(x,...) UseMethod("Garch")
 newsimp = function(x,...) UseMethod("newsimp")
 
 # extract coefficients
-coef.Garch = function(x, names=TRUE, ...){
-	cc = as.matrix(x$Results$Estimates)	
+coef.Garch = function(object, names=TRUE, ...){
+	cc = as.matrix(object$Results$Estimates)	
 	if(names)
-		rownames(cc) = rownames(x$Results)
+		rownames(cc) = rownames(object$Results)
 	cc
 }
 
 # extraact loglikelihood
-logLik.Garch = function(x, ...){
-	x$LogLik
+logLik.Garch = function(object, ...){
+	object$LogLik
 }
 
 # extract coefficients covariance matrix
-vcov.Garch = function(x, ...){
-	x$Vcov
+vcov.Garch = function(object, ...){
+	object$Vcov
 }
 
 
 
-print.Garch = function(x, digits=5){
+print.Garch = function(x, digits=5, ...){
 
 	cat(rep("=", 40), "\n",sep="")
 	cat("Model output:", "\n")
@@ -32,11 +32,11 @@ print.Garch = function(x, digits=5){
 
 	cat(rep("=", 40), "\n",sep="")
 	cat("Model Info:", "\n")
-	cat("Type:", (gg[[1]]), "\n")
-	cat("Order:", (gg[[2]]), "\n")
-	cat("LogLik:", (gg$LogLik), "\n")
-	cat("Vol_Pers:", (gg$Volatility_Persistence), "\n")
-	cat("AIC:", (gg$AIC), "\n")
+	cat("Type:", (x[[1]]), "\n")
+	cat("Order:", (x[[2]]), "\n")
+	cat("LogLik:", (x$LogLik), "\n")
+	cat("Vol_Pers:", (x$Volatility_Persistence), "\n")
+	cat("AIC:", (x$AIC), "\n")
 
 	cat(rep("=", 40), "\n",sep="")
 	cat("Mean equation:", "\n")
@@ -72,7 +72,7 @@ print.Garch = function(x, digits=5){
 # RETURNS:
 #  List of results with summary table for estimated parameters and Volatility persistence;
 #######################################################################################################################	
-Garch.default = function(x, Y=NULL, order=c(alpha=1,beta=1), phi=0, delta=0, type=c("garch","mgarch","tgarch","egarch"), prob=c("norm","ged","t")){ 
+Garch.default = function(x, Y=NULL, order=c(alpha=1,beta=1), phi=0, delta=0, type=c("garch","mgarch","tgarch","egarch"), prob=c("norm","ged","t"), ...){ 
 
 	# coerce input data to matrix and check for NA values
 	if(!is.matrix(x))
@@ -195,7 +195,7 @@ Garch.default = function(x, Y=NULL, order=c(alpha=1,beta=1), phi=0, delta=0, typ
 	fitted[, 3] = ee
 	
 	# get fitted series with Epsilon and Sigma
-	fitted[, 4:5] = Garch.proc(pars=opt$par[-(1:k)], order=order, res=ee, type=type, r=r, prob=prob)
+	fitted[, 4:5] = .Garch.proc(pars=opt$par[-(1:k)], order=order, res=ee, type=type, r=r, prob=prob)
 
 	# store original series
 	fitted[,1] = x
@@ -277,7 +277,7 @@ like.garch = function(theta, ee, x, Y, order, prob=c("norm","ged","t"), r){
 		fit = filter(fit, beta, method="r", init = rep(0, order["beta"]))	}	
 
 	# log-likelihood calculation   
-	garch.like(X=ee[-(1:length(alpha))], S=fit[-(1:max(order))], prob=prob, r=r)  
+	.garch.like(X=ee[-(1:length(alpha))], S=fit[-(1:max(order))], prob=prob, r=r)  
 	
 }
 
@@ -319,7 +319,6 @@ like.tgarch = function(theta, ee, x, Y, order, prob=c("norm","ged","t")){
 	sig0 = mean(ee^2, na.rm=TRUE) 
 	ee[1:max(order)] = sqrt(sig0)
 	
-	
 	# step sign
 	gb = as.numeric(ee<0);
    
@@ -334,7 +333,7 @@ like.tgarch = function(theta, ee, x, Y, order, prob=c("norm","ged","t")){
 	#browser()
 	
 	# log-likelihood calculation   
-	garch.like(X=ee[-(1:length(alpha))], S=fit[-(1:max(order))], prob=prob, r=r)  
+	.garch.like(X=ee[-(1:length(alpha))], S=fit[-(1:max(order))], prob=prob, r=r)  
 	
 }
 
@@ -399,7 +398,7 @@ like.egarch = function(theta, ee, x, Y, order=c(alpha=1,beta=1), prob=c("norm","
 	};
 
 	# log-likelihood calculation   
-	garch.like(X=ee[-(1:length(alpha))], S=exp(fit[-(1:max(order))]), prob=prob, r=r)  
+	.garch.like(X=ee[-(1:length(alpha))], S=exp(fit[-(1:max(order))]), prob=prob, r=r)  
 	
 }
 
@@ -442,7 +441,7 @@ like.mgarch = function(theta, x, Y, order, prob=c("norm","ged","t")){
 	 };
 
 	# log-likelihood calculation   
-	garch.like(X=ee[-(1:length(alpha))], S=fit[-(1:max(order))], prob=prob, r=r)  
+	.garch.like(X=ee[-(1:length(alpha))], S=fit[-(1:max(order))], prob=prob, r=r)  
 	
 }
 
@@ -462,12 +461,12 @@ like.mgarch = function(theta, x, Y, order, prob=c("norm","ged","t")){
 #  Plot of the News Impact Curve
 #######################################################################################################################	
 
-newsimp.default = function(X, theta, order, type=c("garch","mgarch", "egarch","tgarch"), plot=FALSE, ...){
+newsimp.default = function(x, theta, order, type=c("garch","mgarch", "egarch","tgarch"), plot=FALSE, ...){
 	
 	#browser()
 	# coerce input data to matrix
-	if(!is.matrix(X) | any(is.na(X)))
-		X = as.matrix(X[!is.na(X)])
+	if(!is.matrix(x) | any(is.na(x)))
+		x = as.matrix(x[!is.na(x)])
 
 	# check names of order vector 	
 	if(is.null(names(order)))
@@ -519,11 +518,11 @@ newsimp.default = function(X, theta, order, type=c("garch","mgarch", "egarch","t
 	}
 	
 	# get values of news impact curve
-	vv = curve(nic, from=min(X), to=max(X), cex.axis=0.8, type="n")
+	vv = curve(nic, from=min(x), to=max(x), cex.axis=0.8, type="n")
 	dev.off()	
 
 	if(plot)
-		cool.plot( vv[[2]], vv[[1]], main=paste("NIC:",mtype), ... ) 
+		cplot( vv[[2]], vv[[1]], main=paste("NIC:",mtype), ... ) 
 
 	# return results
 	cbind(Sigma = vv[[2]], Innovations = vv[[1]]) 
@@ -640,10 +639,10 @@ newsimp.Garch = function(x, plot=TRUE, ...){
 
 #################################################
 #### Statitc Prediction for Garch models ####
-predict.Garch = function(X, plot=TRUE, ...){
+predict.Garch = function(object, plot=TRUE, ...){
 	
-	ff = X$Fitted
-	cc = X$Results[,1]
+	ff = object$Fitted
+	cc = object$Results[,1]
 	se = sqrt(ff[ ,3])	
 	Returns = cbind(Returns_ME = ff[ ,2], Lower_SE = ff[ ,2] - 2*se, Upper_SE = ff[ ,2] + 2*se)
 	Var = ff[ ,4]
@@ -658,120 +657,6 @@ predict.Garch = function(X, plot=TRUE, ...){
 	res = cbind(Returns, Pred_Variance = Var)
 	
 	res
-}
-
-#### Simulate GARCH process ###
-Garch.proc = function(pars, order, res, type=c("garch", "mgarch", "tgarch", "egarch"), r, prob){
-	
-	#browser()
-	# check names of order vector 	
-	if(is.null(names(order)))
-		names(order) = c("alpha","beta")
-
-	sig0 = mean(res[-(1:max(order))]^2, na.rm=TRUE) 
-	res[1:max(order)] = sqrt(sig0)
-	
-	# get parameters
-	omega = pars[1]
-	alpha = pars[2:(order["alpha"]+1)]
-	beta = pars[(order["alpha"]+2) : (order["alpha"]+order["beta"]+1)]
-	if((match.arg(type) != "garch"))
-		phi = pars[length(pars)-2]
-	
-	# initial matrix with initial sample variance
-	fitted = matrix(NA, length(res)+max(order), 2)
-	fitted[1:max(order),] = (sig0)
-
-	if(match.arg(type) == "garch" || match.arg(type) == "mgarch"){
-		
-		i = max(order) + 1
-		while(i <= length(res) + max(order)){
-			
-			# epsilon calculation - arch component
-			fitted[i, 1] = omega + alpha %*% res[(i-1):(i - order["alpha"])]^2
-			
-			# sigma calculation - garch componentn
-			fitted[i, 2] = fitted[i, 1] + beta %*% (fitted[(i-1):(i - order["beta"]), 2])
-				
-			i = i + 1;
-		};
-
-	} else if(match.arg(type) == "tgarch") {
-		
-		## TGARCH
-		gb = as.numeric(res<0);
-		# asymetry factor
-		asym = abs(filter(res^2*gb, c(0,phi), method="c", sides=1))
-		asym[1] = sig0
-		# arch component
-		fit = omega + filter(res^2, c(0,alpha), method="c", sides=1) + asym;
-		fit[1] = sig0
-		fitted[,1] = fit
-		
-		# garch component
-		fit = filter(fit, beta, method="r", init=rep(0, order["beta"]))
-		fitted[,2] = fit
-		
-	} else {
-	
-		## EGARCH
-		exval = switch(prob,
-			"norm" = (sqrt(2/pi)) ,
-			"ged" = (gamma(2/r)/sqrt(gamma(1/r)*gamma(3/r))),
-			"t" = (sqrt((r-2))*gamma((r-1)*0.5)/gamma(0.5)*gamma(r*0.5)) 
-			);   
-
-		# run egarch equation and calculate epsilon and sigma2 separately
-		i = 1 + max(order)
-		while(i <= length(res) + max(order)){
-				
-			# epsilon calculation - arch component
-			fitted[i, 1] = omega + alpha %*% ((abs(res[(i-1):(i-max(order))])/sqrt(exp(fittted[(i-1):(i-max(order)), 1]))) - exval) + phi * (res[i-1] / sqrt(exp(fitted[i-1, 1])))
-				
-			# sigma calculation - garch component
-			fitted[i, 2] = fitted[i, 1] + beta %*% fitted[(i-1):(i-max(order)), 2]
-				
-			i = i + 1;
-			
-		};
-	
-	}
-	
-	# return new fitted series Epsilon and Sigma
-	fitted[-(1:max(order)),]
-
-}
-
-###################
-# different likelihood formulas for Normal, GED and STD-t
-garch.like = function(X, S, prob=c("norm","ged","t"), r){
-	
-	prob = match.arg(prob)
-	
-	# Lambda parameter for GED
-	if(prob == "ged")
-		lambda = sqrt( (2^(-2/r)) * gamma(1/r)/gamma(3/r));
-	
-	# switch likelihood type according to prob: norm, ged, stdT
-	l = switch(prob,
-			# normal 	
-			"norm" = 
-			 0.5 * (log(S) + (log(2*pi) + (X^2)/(S)))
-			,
-			# ged
-			"ged" = 
-			-( -0.5*log(S) +
-			log(r/lambda) - 0.5*abs((X)/(sqrt(S)*lambda))^r - (1+(1/r))*log(2) - log(gamma(1/r)) )
-			,
-			#stdT
-			"t" = 
-			- (-0.5*log(S) + 
-			log(gamma((r+1)/2) / (sqrt(pi*(r-2))*gamma(r/2))) - ((r+1)/2) * log(1+(((X^2)/S)/(r-2))) ) 
-			
-			);
-		
-	# return likelihood value
-	sum(l, na.rm=TRUE)	
 }
 
 
