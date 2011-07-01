@@ -19,13 +19,8 @@
 #  Vector of results
 #   
 ###################################################################################
-
-# General BS method
-BS.price = function(x,...) UseMethod("BS.price")
-
-
-BS.price.default=function(under, strike, rfr, sigma, maty, yield, calc.type=c("standard","lognorm","gammarec"), opt.type=c("call","put"))  
-{ 
+BS.price = function(under,...) UseMethod("BS.price")
+BS.price.default=function(under, strike, rfr, sigma, maty, yield, calc.type=c("standard","lognorm","gammarec"), opt.type=c("call","put"), ...)  { 
 	# option type
 	opt.type = match.arg(opt.type)
 	
@@ -35,11 +30,11 @@ BS.price.default=function(under, strike, rfr, sigma, maty, yield, calc.type=c("s
 	# BS calculation
 	switch(calc.type)(
 
-		"standard" = (res = BS.price.std(under, strike, rfr, sigma, maty, yield, opt.type))
+		"standard" = (res = .BS.price.std(under, strike, rfr, sigma, maty, yield, opt.type))
 			,
-		"lognorm" =	(res = BS.price.lgn(under, strike, rfr, sigma, maty, yield, opt.type))
+		"lognorm" =	(res = .BS.price.lgn(under, strike, rfr, sigma, maty, yield, opt.type))
 			,
-		"gammarec" = (res = BS.price.gamr(under, strike, rfr, sigma, maty, yield, opt.type))
+		"gammarec" = (res = .BS.price.gamr(under, strike, rfr, sigma, maty, yield, opt.type))
 	)
 	
 	# return results
@@ -59,141 +54,6 @@ BS.price.default=function(under, strike, rfr, sigma, maty, yield, calc.type=c("s
 	cat(paste("Black & Scholes price", " (", calc.type, ")", " for ", opt.type, " option:", "\n\n", sep=""));
 	Results;
 }
-
-######################################################
-BS.price.std=function(under, strike, rfr, sigma, maty, yield, opt.type=c("call","put"))  
-{ 
-	
-	opt.type = match.arg(opt.type)
-
-	# differential factor 1
-	d1 = (log(under/strike) + (rfr-yield + 0.5*sigma^2)*maty) / (sigma*sqrt(maty));
-	
-	# differential factor 2
-	d2 = d1 - sigma*sqrt(maty);
-	
-	# different calculation for "call" and "put" options
-	if (match.arg(type)=="call"){
-	
-		# call option
-		res = under*exp(-yield*maty)*pnorm(d1) - strike*exp(-rfr*maty)*pnorm(d2);
-		
-	} else {
-	
-		# put option
-		res = under*exp(-yield*maty)*pnorm(-d1) - strike*exp(-rfr*maty)*pnorm(-d2) - under*exp(-maty)+strike*exp(-rfr*maty);
-		
-	}
-
-	# return results
-	Results = cbind(Price = res, Diff_1 = d1, Diff_2 = d2);
-	
-	class(Results) = "BS.price"
-	attr(Results, "Opt_Type") = match.arg(type)
-	attr(Results, "BS_Type") = "standard"
-	attr(Results, "Under") = under
-	attr(Results, "Strike") = strike
-	attr(Results, "RiskFree") = rfr
-	attr(Results, "Volatility") = sigma
-	attr(Results, "Maturity") = maty
-	attr(Results, "Yield") = yield
-	
-	Results;
-}
-
-
-
-######################################################
-#### Black & Scholes - LogNormal ####
-BS.price.lgn=function(under, strike, rfr, sigma, maty, yield, opt.type=c("call","put"))  
-{ 
-	
-	MOMS = BS.moments(under, rfr, sigma, yield, maty)
-	
-	# differential factor 2
-	d2 = (MOMS[3,1] - log(strike)) / sqrt(MOMS[4,1])
-	
-	# differential factor 1
-	d1 = d2 + sqrt(MOMS[4,1])
-	
-	# different calculation for "call" and "put" options
-	if (match.arg(type)=="call"){
-	
-		# call option
-		res = exp(-rfr*maty) * (MOMS[1,1] * pnorm(d1)-strike*pnorm(d2))
-		
-	} else {
-	
-		# put option
-		res = exp(-rfr*maty) * (-1) * (MOMS[1,1] * pnorm(-d1)-strike*pnorm(-d2))
-		
-	}
-
-	# return results
-	Results = cbind(Price_LGN = res, Diff_1 = d1, Diff_2 = d2);
-	
-	class(Results) = "BS.price"
-	attr(Results, "Opt_Type") = match.arg(type)
-	attr(Results, "BS_Type") = "lognorm"
-	attr(Results, "Under") = under
-	attr(Results, "Strike") = strike
-	attr(Results, "RiskFree") = rfr
-	attr(Results, "Volatility") = sigma
-	attr(Results, "Maturity") = maty
-	attr(Results, "Yield") = yield
-	
-	Results;
-}
-
-######################################################
-#### Black & Scholes - Gamma reciprocal ####
-BS.price.gamr=function(under, strike, rfr, sigma, maty, yield, opt.type=c("call","put"))  
-{ 
-	# calculate moments
-	MOMS = BS.moments(under, rfr, sigma, yield, maty)
-	
-	# gamma parameters
-	alpha = (2*MOMS[2,1] - MOMS[1,1]^2) / (MOMS[2,1] - MOMS[1,1]^2)
-	beta = (MOMS[2,1] - MOMS[1,1]^2) / (MOMS[2,1]*MOMS[1,1])
-	
-	# different calculation for "call" and "put" options
-	if (match.arg(type)=="call"){
-		
-		# differential factor 1
-		d1 = pgamma(1/strike, shape=alpha-1, rate=beta, scale=beta, lower.tail=TRUE)
-		# differential factor 2
-		d2 = pgamma(1/strike, shape=alpha, rate=beta, scale=beta, lower.tail=TRUE)
-		# call option
-		res = exp(-rfr*maty) * (MOMS[1,1] * (d1) - strike * (d2))
-		
-	} else {
-		
-		# differential factor 1
-		d1 = 1-pgamma(1/strike, shape=alpha-1, rate=beta, scale=beta, lower.tail=TRUE)
-		# differential factor 2
-		d2 = 1-pgamma(1/strike, shape=alpha, rate=beta, scale=beta, lower.tail=TRUE)		
-		# put option
-		res = exp(-rfr*maty) * (-1) * (MOMS[1,1] *(-d1) - strike * (-d2))
-		
-	}
-
-	# return results
-	Results = cbind(Price_GR = res, Diff_1 = d1, Diff_2 = d2)
-	
-	class(Results) = "BS.price"
-	attr(Results, "Opt_Type") = match.arg(type)
-	attr(Results, "BS_Type") = "gammarec"
-	attr(Results, "Under") = under
-	attr(Results, "Strike") = strike
-	attr(Results, "RiskFree") = rfr
-	attr(Results, "Volatility") = sigma
-	attr(Results, "Maturity") = maty
-	attr(Results, "Yield") = yield
-	
-	Results;
-}
-
-
 #######################################################################################################################
 # FUNCTION: Black & Scholes greeks
 #
@@ -217,14 +77,14 @@ BS.price.gamr=function(under, strike, rfr, sigma, maty, yield, opt.type=c("call"
 BS.greeks = function(X=NULL, ...){
 
 	if(class(X) == "BS.price"){
-		opt.type = attr(Results, "Opt_Type") 
-		calc.type = attr(Results, "BS_Type") 
-		under = attr(Results, "Under") 
-		strike = attr(Results, "Strike") 
-		rfr = attr(Results, "RiskFree") 
-		sigma = attr(Results, "Volatility") 
-		maty = attr(Results, "Maturity") 
-		yield = attr(Results, "Yield") 
+		opt.type = attr(X, "Opt_Type") 
+		calc.type = attr(X, "BS_Type") 
+		under = attr(X, "Under") 
+		strike = attr(X, "Strike") 
+		rfr = attr(X, "RiskFree") 
+		sigma = attr(X, "Volatility") 
+		maty = attr(X, "Maturity") 
+		yield = attr(X, "Yield") 
 		# BS calculation
 		bs_price = X[1]
 		d1 = X[2]
@@ -268,8 +128,6 @@ BS.greeks = function(X=NULL, ...){
 	res;
 
 }
-
-
 #######################################################################################################################
 # FUNCTION: Black & Scholes volatility
 #
@@ -308,12 +166,8 @@ BS.ImpVol=function(P, under, strike, rfr, sigma, maty, yield, interval=c(-20, 20
 	res;
 
 }
-
-
-
-####################################################
-BS.formula=function(type=c("call","put"))  
-{ 
+# BS formula
+BS.formula=function(type=c("call","put")){ 
 	# different calculation for "call" and "put" options
 	if (match.arg(type) == "call") 
 		res = expression(under*exp(-yield*maty)*pnorm(log(under/strike) + (((rfr-yield) + 0.5*sigma^2)*maty) / (sigma*sqrt(maty))) - strike*exp(-rfr*maty)*pnorm(log(under/strike) + (((rfr-yield) + 0.5*sigma^2)*maty) / (sigma*sqrt(maty))- sigma*sqrt(maty)))
@@ -323,16 +177,15 @@ BS.formula=function(type=c("call","put"))
 	cat(paste("Black & Scholes for", match.arg(type), "options:", "\n\n"))
 	res
 }
-
-
+# BS sample moments 
 BS.moments = function(BS=NULL, under, rfr, sigma, yield, maty){
 	
 	if(class(BS) == "BS.price"){
-		under = attr(Results, "Under") 
-		rfr = attr(Results, "RiskFree") 
-		sigma = attr(Results, "Volatility") 
-		maty = attr(Results, "Maturity") 
-		yield = attr(Results, "Yield") 
+		under = attr(BS, "Under") 
+		rfr = attr(BS, "RiskFree") 
+		sigma = attr(BS, "Volatility") 
+		maty = attr(BS, "Maturity") 
+		yield = attr(BS, "Yield") 
 	}
 
 	# matrix of results
@@ -348,10 +201,7 @@ BS.moments = function(BS=NULL, under, rfr, sigma, yield, maty){
 	cat(paste("Black & Scholes Moments", "\n\n"))
 	MOMS;
 }
-
-############################################################
-##### Jarrow and Rudd (JR) Tree #####
-
+# Jarrow and Rudd (JR) Tree 
 JR.BinTree = function(Nsteps, p, under, strike, rfr, sigma, maty, yield, life, ret.steps=FALSE){
 
 	# control input arguments
@@ -408,13 +258,10 @@ JR.BinTree = function(Nsteps, p, under, strike, rfr, sigma, maty, yield, life, r
 	else
 		Results = list(Price_eval = Price_tab, Moments = MOMS, Values = cbind(B_S = BSp, LR = ev_opt), Price_Path = path)
 
-	Results
+	Results;
 
 }
-
-############################################################
-##### Cox, Ross, Rubinstein (CRR) Tree #####
-
+# Cox, Ross, Rubinstein (CRR) Tree 
 CRR.BinTree = function(Nsteps, under, strike, rfr, sigma, maty, yield, life, ret.steps=FALSE){
 	
 	# control input arguments
@@ -481,10 +328,7 @@ CRR.BinTree = function(Nsteps, under, strike, rfr, sigma, maty, yield, life, ret
 	Results
 
 }
-
-############################################################
-##### Leisen - Reimer (LR) Tree #####
-
+# Leisen - Reimer (LR) Tree 
 LR.BinTree = function(Nsteps, under, strike, rfr, sigma, maty, yield, life, ret.steps=FALSE){
 	
 	# control input arguments
@@ -555,10 +399,8 @@ LR.BinTree = function(Nsteps, under, strike, rfr, sigma, maty, yield, life, ret.
 	Results
 
 }
-
-
 # Edgeworth option price calculation
-Edgeworth.price = function(init, p, under, strike, rfr, sigma, maty, yield){
+Edgeworth.price = function(init, under, strike, rfr, sigma, maty, yield){
 	
 	init = as.matrix(init)
 	Nsteps = nrow(init)-1 
@@ -582,9 +424,8 @@ Edgeworth.price = function(init, p, under, strike, rfr, sigma, maty, yield){
 	ev_opt;
 
 }
-
 # Edgeworth distribution
-EdgeWorthDist = function(init, Nsteps){
+EdgeWorthDist = function(init, Nsteps, p=0.5){
 	
 	rowID = as.numeric(rownames(init))
 	
@@ -606,10 +447,9 @@ EdgeWorthDist = function(init, Nsteps){
 	#results
 	list(cbind(Nodes=std_init, Edge_prob=edg_prob) ,Moments=moms_f);
 }
-
-############################################################
-
+# Browniam motion simulation
 BroMot = function(nsim, T, S0=0, mi=0, sigma=1, geom=TRUE, same.rnd=TRUE, plot=FALSE, ...){
+
 	
 	mi = as.matrix(mi)
 	sigma = as.matrix(sigma)	
@@ -659,19 +499,19 @@ BroMot = function(nsim, T, S0=0, mi=0, sigma=1, geom=TRUE, same.rnd=TRUE, plot=F
 	
 	# plot simulated series
 	if(plot){
-		cool.plot(S, base=t, main="Brownian Motion", ...)
+		cplot(S, base=t, main="Brownian Motion", ...)
 		if(nser == 1){
 			if(geom)			
 				X = exp(mi*t) else
 					X = mi*t
-			cool.plot(X, base=t*T, col="red", append=TRUE, show.legend=FALSE, ...)
+			cplot(X, base=t*T, col="red", append=TRUE, show.legend=FALSE, ...)
 		}
 	}
 		
 	# return simulated series
 	invisible(S)
 }
-
+# Browniam motion simulation bi-dimensional
 BroMot2D = function(nsim, T, S0, mi, sigma, geom=TRUE, same.rnd=FALSE, laydisp=NULL, plot=TRUE, ...){
 	
 	mi = as.matrix(mi)
@@ -693,24 +533,23 @@ BroMot2D = function(nsim, T, S0, mi, sigma, geom=TRUE, same.rnd=FALSE, laydisp=N
 		if(is.null(laydisp))
 			laydisp = c(floor(pos/2), ceiling(pos/2)-1)
 		par(mfrow=laydisp)
-		nn = paste("BM_", 1:nser, "-Drift=", alpha, ",Sigma=", sigma, sep="" )
+		nn = paste("BM_", 1:nser, "-Drift=", mi, ",Sigma=", sigma, sep="" )
 		
 		for(i in 1:pos)
 		
-			cool.plot(BM[,elem[1,i]], BM[,elem[2,i]], main=paste(nn[elem[1,i]], nn[elem[2,i]], sep="<-->"), cex.main=0.5, cex.axis=0.5, ...)
+			cplot(BM[,elem[1,i]], BM[,elem[2,i]], main=paste(nn[elem[1,i]], nn[elem[2,i]], sep="<-->"), cex.main=0.5, cex.axis=0.5, ...)
 	
 	} else {
 	
-		nn = paste("BM_", 1:nser, "-- Drift=", alpha, ", Sigma=", sigma, sep="" )
-		cool.plot(BM[,1], (seq(0, 1, length.out=nsim) / nsim), main = nn, ...)
+		nn = paste("BM_", 1:nser, "-- Drift=", mi, ", Sigma=", sigma, sep="" )
+		cplot(BM[,1], (seq(0, 1, length.out=nsim) / nsim), main = nn, ...)
 	
 	}
 	
 	invisible(BM)
 		
 }
-
-########################
+# Probability density function for hittin barriers
 PDFHit = function(t, B=0, S0=0, mi, sigma, cumul=FALSE, plot=FALSE, ...){
 	
 	# check if barrier is above starting point
@@ -734,13 +573,12 @@ PDFHit = function(t, B=0, S0=0, mi, sigma, cumul=FALSE, plot=FALSE, ...){
 		# main title
 		main = paste( ifelse(cumul,"CDF","PDF"), "-> N=", length(t), "; Mi=",mi, "; Sigma=",sigma, "; S0=", S0, "; B=", B, sep="")
 		# plot function
-		cool.plot(pd, main=main, xtitle="t", ytitle=ifelse(cumul, expression(G(t,S0,B)),expression(g(t,S0,B))), ...)
+		cplot(pd, main=main, xtitle="t", ytitle=ifelse(cumul, expression(G(t,S0,B)),expression(g(t,S0,B))), ...)
 	}
 	
 	invisible(pd)
 }
-
-#### Probability of hitting barrier
+# Probability of hitting barrier
 ProbHit = function(B=0, S0=0, mi, sigma){
 
 	# double barrier
@@ -786,8 +624,7 @@ ProbHit = function(B=0, S0=0, mi, sigma){
 	ph; 
 	
 }
-
-#### First hit time
+# First hit time
 FirstHit = function(B, S0, mi, geom=FALSE, sigma=NULL){
 
 	# check sigma parameters
@@ -801,7 +638,7 @@ FirstHit = function(B, S0, mi, geom=FALSE, sigma=NULL){
 		
 		if(geom){
 			if(mi < 0.5*sigma^2)
-				ht = (1/(0.5*sigma^2-mi)) * log(So/B) else
+				ht = (1/(0.5*sigma^2-mi)) * log(S0/B) else
 					ht = Inf
 		} else {
 			if(mi<0)
@@ -841,19 +678,13 @@ FirstHit = function(B, S0, mi, geom=FALSE, sigma=NULL){
 	ht;
 	
 }
-
-
-############################################################
-############################################################
-
-## Edgeworth factor
+# Edgeworth factor
 EdgeFact = function(x, s, k){
 	
 	1 + s * (x^3-3*x) + (k-3) * (x^4-6*x^2+3)/24 + s^2*(x^6-15*x^4+45*x^2-15)/72
 	
 	}
-
-## Sample moments
+# Sample moments
 SampMom = function(P, X, moms=1:2){
 	
 	res = matrix(NA, length(moms), 1)
@@ -867,17 +698,14 @@ SampMom = function(P, X, moms=1:2){
 	
 	res
 }
-
-## Binomial coefficient
+# Binomial coefficient
 BinCoef = function(N, n){
 	factorial(N) / (factorial(N-n)*factorial(n))
 }
-
-## Peizer-Pratt Inversion formula
+# Peizer-Pratt Inversion formula
 InvPP = function(z, n){
 	0.5 + sign(z) * sqrt(0.25 - 0.25*exp( -(z/(n+(1/3)+(0.1/(n+1))) )^2 * (n+(1/6))))
 }
-
 # Create Step probability matrix 
 StepMat = function(init, n_step, up, down){
 	
