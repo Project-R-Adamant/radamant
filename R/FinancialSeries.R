@@ -45,17 +45,17 @@ as.fs = function(X, SName = "", Symbol = "") {
 }
 
 # Print for class 'fs'
-print.fs = function(X) {
+print.fs = function(x, ...) {
 	
-	show(X[, , drop = FALSE]);	
-	cat("Financial Time Series:", attr(X, "SName"), "\n");
-	cat("Stock Symbol:", attr(X, "Symbol"), "\n");
-	cat("Time Period: from", rownames(X)[1], "to", rownames(X)[NROW(X)], "\n");
+	show(x[, , drop = FALSE]);	
+	cat("Financial Time Series:", attr(x, "SName"), "\n");
+	cat("Stock Symbol:", attr(x, "Symbol"), "\n");
+	cat("Time Period: from", rownames(x)[1], "to", rownames(x)[NROW(x)], "\n");
 }
 
 # Plot for class 'fs' (financial series)
-plot.fs = function(X, ...) {
-	fin.plot(X, ...)
+plot.fs = function(x, ...) {
+	fin.plot(x, ...)
 }
 
 combine.fs = function(..., which = "Close") {
@@ -225,7 +225,7 @@ hroi = function(X
 			n = n + 1;
 			
 			# Compute Returns
-			ret = Ret(X[, v, drop = F], lag = lvec[n], log = log, na.rm = TRUE);
+			ret = Ret(X[, v, drop = FALSE], lag = lvec[n], log = log, na.rm = TRUE);
 			# Compute Average Return
 			res[[v]][n, 1] = mean(ret, na.rm = TRUE);
 			res[[v]][n, 2:3] = VaR(ret, probf = VaR.type, p = c(1-p, p), ...);
@@ -239,9 +239,9 @@ hroi = function(X
 	res
 }
 
-plot.roi = function(X, main = "Historical Return on Investment", xtitle = "Lag", ...) {
-	for(n in 1:length(X)) {
-		cplot(100*X[[n]]
+plot.roi = function(x, main = "Historical Return on Investment", xtitle = "Lag", ...) {
+	for(n in 1:length(x)) {
+		cplot(100*x[[n]]
 				, new.device = TRUE
 				, main = main
 				, xtitle = xtitle
