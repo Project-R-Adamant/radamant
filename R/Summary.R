@@ -271,11 +271,11 @@ JB.test = function(X, plot.hist=FALSE) {
 ####################################################
 
 ## SUMMARY & DENSITY ##
-Sum.dens = function(x) {
-	sry=summary(x)
-	plot(density(x),main="Density",lwd=2,cex.lab=0.8,cex.axis=0.8)
+Sum.dens = function(x, ...) {
+	sry = summary(x)
+	plot(density(x),main="Density",lwd=2,cex.lab=0.8,cex.axis=0.8, ...)
 	abline(v=sry, col=heat.colors(6),lwd=1.5)
-	legend("topright", inset=.05, title="Legend", names(sry), fill=heat.colors(6), horiz=F, cex = 0.6, pt.cex = cex)
+	legend("topright", inset=.05, title="Legend", names(sry), fill=heat.colors(6), horiz=FALSE, cex = 0.6, pt.cex = 0.6, ...)
 }
 
 
