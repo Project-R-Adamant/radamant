@@ -3,14 +3,33 @@
 ######### transform input data according to weight of evidence #######
 input2woe = function(data, nseg, woe, na.replace, seg.type=c("freq_equal", "width_equal")){
 	
-	#if(class(woe) != "WoE"){
-	#	cat("'~' Object must be of class 'WoE'")
-	#	return(NULL)
-	#}
-	
 	seg.type = match.arg(seg.type)
-	# factorise data
-	SEGM = Factorise(data, nseg, na.replace, seg.type=seg.type)
+
+	if(is.matrix(data))
+		numid = apply(data, 2, is.numeric)
+	else
+		numid = sapply(data, is.numeric)
+
+	# number of input variables 
+	nvars = NCOL(data)
+	
+	catid = (1:nvars)[!numid]
+	ncat = length(catid)
+	
+	## factorise numerical variables (if any)
+	if(length(numid) > 0)
+		temp = Factorise(data[, numid], nseg, na.replace, seg.type=seg.type)
+	
+	SEGM = matrix(NA, NROW(temp), NCOL(temp)+ifelse(ncat>0, ncat, 0) )
+	colnames(SEGM) = character(ncol(SEGM))
+	
+	SEGM[ , 1:NCOL(temp)] = temp
+	colnames(SEGM)[1:NCOL(temp)] = colnames(temp)
+	SEGM[ , (NCOL(temp)+1):NCOL(SEGM)] = data[ ,catid]
+	colnames(SEGM)[(NCOL(temp)+1):NCOL(SEGM)] = colnames(data)[catid]
+	
+	rm(temp)
+
 	# convert fator data to weight of evidence
 	res = factor2woe(SEGM, woe)
 	
@@ -45,14 +64,30 @@ factor2woe = function(segm, woe){
 ## Calculate weight of evidence for a matrix with target variable
 WeightEvid = function(data, target, nseg, missing=FALSE, na.replace=NULL){
 	
-	if(!is.matrix(data))
-		data = as.matrix(data)
-
+	if(is.matrix(data))
+		numid = apply(data, 2, is.numeric)
+	else
+		numid = sapply(data, is.numeric)
+		
 	# number of input variables 
 	nvars = NCOL(data)
 	
-	## factorise variable
-	SEGM = Factorise(data, nseg, na.replace)
+	catid = (1:nvars)[!numid]
+	ncat = length(catid)
+	
+	## factorise numerical variables (if any)
+	if(length(numid) > 0)
+		temp = Factorise(data[, numid], nseg, na.replace)
+	
+	SEGM = matrix(NA, NROW(temp), NCOL(temp)+ifelse(ncat>0, ncat, 0) )
+	colnames(SEGM) = character(ncol(SEGM))
+	
+	SEGM[ , 1:NCOL(temp)] = temp
+	colnames(SEGM)[1:NCOL(temp)] = colnames(temp)
+	SEGM[ , (NCOL(temp)+1):NCOL(SEGM)] = data[ ,catid]
+	colnames(SEGM)[(NCOL(temp)+1):NCOL(SEGM)] = colnames(data)[catid]
+	
+	rm(temp)
 	
 	# check the presence of NAs for each segmented variable
 	if(missing){
@@ -77,11 +112,13 @@ WeightEvid = function(data, target, nseg, missing=FALSE, na.replace=NULL){
 	}
 	
 	# allocate matrix for weigth of evidence results
-	WOE = (matrix(NA, sum(nvars * nseg) + ifelse(nna > 0, nna, 0) , 12))
-	colnames(WOE) = c("Variable", "Segment", "Obs", "PC.Obs", "Good", "PC.Good", "Zero", "Pc.Zero", "Rate", "Weight.Evidence" ,"Info.Value.Within", "Info.Value")
+	numclass = sum(apply(SEGM, 2, function(x) length(unique(x))))
+	
+	WOE = (matrix(NA, numclass + ifelse(nna > 0, nna, 0) , 12))
+	colnames(WOE) = c("Variable", "Segment", "Obs", "PC.Obs", "Good", "PC.Good", "Bad", "Pc.Bad", "Rate", "Weight.Evidence" ,"Info.Value.Within", "Info.Value")
 	
 	## overall target information from the data
-	N = NROW(data)
+	N = NROW(SEGM)
 	# number of goods
 	overall.one = sum(target)
 	# number of bads
@@ -259,7 +296,7 @@ Factorise = function(X, nseg, seg.type = c("freq_equal", "width_equal"), na.repl
 	
 	names(BR) = colnames(BIN)
 	attr(BIN, "Breaks") = BR
-	#class(BIN) = "Factorise"
+	class(BIN) = "Factorise"
 	
 	invisible(BIN);
 
@@ -279,7 +316,7 @@ print.Factorise = function(x, ...){
 
 	res[,1] = unique(nn)
 
-	for(i in 1:ncol(res)){
+	for(i in 1:nrow(res)){
 	
 		res[i, -1] = unlist(br[which(!is.na(match(nn, res[i,1])))])
 	}	
@@ -294,12 +331,12 @@ print.Factorise = function(x, ...){
 
 
 ## extract specificied break from an object of class Factorise
-extrBreak = function(var){
+extrBreak = function(var, Factors){
 	
 	if(!is.character(var))
 		var = as.character(var)
 	
-	br = lapply(attr(x, "Breaks"), function(x) paste(round(x,3), collapse=" ") )
+	br = lapply(attr(Factors, "Breaks"), function(x) paste(round(x,3), collapse=" ") )
 	nn = sapply(strsplit(names(br), "__"), function(x) x[[1]])
 	nb = sapply(strsplit(names(br), "__"), function(x) x[[2]])
 	
@@ -318,79 +355,106 @@ extrBreak = function(var){
 }
 
 
+Score.card = function(Y, X, nseg=2){
+	
+	# get ids of numerical variables
+	numid = which( sapply(X, is.numeric) )
+	catid = which( sapply(X, function(x) !is.numeric(x)) ) 
+	
+	if(length(numid) > 0){
+		
+		# calculate Weight of Evidence
+		woe = WeightEvid(X, Y, nseg, missing = FALSE, na.replace=NULL)
+		# replace original data with weight of evidence
+		X = input2woe(X, nseg, woe, na.replace=0)
+		# assign names to new data
+		colnames(X) = unique(woe[,1])
+		
+		# count number of rows to allocate for both numerical and categorical variables
+		numrow = nrow(woe) 
+		catrow = ifelse(length(catid)==0, 0, sum(apply(X[, catid, drop=FALSE], 2, function(x) length(unique(x))))-length(catid))
+		
+		# allocate matrix for overall Scorecard results
+		SC = matrix(NA, nrow(woe), 8)
+		
+		SC[, 1:2] = woe[, 1:2]
+		SC[, 3] = woe[, 10]
+		
+	} else {
+		
+		# allocate matrix for Scorecard results (only categorical variables)
+		SC = matrix(NA, sum(apply(X, 2, function(x) length(unique(x)))), 8)
+		
+	}
 
-
-
-Score.card = function(Y, X, woe){
-
-	SC = matrix(NA, nrow(woe), 8)
 	colnames(SC) = c("Variable", "Segment", "WoE", "Est.Coef", "Wald-Z", "P-Val", "Score", "Round.Score")
 
 	##Run Logistic Regression to calculate the parameter estimates
-	model <- glm(Y ~., data = as.data.frame(X), family=binomial(link="logit"))
-
-	SC[ ,1:2] = (woe[,1:2])
-	SC[ ,3] = woe[ ,10]
+	model = glm(Y ~., data = as.data.frame(X), family=binomial(link="logit"))
 
 	reg.res = summary(model)$coefficients
 
-	# number of coeffs
+	
+	# number of coeffs for numerical variables
 	k = nrow(reg.res)
 
 	i = 2
-	while(i <= nrow(reg.res)){
+	while(i <= k){
 
 		idx = which(!is.na(match(SC[ ,1], rownames(reg.res)[i])))
-		SC[idx ,4] = round(reg.res[i ,2], 5)
-		SC[idx ,5] = round(reg.res[i ,3], 5)	
-		SC[idx ,6] = round(reg.res[i ,4], 5)
+		SC[ ,4][idx] = round(reg.res[i ,2], 5)
+		SC[ ,5][idx] = round(reg.res[i ,3], 5)
+		SC[ ,6][idx] = round(reg.res[i ,4], 5)
+		
 		i = i + 1
-	
 	}
 
 	SC[ ,7] = round( -(as.numeric(SC[ ,3]) * as.numeric(SC[ ,4])+reg.res[1 ,1]/k) * 100, 5)
 	
 	SC[ ,8] = round(as.numeric(SC[ ,7]), 0)
 
+	
+	# matrix of results
 	Results = list(Scorecard = as.data.frame(SC), 
 			Model = model, 
 			WeightOfEvidence = woe);
 	
 	class(Results) = "scorecard"
 
+	cleanup(keep="Results");
 	Results;
 
 }
 
 
-summary.scorecard = function(sc, plot=FALSE, ...){
+summary.scorecard = function(object, plot=FALSE, ...){
 
 	# confusion matrix
-	cmat = round(confusionM(sc, th=0.5)[[1]], 2)
+	cmat = round(confusionM(object, th=0.5)[[1]], 2)
 
 	# accuracies
-	acc = round(accuracy(sc, 0.5), 2)
+	acc = round(accuracy(object, 0.5), 2)
 	
-	pred = (1/(1+exp(-predict(sc[[2]]))))
-	target = sc[[2]]$y
+	pred = (1/(1+exp(-predict(object[[2]]))))
+	target = object[[2]]$y
 
 	# ROC info
-	rocinfo = rbind(SomerD = SomerD(target, pred),t(KendallTau(target, pred)),Gamma = 	GKgamma(target, pred), Gini = Gini(sc))
+	rocinfo = rbind(SomerD = SomerD(target, pred),t(KendallTau(target, pred)),Gamma = 	GKgamma(target, pred), Gini = Gini(object))
 	
 	if(plot){
 		par(mfrow=c(2,2))
-		Lift(sc)
-		Gain(sc)
-		ROCplot(sc)
+		Lift(object)
+		Gain(object)
+		ROCplot(object)
 	}
 	
-	list(Results = sc[[1]], Confusion_Matrix = cmat, Accuracy = acc, ROC = rocinfo)
+	list(Results = object[[1]], Confusion_Matrix = cmat, Accuracy = acc, ROC = rocinfo)
 }
 
 #############################################################################
-confusionM = function(x, ...) UseMethod("confusionM")
+confusionM = function(target, ...) UseMethod("confusionM")
 
-confusionM.default = function(orig, pred, th){
+confusionM.default = function(target, pred, th, ...){
 
 	rec = pred <= th
 
@@ -438,16 +502,16 @@ confusionM.default = function(orig, pred, th){
 }
 
 
-confusionM.scorecard = function(x, th){
+confusionM.scorecard = function(target, th, ...){
 
-	pred = (1/(1+exp(-predict(x[[2]]))))
+	pred = (1/(1+exp(-predict(target[[2]]))))
 
-	confusionM.default(orig=x[[2]]$y, pred=pred , th)
+	confusionM.default(target=target[[2]]$y, pred=pred , th)
 }
 
 accuracy = function(x, ...) UseMethod("accuracy")
 
-accuracy.scorecard = function(x, th){
+accuracy.scorecard = function(x, th, ...){
 
 	#cat("Accuracy measures: \n")
 	confusionM(x , th)$Accuracy
@@ -591,13 +655,13 @@ GKgamma = function(target, pred, ...){
 
 ROCplot = function(x, ...) UseMethod("ROCplot")
 
-ROCplot.scorecard = function(sc){
+ROCplot.scorecard = function(x, ...){
 
 	TH = seq(0, 1, length.out=100)
 	tab = matrix(0, 2, length(TH))
 
 	for(i in 1:length(TH)){
-		acc = accuracy(sc, th=TH[i])
+		acc = accuracy(x, th=TH[i])
 		tab[1,i] = acc[ ,4]
 		tab[2,i] = acc[ ,5]
 	}
@@ -623,17 +687,17 @@ ROCplot.scorecard = function(sc){
 Lift = function(x, ...) UseMethod("Lift")
 Gain = function(x, ...) UseMethod("Gain")
 
-Lift.scorecard = function(sc, pc=0.1, ...){
+Lift.scorecard = function(x, pc=0.1, ...){
 	
-	pred = (1/(1+exp(-predict(sc[[2]]))))
+	pred = (1/(1+exp(-predict(x[[2]]))))
 
 	ordid = order(pred, decreasing=TRUE)
-	ordtg = sc[[2]]$y[ordid]
+	ordtg = x[[2]]$y[ordid]
 
 	n = length(ordid)
 	
-	TG = sum(sc[[2]]$y)
-	TPG = sum(sc[[2]]$y) / n
+	TG = sum(x[[2]]$y)
+	TPG = sum(x[[2]]$y) / n
 
 	probs=seq(0, 1, pc)
 	segs = quantile(1:n, probs=probs)
@@ -646,7 +710,7 @@ Lift.scorecard = function(sc, pc=0.1, ...){
 		i = i + 1
 	}
 	
-	cplot(lift, base=probs*100, col="red", lwd=2, main="Lift chart", ytitle="Lift", xtitle="Pop_segments", legend="Lift")
+	cplot(lift[-1], base=probs[-1]*100, col="red", lwd=2, main="Lift chart", ytitle="Lift", xtitle="Pop_segments", legend="Lift")
 	abline(h=1, col="green", lty=4)
 	
 	invisible(lift)
@@ -654,17 +718,17 @@ Lift.scorecard = function(sc, pc=0.1, ...){
 }
 
 
-Gain.scorecard = function(sc, pc=0.1, ...){
+Gain.scorecard = function(x, pc=0.1, ...){
 	
-	pred = (1/(1+exp(-predict(sc[[2]]))))
+	pred = (1/(1+exp(-predict(x[[2]]))))
 
 	ordid = order(pred, decreasing=TRUE)
-	ordtg = sc[[2]]$y[ordid]
+	ordtg = x[[2]]$y[ordid]
 	
 	n = length(ordid)
 		
-	TG = sum(sc[[2]]$y)
-	TPG = sum(sc[[2]]$y) / n
+	TG = sum(x[[2]]$y)
+	TPG = sum(x[[2]]$y) / n
 	
 	probs=seq(0, 1, pc)
 	segs = quantile(1:n, probs=probs)
@@ -689,10 +753,12 @@ Gain.scorecard = function(sc, pc=0.1, ...){
 
 Gini = function(x, ...) UseMethod("Gini")
 
-Gini.scorecard = function(sc, glob=TRUE, ...){
+Gini.scorecard = function(x, glob=TRUE, ...){
 	
-	tab = apply(sc[[3]][,-(1:2)], 2, as.numeric)
+	# extract table with needed information for Gini calculation
+	tab = apply(x[[3]][,-(1:2)], 2, as.numeric)
 
+	# calculate Gini for the entire model
 	if(glob){
 	
 		tab = tab[order(tab[,7]),]
@@ -704,13 +770,15 @@ Gini.scorecard = function(sc, glob=TRUE, ...){
 		return(gini)
 		
 	} else {
-
-		group = sc[[3]][,1:2] 
+		
+		## calculate Gini for each variable separately
+		# get variable group
+		group = x[[3]][,1:2] 
 		gid = unique(group[, 1])
-	
+		# allocate matrix of results
 		gini = matrix(NA, length(gid), 1)
 		dimnames(gini) = list(gid, "Gini")
-
+		# loop through each variable and calculate corresponding Gini
 		for(i in 1:length(gid)){
 
 			lab = which(!is.na(match(group[,1], gid[i])))
@@ -723,7 +791,28 @@ Gini.scorecard = function(sc, glob=TRUE, ...){
 		
 		}
 	
+		cleanup(keep = "gini")	
 		return(gini)
 	}
 	
+}
+
+
+Gini.default = function(x, ...){
+	
+	# calculate "rate" if needed
+	if(ncol(x) == 2)
+		x = cbind(x, apply(x, 1, function(x) x[1]/sum(x)) ) 
+
+	# calculate Gini for the entire model based on the info table provided
+	x = x[order(x[,3]),]
+	cumgood = cumsum(x[,1]/sum(x[,1]))
+	temp =  c(0, cumgood[-length(cumgood)])
+	
+	# Gini formula
+	gini = (2*(1 - (sum((x[,3]/sum(x[,3]))*((cumgood + temp)/2))))) - 1
+	
+	cleanup(keep = "gini")	
+
+	gini
 }
