@@ -31,23 +31,23 @@ impulse = function(N, value = 1) {
 # RETURNS:
 #  Void
 #######################################################################################################################
-plot.ma = function(MovAv, X = NULL, main = attr(MovAv, "desc"), ...) {
-	if(!is.null(X)) {
+plot.Movav = function(x, fs = NULL, main = attr(x, "desc"), ...) {
+	if(!is.null(fs)) {
 	
 		padding = NULL;
 		# Check for data length consistency
-		if(NROW(X) != NROW(MovAv)) {
-			if(NROW(X) < NROW(MovAv)) {
-				stop("Argument 'MovAv' has more rows than argument 'X'");
+		if(NROW(fs) != NROW(x)) {
+			if(NROW(fs) < NROW(x)) {
+				stop("Argument 'x' has more rows than argument 'X'");
 			}
 			# Padding with NA
-			padding = matrix(NA, nrow = NROW(X)-NROW(MovAv), ncol = NCOL(MovAv));
+			padding = matrix(NA, nrow = NROW(fs)-NROW(x), ncol = NCOL(x));
 		} 
 	
-		if(class(X) == "fs") {
+		if(class(fs) == "fs") {
 			# Combine Close and Moving Average on the top plot, show the Volume on the bottom plot
-			Z = cbind(X[, c("Volume", "Close")], rbind(padding, MovAv));
-			colnames(Z)[2] = attr(X, "SName");
+			Z = cbind(fs[, c("Volume", "Close")], rbind(padding, x));
+			colnames(Z)[2] = attr(fs, "SName");
 			fin.plot(Z
 					, top.vars = colnames(Z)[-1]
 					, snames = NULL
@@ -55,11 +55,11 @@ plot.ma = function(MovAv, X = NULL, main = attr(MovAv, "desc"), ...) {
 					, ...
 					)
 		} else {
-			# Combine X and Moving Average on one plot
-			cplot(cbind(X, MovAv), main = main, ...);
+			# Combine fs and Moving Average on one plot
+			cplot(cbind(fs, x), main = main, ...);
 		}
 	} else {
-		cplot(MovAv, main = main, ...);
+		cplot(x, main = main, ...);
 	}
 }
 
@@ -220,106 +220,10 @@ movVar = function(X, win.size = 1, ...) {
 
 
 #######################################################################################################################
-# FUNCTION: movav
+# FUNCTION: Movav
 #
 # SUMMARY:
-# Generic Moving Average (MA filter). Computes a FIR filtering on each column of the input data
-#
-# PARAMETERS:
-# - X: Matrix of data series (one column per variable). For financial time series (class = 'fs'), only 'Close' column is processed.
-# - weights: Vector of FIR coefficients. equivalent to the 'filter' parameter of the filter function (DEFAULT = 1). 
-# - padding: Padding value to fill transient of result (output data rows from 1 to win.size-1). (DEFAULT = 0)
-# - rm.transient: LOGICAL. If TRUE, transient is removed, otherwise func is applied to the transient. (DEFAULT = FALSE)
-# - normalize.weights: LOGICAL. If TRUE, FIR coefficients are normalized to get sum(weights) = 1 (DEFAULT = FALSE) 
-# - type: Charachter attribute attached to the result (DEFAULT: "MA")
-#
-# RETURNS:
-#  A object of class 'ma' with attributes 'type' and 'weights' as given by the corresponding input parameters:
-#  - matrix of size NROW(X) by NCOL(X) where each column is the moving average of the corresponding column of X.
-#   
-#######################################################################################################################
-movav = function(X, weights = 1, padding = 0, rm.transient = FALSE, normalize.weights = FALSE, type = "MA", desc = "Moving Average", plot = FALSE, ...) {
-
-	# Window size
-	win.size = length(weights);
-
-	# Check if input is an instance of the Financial Series class
-	fs.flag = FALSE;
-	if(class(X) == "fs") {
-		fs.flag = TRUE;
-		# Take a copy
-		Y = X;
-		# Process Close data
-		X = Y[, "Close", drop = FALSE];
-		# Assign Column Name
-		colnames(X) = attr(Y, "SName");
-	}
-	
-	# Data dimensions
-	N = NROW(X);
-	V = NCOL(X);
-	if(is.null(dim(X)))
-		dim(X) = c(N, V);
-	
-	# Declare output
-	res = matrix(padding, nrow = N, ncol = V);
-	colnames(res) = get.col.names(X);
-	rownames(res) = get.row.names(X);
-	
-	# Normalize weights to have unitary norm
-	if(normalize.weights)
-		weights = weights / sum(weights);
-		
-	# Apply moving average (filter)
-	res[, ] = filter(X
-					, filter = weights
-					, sides = 1
-					, method = "convolution"
-					);
-	
-	# Filter function does not calculate transient (data points 1:win.size)
-	transient.idx = seq(ifelse(rm.transient[1], win.size, 1), win.size-1, len = ifelse(rm.transient[1], 0, win.size-1));
-	Tlen = length(transient.idx);
-	# Apply moving window filter to each single serie separately
-	v = 0;
-	while(v < V) {
-		v = v + 1;
-		n = 0;
-		while(n < Tlen) {
-			n = n + 1;
-			i = transient.idx[n];
-			res[i, v] = sum(weights[1:i] * X[i:max(i-win.size+1, 1), v], na.rm = TRUE);
-		}
-	}
-#	for(v in seq(1, V, len = V))
-#		for(n in transient.idx)
-#			res[n, v] = sum(weights[1:n] * X[n:max(n-win.size+1, 1), v], na.rm = TRUE);
-	
-	class(res) = "ma";
-	attr(res, "weights") = weights;
-	attr(res, "type") = type;
-	attr(res, "desc") = desc;
-	
-	# Plot Results if required
-	if(plot)
-		plot(res
-			, X = if(fs.flag) Y else X
-			, ...
-			);
-			
-	# Cleanup memory
-	cleanup(keep = "res");
-	
-	# Return result
-	res
-
-}
-
-#######################################################################################################################
-# FUNCTION: Mmovav
-#
-# SUMMARY:
-# Generic Multiple Moving Average (MA filter). Computes multiple FIR filtering on each column of the input data
+# Generic (Multiple) Moving Average (MA filter). Computes multiple FIR filtering on each column of the input data
 #
 # PARAMETERS:
 # - X: Matrix of data series (one column per variable). For financial time series (class = 'fs'), only 'Close' column is processed.
@@ -332,7 +236,9 @@ movav = function(X, weights = 1, padding = 0, rm.transient = FALSE, normalize.we
 #  - matrix of size NROW(X) by NCOL(X)*length(win.size) where each column is the moving average of length win.size[i] of the corresponding column of X.
 #   
 #######################################################################################################################
-Mmovav = function(X, win.size = NULL, func = NULL, type = "MA", desc = "Moving Average", plot = FALSE, ...) {
+Movav = function(X, ...) UseMethod("Movav")
+
+Movav.default = function(X, win.size = NULL, func = NULL, type = "MA", desc = "Moving Average", plot = FALSE, ...) {
 
 	if(length(win.size) == 0)
 		stop("Argument 'win.size' has zero length.");
@@ -378,19 +284,17 @@ Mmovav = function(X, win.size = NULL, func = NULL, type = "MA", desc = "Moving A
 	w = 0;
 	while(w < W) {
 		w = w + 1;
-		res[, 1:V + V*(w-1)] = movav(X, weights = func(win.size[w]), type = type, desc = desc, ...);
+		res[, 1:V + V*(w-1)] = .genmovav(X, weights = func(win.size[w]), type = type, desc = desc, ...);
 	}
-#	for(w in 1:W)
-#		res[, 1:V + V*(w-1)] = movav(X, weights = func(win.size[w]), type = type, ...);
 	
-	class(res) = "ma";	
+	class(res) = "Movav";	
 	attr(res, "type") = type;
 	attr(res, "desc") = desc;
 	attr(res, "win.size") = win.size;
 
 	if(plot)
-		plot(res
-			, X = if(fs.flag) Y else X
+		plot(x = res
+			, fs = if(fs.flag) Y else X
 			, ...
 			);
 	
@@ -550,15 +454,15 @@ ss.sym = function(X, F = NULL, G = NULL, H = NULL, D = NULL, init = 0, SLen = if
 # PARAMETERS:
 # - X: Matrix of data series (one column per variable). For financial time series (class = 'fs'), only 'Close' column is processed.
 # - win.sizes: vector of moving average window sizes (lags) to be applied on the data X. (DEFAULT = 10). 
-# - ...: Additional parameters accepted by the function Mmovav.
+# - ...: Additional parameters accepted by the function Movav.
 #
 # RETURNS:
-#  A object of class 'ma' with attributes type = "SMA" and 'win.size' as given by the corresponding input parameter:
+#  A object of class 'Movav' with attributes type = "SMA" and 'win.size' as given by the corresponding input parameter:
 #  - matrix of size NROW(X) by NCOL(X)*length(win.size) where each column is the moving average of length win.size[i] of the corresponding column of X.
 #   
 #######################################################################################################################
 sma = function(X, win.size = 10, plot = FALSE, ...) {
-	Mmovav(X
+	Movav(X
 			, win.size = win.size
 			, type = "SMA"
 			, desc = "Simple Moving Average"
@@ -578,10 +482,10 @@ sma = function(X, win.size = 10, plot = FALSE, ...) {
 # PARAMETERS:
 # - X: Matrix of data series (one column per variable). For financial time series (class = 'fs'), only 'Close' column is processed.
 # - win.sizes: vector of moving average window sizes (lags) to be applied on the data X. (DEFAULT = 10). 
-# - ...: Additional parameters accepted by the function Mmovav.
+# - ...: Additional parameters accepted by the function Movav.
 #
 # RETURNS:
-#  A object of class 'ma' with attributes type = "TMA" and 'win.size' as given by the corresponding input parameter:
+#  A object of class 'Movav' with attributes type = "TMA" and 'win.size' as given by the corresponding input parameter:
 #  - matrix of size NROW(X) by NCOL(X)*length(win.size) where each column is the moving average of length win.size[i] of the corresponding column of X.
 #   
 #######################################################################################################################
@@ -595,7 +499,7 @@ tma = function(X, win.size = 10, plot = FALSE, ...) {
 		}
 	}
 	
-	Mmovav(X
+	Movav(X
 			, win.size = win.size
 			, type = "TMA"
 			, desc = "Triangular Moving Average"
@@ -616,15 +520,15 @@ tma = function(X, win.size = 10, plot = FALSE, ...) {
 # PARAMETERS:
 # - X: Matrix of data series (one column per variable). For financial time series (class = 'fs'), only 'Close' column is processed.
 # - win.sizes: vector of moving average window sizes (lags) to be applied on the data X. (DEFAULT = 10). 
-# - ...: Additional parameters accepted by the function Mmovav.
+# - ...: Additional parameters accepted by the function Movav.
 #
 # RETURNS:
-#  A object of class 'ma' with attributes type = "WMA" and 'win.size' as given by the corresponding input parameter:
+#  A object of class 'Movav' with attributes type = "WMA" and 'win.size' as given by the corresponding input parameter:
 #  - matrix of size NROW(X) by NCOL(X)*length(win.size) where each column is the moving average of length win.size[i] of the corresponding column of X.
 #   
 #######################################################################################################################
 wma = function(X, win.size = 10, plot = FALSE, ...) {
-	Mmovav(X
+	Movav(X
 			, win.size = win.size
 			, type = "WMA"
 			, desc = "Weighted Moving Average"
@@ -650,7 +554,7 @@ wma = function(X, win.size = 10, plot = FALSE, ...) {
 # - ...: Additional parameters for future development.
 #
 # RETURNS:
-#  A object of class 'ma' with attributes type = "EMA" and 'win.size' as given by the corresponding input parameter:
+#  A object of class 'Movav' with attributes type = "EMA" and 'win.size' as given by the corresponding input parameter:
 #  - matrix of size NROW(X) by NCOL(X)*length(win.size) where each column is the moving average of length win.size[i] of the corresponding column of X.
 #   
 #######################################################################################################################
@@ -710,13 +614,8 @@ ema = function(X, win.size = NROW(X), plot = FALSE, ...) {
 			res[, v + V*(w-1)] = filter(X[, v, drop = FALSE], filter = 1-lambda[w], method = "recursive", init = X[1, v]/lambda[w]) * lambda[w];
 		}
 	}
-#	for(v in seq(1, V, len = V))
-#		for(w in 1:W)
-#			#movav(X, weights = lambda[w]*(1-lambda[w])^(1:NROW(X) - 1), type = "EMA", ...);
-#			#res[, 1:V + V*(w-1)] = filter(X, filter = 1-lambda[w], method = "recursive") * lambda[w];
-#			res[, v + V*(w-1)] = filter(X[, v, drop = FALSE], filter = 1-lambda[w], method = "recursive", init = X[1, v]/lambda[w]) * lambda[w];
 		
-	class(res) = "ma";
+	class(res) = "Movav";
 	attr(res, "type") = "EMA";
 	attr(res, "desc") = "Exponential Moving Average";
 	attr(res, "lambda") = lambda;
@@ -751,7 +650,7 @@ ema = function(X, win.size = NROW(X), plot = FALSE, ...) {
 # - ...: Additional parameters accepted by function ema.
 #
 # RETURNS:
-#  A object of class 'ma' with attributes type = "DEMA" and 'win.size' as given by the corresponding input parameter:
+#  A object of class 'Movav' with attributes type = "DEMA" and 'win.size' as given by the corresponding input parameter:
 #  - matrix of size NROW(X) by NCOL(X)*length(win.size) where each column is the moving average of length win.size[i] of the corresponding column of X.
 #   
 #######################################################################################################################
@@ -791,7 +690,7 @@ dema = function(X, win.size = NROW(X), plot = FALSE, ...) {
 # - ...: Additional parameters accepted by function ema.
 #
 # RETURNS:
-#  A object of class 'ma' with attributes type = "GDEMA" and 'win.size' as given by the corresponding input parameter:
+#  A object of class 'Movav' with attributes type = "GDEMA" and 'win.size' as given by the corresponding input parameter:
 #  - matrix of size NROW(X) by NCOL(X)*length(win.size) where each column is the moving average of length win.size[i] of the corresponding column of X.
 #   
 #######################################################################################################################
@@ -823,7 +722,7 @@ gdema = function(X, win.size = NROW(X), alpha = 0.7, plot = FALSE, ...) {
 # - ...: Additional parameters accepted by function ema.
 #
 # RETURNS:
-#  A object of class 'ma' with attributes type = "TEMA" and 'win.size' as given by the corresponding input parameter:
+#  A object of class 'Movav' with attributes type = "TEMA" and 'win.size' as given by the corresponding input parameter:
 #  - matrix of size NROW(X) by NCOL(X)*length(win.size) where each column is the moving average of length win.size[i] of the corresponding column of X.
 #   
 #######################################################################################################################
@@ -865,7 +764,7 @@ tema = function(X, win.size = NROW(X), plot = FALSE, ...) {
 # - ...: Additional parameters accepted by function ema.
 #
 # RETURNS:
-#  A object of class 'ma' with attributes type = "TTMA" and 'win.size' as given by the corresponding input parameter:
+#  A object of class 'Movav' with attributes type = "TTMA" and 'win.size' as given by the corresponding input parameter:
 #  - matrix of size NROW(X) by NCOL(X)*length(win.size) where each column is the moving average of length win.size[i] of the corresponding column of X.
 #   
 #######################################################################################################################
@@ -906,7 +805,7 @@ ttma = function(X, win.size = NROW(X), alpha = 0.7, plot = FALSE, ...) {
 # - ...: Additional parameters accepted by function ema.
 #
 # RETURNS:
-#  A object of class 'ma' with attributes type = "MMA" and 'win.size' as given by the corresponding input parameter:
+#  A object of class 'Movav' with attributes type = "MMA" and 'win.size' as given by the corresponding input parameter:
 #  - matrix of size NROW(X) by NCOL(X)*length(win.size) where each column is the moving average of length win.size[i] of the corresponding column of X.
 #   
 #######################################################################################################################
@@ -938,7 +837,7 @@ mma = function(X, win.size = NROW(X), plot = FALSE, ...) {
 # - ...: Additional parameters accepted by function ema.
 #
 # RETURNS:
-#  A object of class 'ma' with attributes type = "GMMA" and 'win.size' as given by the corresponding input parameter:
+#  A object of class 'Movav' with attributes type = "GMMA" and 'win.size' as given by the corresponding input parameter:
 #  - matrix of size NROW(X) by NCOL(X)*12 with twelve moving averagesfor each column of X.
 #   
 #######################################################################################################################
@@ -1007,7 +906,7 @@ gmma = function(X, plot = FALSE, ...) {
 # - ...: Additional parameters for future development.
 #
 # RETURNS:
-#  A object of class 'ma' with attributes type = "REMA", 'lambda' and 'alpha':
+#  A object of class 'Movav' with attributes type = "REMA", 'lambda' and 'alpha':
 #  - matrix of size NROW(X) by NCOL(X)*length(win.size) where each column is the moving average of length win.size[i] of the corresponding column of X.
 #   
 #######################################################################################################################
@@ -1075,7 +974,7 @@ rema = function(X, win.size = NROW(X), alpha = 0.5, plot = FALSE, ...) {
 		}
 	}
 		
-	class(res) = "ma";
+	class(res) = "Movav";
 	attr(res, "type") = "REMA";
 	attr(res, "desc") = "Regularised Exponential Moving Average";
 	attr(res, "lambda") = lambda;
@@ -1113,7 +1012,7 @@ rema = function(X, win.size = NROW(X), alpha = 0.5, plot = FALSE, ...) {
 # - alpha: weight for the trend correction (DEFAULT: 0.1)
 #
 # RETURNS:
-#  A object of class 'ma' with attributes type = "EMAT", 'lambda' and 'alpha':
+#  A object of class 'Movav' with attributes type = "EMAT", 'lambda' and 'alpha':
 #  - matrix of size NROW(X) by NCOL(X)*length(win.size) where each column is the moving average of length win.size[i] of the corresponding column of X.
 #   
 #######################################################################################################################
@@ -1187,7 +1086,7 @@ emat = function(X, win.size = NROW(X), alpha = 0.1, plot = FALSE, ...) {
 		}
 	}
 	
-	class(res) = "ma";
+	class(res) = "Movav";
 	attr(res, "type") = "EMAT";
 	attr(res, "desc") = "Trend-Adjusted Exponential Moving Average";
 	attr(res, "lambda") = lambda;
@@ -1221,7 +1120,7 @@ emat = function(X, win.size = NROW(X), alpha = 0.1, plot = FALSE, ...) {
 # - alpha: weight for the trend correction (DEFAULT: 0.1)
 #
 # RETURNS:
-#  A object of class 'ma' with attributes type = "EMAT" and lambda = 2/(win.size+1)
+#  A object of class 'Movav' with attributes type = "EMAT" and lambda = 2/(win.size+1)
 #  - matrix of size NROW(X) by NCOL(X)*length(win.size) where each column is the moving average of length win.size[i] of the corresponding column of X.
 #   
 #######################################################################################################################
@@ -1276,7 +1175,7 @@ zlma = function(X, win.size = NROW(X), plot = FALSE, ...) {
 # - win.sizes: vector of moving average window sizes (lags) to be applied on the data X. (DEFAULT = NROW(X)). 
 #
 # RETURNS:
-#  A object of class 'ma' with attributes type = "VWMA" and 'win.size' as from the corresponding input parameter
+#  A object of class 'Movav' with attributes type = "VWMA" and 'win.size' as from the corresponding input parameter
 #  - matrix of size NROW(X) by NCOL(X)*length(win.size) where each column is the moving average of length win.size[i] of the corresponding column of X.
 #   
 #######################################################################################################################
@@ -1333,7 +1232,7 @@ vwma = function(X, Vol = NULL, win.size = 10, plot = FALSE, ...) {
 # - win.sizes: vector of moving average window sizes (lags) to be applied on the data X. (DEFAULT = NROW(X)). 
 #
 # RETURNS:
-#  A object of class 'ma' with attributes type = "HMA" and 'win.size' as from the corresponding input parameter
+#  A object of class 'Movav' with attributes type = "HMA" and 'win.size' as from the corresponding input parameter
 #  - matrix of size NROW(X) by NCOL(X)*length(win.size) where each column is the moving average of length win.size[i] of the corresponding column of X.
 #   
 #######################################################################################################################
@@ -1366,7 +1265,7 @@ hma = function(X, win.size = NROW(X), plot = FALSE, ...) {
 # - slow.win: size of the slow moving average (fast lag) to be applied on the data X. (DEFAULT = 28). 
 #
 # RETURNS:
-#  A object of class 'ma' with attributes type = "DMA" and 'win.size' as from the corresponding input parameters [fast.win, slow.win]
+#  A object of class 'Movav' with attributes type = "DMA" and 'win.size' as from the corresponding input parameters [fast.win, slow.win]
 #  - matrix of size NROW(X) by NCOL(X) where each column is the moving average of the corresponding column of X.
 #   
 #######################################################################################################################
@@ -1389,7 +1288,7 @@ dma = function(X, fast.win = 5, slow.win = 28, plot = FALSE, ...) {
 			- movMin(sma(X, win.size = fast.win), win.size = slow.win) 
 		   ) / X;
 	colnames(res) = paste(gsub("SMA", "DMA", colnames(res)), slow.win, sep = "_");
-	class(res) = "ma";
+	class(res) = "Movav";
 	attr(res, "type") = "DMA";
 	attr(res, "desc") = "Derivative Moving Average";
 	attr(res, "win.size") = c(fast.win, slow.win);
@@ -1418,12 +1317,12 @@ dma = function(X, fast.win = 5, slow.win = 28, plot = FALSE, ...) {
 # - win.sizes: vector of moving average window sizes (lags) to be applied on the data X. (DEFAULT = NROW(X)). 
 #
 # RETURNS:
-#  A object of class 'ma' with attributes type = "SINMA" and 'win.size' as from the corresponding input parameter
+#  A object of class 'Movav' with attributes type = "SINMA" and 'win.size' as from the corresponding input parameter
 #  - matrix of size NROW(X) by NCOL(X)*length(win.size) where each column is the moving average of length win.size[i] of the corresponding column of X.
 #   
 #######################################################################################################################
 sinma = function(X, win.size = 10, plot = FALSE, ...) {
-	Mmovav(X
+	Movav(X
 			, win.size = win.size
 			, type = "SINMA"
 			, desc = "Sin Weighted Moving Average"
@@ -1444,12 +1343,12 @@ sinma = function(X, win.size = 10, plot = FALSE, ...) {
 # - X: Matrix of data series (one column per variable). For financial time series (class = 'fs'), only 'Close' column is processed.
 #
 # RETURNS:
-#  A object of class 'ma' with attributes type = "FW1" and 'weights' given by the FW1 filter weights
+#  A object of class 'Movav' with attributes type = "FW1" and 'weights' given by the FW1 filter weights
 #  - matrix of size NROW(X) by NCOL(X) where each column is the moving average of the corresponding column of X.
 #   
 #######################################################################################################################
 fw1 = function(X, plot = FALSE, ...) {
-	res = movav(X
+	res = .genmovav(X
 				, weights = c(rep(0, 17), rep(0.02, 8), rep(0.01, 8))
 				, type = "FW1"
 				, desc = "Front Weighted 32-day Moving Average"
@@ -1472,12 +1371,12 @@ fw1 = function(X, plot = FALSE, ...) {
 # - X: Matrix of data series (one column per variable). For financial time series (class = 'fs'), only 'Close' column is processed.
 #
 # RETURNS:
-#  A object of class 'ma' with attributes type = "FW2" and 'weights' given by the FW2 filter weights
+#  A object of class 'Movav' with attributes type = "FW2" and 'weights' given by the FW2 filter weights
 #  - matrix of size NROW(X) by NCOL(X) where each column is the moving average of the corresponding column of X.
 #   
 #######################################################################################################################
 fw2 = function(X, plot = FALSE, ...){
-	res = movav(X
+	res = .genmovav(X
 				, weights = c(rep(0, 2), rep(0.07, 4), rep(0.06, 2), rep(0.031, 9), 0.03)
 				, type = "FW2"
 				, desc = "Front Weighted 18-day Moving Average"
@@ -1500,12 +1399,12 @@ fw2 = function(X, plot = FALSE, ...){
 # - X: Matrix of data series (one column per variable). For financial time series (class = 'fs'), only 'Close' column is processed.
 #
 # RETURNS:
-#  A object of class 'ma' with attributes type = "FW3" and 'weights' given by the FW3 filter weights
+#  A object of class 'Movav' with attributes type = "FW3" and 'weights' given by the FW3 filter weights
 #  - matrix of size NROW(X) by NCOL(X) where each column is the moving average of the corresponding column of X.
 #   
 #######################################################################################################################
 fw3 = function(X, plot = FALSE, ...) {
-	res = movav(X
+	res = .genmovav(X
 				, weights = c(0.079, 0.07)
 				, type = "FW3"
 				, desc = "Front Weighted 2-day Moving Average"
@@ -1531,12 +1430,12 @@ fw3 = function(X, plot = FALSE, ...) {
 # - win.sizes: vector of moving average window sizes (lags) to be applied on the data X. (DEFAULT = NROW(X)). 
 #
 # RETURNS:
-#  A object of class 'ma' with attributes type = "EPMA" and 'win.size' as from the corresponding input parameter
+#  A object of class 'Movav' with attributes type = "EPMA" and 'win.size' as from the corresponding input parameter
 #  - matrix of size NROW(X) by NCOL(X)*length(win.size) where each column is the moving average of length win.size[i] of the corresponding column of X.
 #   
 #######################################################################################################################
 epma = function(X, win.size = 10, plot = FALSE, ...) {
-	Mmovav(X
+	Movav(X
 		, win.size = win.size
 		, type = "EPMA"
 		, desc = "End-Points Moving Average"
@@ -1559,7 +1458,7 @@ epma = function(X, win.size = 10, plot = FALSE, ...) {
 # ...: Additional parameters accepted by the function sma
 #
 # RETURNS:
-#  A object of class 'ma' with attributes type = "MNDMA" and 'win.size' as from the corresponding input parameter
+#  A object of class 'Movav' with attributes type = "MNDMA" and 'win.size' as from the corresponding input parameter
 #  - matrix of size NROW(X) by NCOL(X)*length(win.size) where each column is the moving average of length win.size[i] of the corresponding column of X.
 #   
 #######################################################################################################################
@@ -1615,7 +1514,7 @@ mndma = function(X, win.size = 50, plot = FALSE, ...) {
 	}
 		
 	colnames(res) = gsub("SMA", "MNDMA", colnames(res));
-	class(res) = "ma";
+	class(res) = "Movav";
 	attr(res, "type") = "MNDMA";
 	attr(res, "desc") = "Multiple N-Day Moving Average";
 
@@ -1642,14 +1541,14 @@ mndma = function(X, win.size = 50, plot = FALSE, ...) {
 # - X: Matrix of data series (one column per variable). For financial time series (class = 'fs'), only 'Close' column is processed.
 # - ar.ord: Order of the AR part of the filter (DEFAULT = 1)
 # - ma.ord: Order of the MA part of the filter (DEFAULT = 1)
-# - func: Function (func = function(y, x, n, v, ...)): 
+# - func: Function(func = function(y, x, n, v, ...)): 
 #         computes the current output y[n, v] using y[(n-ar.ord):(n-1), v] and X[(n-ma.ord+1):n, v]. (DEFAULT = NULL). 
 # - padding: Initialization of the output vector Y (DEFAULT = 0)
 # - type: Charachter attribute attached to the result (DEFAULT = "AMA")
 # ...: Additional parameters accepted by the function 'func'
 #
 # RETURNS:
-#  A object of class 'ma' with attributes 'type', 'ar.ord', 'ma.ord' and 'func' given by the corresponding input parameters
+#  A object of class 'Movav' with attributes 'type', 'ar.ord', 'Movav.ord' and 'func' given by the corresponding input parameters
 #  - matrix of size NROW(X) by NCOL(X) where each column is the moving average of the corresponding column of X.
 #   
 #######################################################################################################################
@@ -1721,7 +1620,7 @@ ama = function(X, ar.ord = 1, ma.ord = 1, func = NULL, padding = 0, type = "AMA"
 #		}
 	
 
-	class(res) = "ma";
+	class(res) = "Movav";
 	attr(res, "ar.ord") = ar.ord;
 	attr(res, "ma.ord") = ma.ord;
 	attr(res, "func") = func;
@@ -1759,7 +1658,7 @@ ama = function(X, ar.ord = 1, ma.ord = 1, func = NULL, padding = 0, type = "AMA"
 # - keep.ER: LOGICAL. If TRUE, adaptive Efficiency Ratio ER is returned as an attribute (DEFAULT = FALSE)
 #
 # RETURNS:
-#  A object of class 'ma' with attributes type = "KAMA", 'lambda' and 'ER' as required and 'fast.win', 'slow.win' and 'lag' given by the corresponding input parameters
+#  A object of class 'Movav' with attributes type = "KAMA", 'lambda' and 'ER' as required and 'fast.win', 'slow.win' and 'lag' given by the corresponding input parameters
 #  - matrix of size NROW(X) by NCOL(X)*length(fast.win) where each column is the moving average of the corresponding column of X.
 #   
 #######################################################################################################################
@@ -1848,7 +1747,7 @@ kama = function(X, fast.win = 2, slow.win = 30, lag = 5, keep.lambda = FALSE, ke
 		res[, 1:V + (w-1)*V] = ama(X, ar.ord = 1, ma.ord = 1, func = kfunc, lambda = lambda[, 1:V + (w-1)*V, drop = FALSE]);
 	}
 		
-	class(res) = "ma";
+	class(res) = "Movav";
 	attr(res, "type") = "KAMA";
 	attr(res, "desc") = "Kauffman Adaptive Moving Average";
 	attr(res, "fast.win") = fast.win;
@@ -1892,7 +1791,7 @@ kama = function(X, fast.win = 2, slow.win = 30, lag = 5, keep.lambda = FALSE, ke
 # - keep.ER: LOGICAL. If TRUE, adaptive Efficiency Ratio ER is returned as an attribute (DEFAULT = FALSE)
 #
 # RETURNS:
-#  A object of class 'ma' with attributes type = "FRAMA", 'lambda' and 'ER' as required and 'win.size' and 'tau' given by the corresponding input parameters
+#  A object of class 'Movav' with attributes type = "FRAMA", 'lambda' and 'ER' as required and 'win.size' and 'tau' given by the corresponding input parameters
 #  - matrix of size NROW(X) by NCOL(X)*length(win.size) where each column is the moving average of the corresponding column of X.
 #   
 #######################################################################################################################
@@ -1998,7 +1897,7 @@ frama = function(X, win.size = 10, tau = 4.6, keep.lambda = FALSE, keep.ER = FAL
 		res[, 1:V + (w-1)*V] = ama(X, ar.ord = 1, ma.ord = 1, func = kfunc, lambda = lambda[, 1:V + (w-1)*V, drop = FALSE], w = w);
 	}
 		
-	class(res) = "ma";
+	class(res) = "Movav";
 	attr(res, "type") = "FRAMA";
 	attr(res, "desc") = "Fractal Adaptive Moving Average";
 	attr(res, "win.size") = win.size;
