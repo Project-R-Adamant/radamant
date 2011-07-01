@@ -98,7 +98,7 @@ PtfOpt = function(ret = NULL, ptf = NULL, mi = NULL, SIGMA = NULL, volatility = 
 
 }
 
-print.PtfOpt = function(x) {
+print.PtfOpt = function(x, ...) {
 	cat("\nMinimum Variance Portfolio (weigths):\n");
 	print(x$weights);
 	cat("\n")
