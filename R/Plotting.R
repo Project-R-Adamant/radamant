@@ -909,7 +909,7 @@ cplot = function(X
 							 , new.device = new.device
 							 , main = main
 							 , theme.params = theme.params
-							 , two.sides = ifelse(length(side2.idx)>0, TRUE, FALSE)
+							 , two.sides = ifelse(length(side2.idx) > 0, TRUE, FALSE)
 							 , ...
 							);
 
@@ -933,7 +933,7 @@ cplot = function(X
 			shade.plot(X[, v]
 						, base = base
 						, theme.params = theme.params
-						, shade.col = if(length(shaded == T) > 1) theme.params[["col"]][v] else theme.params[["shade.col"]]
+						, shade.col = if(length(shaded == TRUE) > 1) theme.params[["col"]][v] else theme.params[["shade.col"]]
 						);
 
 	# Plot Series (Left side scale)
@@ -998,7 +998,7 @@ cplot = function(X
 				shade.plot(X[, v]
 							, base = base
 							, theme.params = theme.params
-							, shade.col = if(length(shaded == T) > 1) theme.params[["col"]][v] else theme.params[["shade.col"]]
+							, shade.col = if(length(shaded == TRUE) > 1) theme.params[["col"]][v] else theme.params[["shade.col"]]
 							);
 							 
 		# Plot Series  (Right  side scale)
