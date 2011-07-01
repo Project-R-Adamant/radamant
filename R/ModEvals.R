@@ -11,7 +11,7 @@ pred_error=function(actual, predicted, pc=FALSE)
 	res = actual - predicted
 	
 	# results as percentage
-	if (pc) res=(res / actual) * 100
+	if (pc) res = (res / actual) * 100
 	
 	# results
 	res
@@ -121,8 +121,8 @@ track_sign_exp = function(actual, predicted, beta=0.1)
 		
 	e = actual - predicted
 	
-	d=ema(e,2,T)
-	g=ema(abs(e),2,T)
+	d=ema(e, 2, TRUE)
+	g=ema(abs(e), 2, TRUE)
 	
 	etrsi = abs(d/g)
 	etrsi
