@@ -5,7 +5,7 @@
 ## rfr = risk free rate
 
 ## Capm generic method
-Capm = function(x, ...) UseMethod("Capm")
+Capm = function(PTF, ...) UseMethod("Capm")
 
 Capm.default = function(PTF, PTF_M, rf=NULL, rfr=NULL, ...){
 	
@@ -184,7 +184,7 @@ PtfVar = function(PTF, w=NULL, glob=TRUE, vol=FALSE, calc.ret=FALSE, ...){
 PtfBeta = function(beta, w=NULL, glob=TRUE){
 	
 	if(class(beta) == "Capm"){
-		beta = x$Beta
+		beta = beta$Beta
 	}
 	 
 	# check vector of weights
@@ -205,11 +205,11 @@ PtfBeta = function(beta, w=NULL, glob=TRUE){
 #############################################
 #############################################
 #### 4Measures ####
-Sharpe = function(x, ...) UseMethod("Sharpe")
-Jensen = function(x, ...) UseMethod("Jensen")
-Treynor = function(x, ...) UseMethod("Treynor")
-Appraisal = function(x, ...) UseMethod("Appraisal")
-FourMeasures = function(x, ...) UseMethod("FourMeasures")
+Sharpe = function(PTF, ...) UseMethod("Sharpe")
+Jensen = function(PTF, ...) UseMethod("Jensen")
+Treynor = function(PTF, ...) UseMethod("Treynor")
+Appraisal = function(PTF, ...) UseMethod("Appraisal")
+FourMeasures = function(PTF, ...) UseMethod("FourMeasures")
 
 
 #### Sharpe ratio ####
@@ -230,10 +230,10 @@ Sharpe.default = function(PTF, rfr=0, ...){
 }
 
 #####
-Sharpe.Capm = function(X, rfr=0, ...){
+Sharpe.Capm = function(PTF, rfr=0, ...){
 	
-	ptf_mi = X$Ret_and_Vol[,1]
-	ptf_sigma = X$Ret_and_Vol[,2]
+	ptf_mi = PTF$Ret_and_Vol[,1]
+	ptf_sigma = PTF$Ret_and_Vol[,2]
 	
 	# calculate index	
 	res = (ptf_mi - rfr) / ptf_sigma ;
@@ -265,10 +265,10 @@ Treynor.default = function(PTF, PTF_M, rfr=0, rf=NULL, ...){
 }
 
 #####
-Treynor.Capm = function(X, rfr=0, ...){
+Treynor.Capm = function(PTF, rfr=0, ...){
 	
-	ptf_mi = X$Ret_and_Vol[,1]
-	beta = X$Beta ;	
+	ptf_mi = PTF$Ret_and_Vol[,1]
+	beta = PTF$Beta ;	
 	
 	res = (ptf_mi - rfr) / beta ;
 	res;
@@ -300,11 +300,11 @@ Jensen.default = function(PTF, PTF_M, rf=NULL, rfr=0, ...){
 }
 
 ####
-Jensen.Capm = function(X, rfr=0, ...){
+Jensen.Capm = function(PTF, rfr=0, ...){
 	
-	ptf_mi = X$Ret_and_Vol[,1];
-	mkt_mi = X$Ret_and_Vol_Bench[,1] ; 
-	beta = X$Beta ;
+	ptf_mi = PTF$Ret_and_Vol[,1];
+	mkt_mi = PTF$Ret_and_Vol_Bench[,1] ; 
+	beta = PTF$Beta ;
 		
 	#compute index
 	res = ptf_mi - (rfr + beta * (mkt_mi - rfr));
@@ -337,10 +337,10 @@ Appraisal.default = function(PTF, PTF_M, rf=NULL, rfr=0, ...){
 
 
 ####
-Appraisal.Capm = function(X, rfr=0, ...){
+Appraisal.Capm = function(PTF, rfr=0, ...){
 	
-	alpha = X$Alpha ;
-	sprisk = X$Risk_Analysis[,2] ;	
+	alpha = PTF$Alpha ;
+	sprisk = PTF$Risk_Analysis[,2] ;	
 
 	#compute index
 	res = alpha / sprisk
@@ -370,16 +370,16 @@ FourMeasures.default = function(PTF, PTF_M, rf=NULL, rfr=0, ...){
 }
 
 #####
-FourMeasures.Capm = function(X, rfr=0, ...){
+FourMeasures.Capm = function(PTF, rfr=0, ...){
 	
 	RES = matrix(NA, 4, NCOL(PTF))
 	rownames(RES) = c("Sharpe","Treynor","Jensen","Appraisal")
-	colnames(RES) = rownames(X$Ret_and_Vol)
+	colnames(RES) = rownames(PTF$Ret_and_Vol)
 	
-	RES[1, ] = Sharpe(X, rfr=rfr, ...)
-	RES[2, ] = Treynor(X, rfr=rfr, ...)
-	RES[3, ] = Jensen(X, rfr=rfr, ...)
-	RES[4, ] = Appraisal(X, rfr=rfr, ...)
+	RES[1, ] = Sharpe(PTF, rfr=rfr, ...)
+	RES[2, ] = Treynor(PTF, rfr=rfr, ...)
+	RES[3, ] = Jensen(PTF, rfr=rfr, ...)
+	RES[4, ] = Appraisal(PTF, rfr=rfr, ...)
 	
 	RES;
 
