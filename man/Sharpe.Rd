@@ -2,7 +2,6 @@
 \alias{Sharpe}
 \alias{Sharpe.default}
 \alias{Sharpe.Capm}
-
 \title{Sharpe index}
 
 \description{
@@ -11,33 +10,21 @@
 }
 
 \usage{
-Sharpe(x, ...)
-
+Sharpe(PTF, ...)
 \method{Sharpe}{default}(PTF, rfr = 0, ...) 
-
-\method{Sharpe}{Capm}(X, rfr = 0, ...) 
-
+\method{Sharpe}{Capm}(PTF, rfr = 0, ...) 
 }
 
 \arguments{ 
-\item{PTF}{ Input portfolio}
+
+\item{PTF}{ Input portfolio or an object of class "Capm"}
+
 \item{rfr}{ risk free rate}
-\item{X}{An object of class "Capm"}
-\item{...}{ }}
 
-\details{}
-
-\value{}
-
-\references{}
+\item{...}{ Further arguments to or from other methods}
+}
 
 \author{ RAdamant Development Team \email{team@r-adamant.org} }
-
-\note{}
-
 \seealso{\code{\link{Treynor}}, \code{\link{Jensen}}, \code{\link{Appraisal}}}
-
-\examples{}
-
 \keyword{ ~kwd1 }
 \keyword{ ~kwd2 }

@@ -1,27 +1,30 @@
 \name{Garch}
+
 \alias{Garch}
+\alias{Garch.default}
 
-\title{Garch – method}
+\title{Garch}
 
-\description{Generic method for Garch model class}
+\description{Estimate Garch models}
 
-\usage{Garch(x, ...) }
+\usage{
+Garch(x, ...)
+\method{Garch}{default}(x, Y=NULL, order=c(alpha=1,beta=1), phi=0, delta=0,
+type=c("garch","mgarch","tgarch","egarch"), prob=c("norm","ged","t"), ...)
+}
 
-\arguments{ \item{x}{ }\item{...}{ }}
-
-\details{}
-
-\value{}
-
-\references{}
+\arguments{ 
+\item{x}{ Univariate time series, usaully returns}
+\item{Y}{ Exogenous regressors for the Mean Equation}
+\item{order}{ Garch order}
+\item{type}{ Garch type.}
+\item{prob}{ Probability density for the innovations.}
+\item{phi}{ Phi pars}
+\item{delta}{ Delta pars}
+\item{...}{ Further arguments to or from other methods}
+}
 
 \author{RAdamant Development Team \email{team@r-adamant.org}}
-
 \note{TO BE COMPLETED}
-
-\seealso{}
-
-\examples{}
-
 \keyword{ ~kwd1 }
 \keyword{ ~kwd2 }

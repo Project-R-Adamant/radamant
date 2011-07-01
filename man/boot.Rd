@@ -1,27 +1,16 @@
 \name{boot}
 \alias{boot}
-
 \title{General bootstrapping function}
+\description{General bootstrapping function}
 
-\description{}
+\usage{
+boot(X, nboots = 100, func = NULL, init = NULL, 
+message = "Bootstrapping...", ...) 
+}
 
-\usage{boot(X, nboots = 100, func = NULL, init = NULL, message = "Bootstrapping...", ...) }
-
-\arguments{ \item{X}{ }\item{nboots}{ }\item{func}{ }\item{init}{ }\item{message}{ }\item{...}{ }}
-
-\details{}
-
-\value{}
-
-\references{}
-
+\arguments{\item{X}{ X}\item{nboots}{ nboots}\item{func}{ func}\item{init}{ init}\item{message}{
+message}\item{...}{ Further arguments to or from other methods.}}
 \author{RAdamant Development Team \email{team@r-adamant.org}}
-
 \note{TO BE COMPLETED}
-
-\seealso{}
-
-\examples{}
-
 \keyword{ ~kwd1 }
 \keyword{ ~kwd2 }

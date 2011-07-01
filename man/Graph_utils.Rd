@@ -1,5 +1,6 @@
 \name{Graph_utils}
 \alias{getTheme}
+\alias{getCurrentTheme}
 \alias{getThemeAttr}
 \alias{setCurrentTheme}
 \alias{setThemeAttr}
@@ -22,30 +23,8 @@
 \alias{get.plot.params}
 \alias{getProjectionMatrix}
 \alias{setProjectionMatrix}
-
-\title{ Graphical utilities used by the plotting functions}
-
-\description{}
-
-\usage{ 
-}
-
-\arguments{
-}
-
-\details{ }
-
-\value{ }
-
-\references{ }
-
+\title{ RAdamant Graphical utilities}
+\description{Graphical utilities used by the plotting functions}
 \author{ RAdamant Development Team \email{team@r-adamant.org} }
-
-\note{ }
-
-\seealso{ }
-
-\examples{ }
-
 \keyword{ ~kwd1 }
 \keyword{ ~kwd2 }

@@ -5,45 +5,43 @@
 \alias{x.title3d}
 \alias{y.title3d}
 \alias{z.title3d}
-
-
 \title{ 3D Plot Axis Formatting}
-
 \description{Add and format labels for 3D Plot }
+\usage{ 
 
-\usage{ x.axis3d(xlim = NULL, ylim = NULL, zlim = NULL, pmat = getProjectionMatrix(), at = NULL,
-labels = NULL, theme.params = getCurrentTheme(), show.labels = TRUE, grid = theme.params[["xgrid"]],
-...) \cr
-y.axis3d(xlim = NULL, ylim = NULL, zlim = NULL, pmat = getProjectionMatrix(), at = NULL,
-labels = NULL, theme.params = getCurrentTheme(), show.labels = TRUE, grid = theme.params[["ygrid"]],
-...) \cr
-z.axis3d(xlim = NULL, ylim = NULL, zlim = NULL, pmat = getProjectionMatrix(), at = NULL, labels =
-NULL, theme.params = getCurrentTheme(), show.labels = TRUE, grid = theme.params[["zgrid"]], ...) \cr
+x.axis3d(xlim = NULL, ylim = NULL, zlim = NULL, 
+pmat = getProjectionMatrix(), at = NULL,
+labels = NULL, theme.params = getCurrentTheme(), 
+show.labels = TRUE, grid = theme.params[["xgrid"]],...) 
 
-x.title3d(xlim = NULL, ylim = NULL, zlim = NULL, pmat = getProjectionMatrix(), title = "",
-theme.params = getCurrentTheme(), ...) \cr
-y.title3d(xlim = NULL, ylim = NULL, zlim = NULL, pmat = getProjectionMatrix(), title = "",
-theme.params = getCurrentTheme(), ...) \cr
-z.title3d(xlim = NULL, ylim = NULL, zlim = NULL, pmat = getProjectionMatrix(), title = "",
+y.axis3d(xlim = NULL, ylim = NULL, zlim = NULL, 
+pmat = getProjectionMatrix(), at = NULL,
+labels = NULL, theme.params = getCurrentTheme(), 
+show.labels = TRUE, grid = theme.params[["ygrid"]],...) 
+
+z.axis3d(xlim = NULL, ylim = NULL, zlim = NULL, 
+pmat = getProjectionMatrix(), at = NULL, labels =NULL, 
+theme.params = getCurrentTheme(), show.labels = TRUE, 
+grid = theme.params[["zgrid"]], ...)
+
+x.title3d(xlim = NULL, ylim = NULL, zlim = NULL, 
+pmat = getProjectionMatrix(), title = "", 
+theme.params = getCurrentTheme(), ...) 
+
+y.title3d(xlim = NULL, ylim = NULL, zlim = NULL, 
+pmat = getProjectionMatrix(), title = "", 
+theme.params = getCurrentTheme(), ...) 
+
+z.title3d(xlim = NULL, ylim = NULL, zlim = NULL, 
+pmat = getProjectionMatrix(), title = "",
 theme.params = getCurrentTheme(), ...)
 }
-
-\arguments{\item{xlim}{ }\item{ylim}{ }\item{zlim}{ }\item{pmat}{ }\item{at}{ }\item{labels}{
-}\item{theme.params}{ }\item{show.labels}{ }\item{grid}{ }\item{...}{ } }
-
-\details{ }
-
-\value{ }
-
-\references{ }
-
+\arguments{
+\item{xlim}{ xlim}\item{ylim}{ ylim}\item{zlim}{ zlim}\item{pmat}{ pmat}\item{at}{
+at}\item{labels}{labels}
+\item{title}{ title}
+\item{theme.params}{ theme.params}\item{show.labels}{ show.labels}\item{grid}{ grid}\item{...}{
+Further arguments to or from other methods} }
 \author{ RAdamant Development Team \email{team@r-adamant.org}}
-
-\note{ }
-
-\seealso{ }
-
-\examples{ }
-
 \keyword{ ~kwd1 }
 \keyword{ ~kwd2 }

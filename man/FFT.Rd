@@ -1,27 +1,26 @@
 \name{FFT}
+
 \alias{FFT}
+\alias{FFT.default}
 
 \title{Custom Fast Fourier transformation}
 
 \description{Compute Custom Fast Fourier transformation}
 
-\usage{FFT(X, Fs = 1, half = FALSE, window = NULL, plot = TRUE, optimised = TRUE, ...) }
+\usage{
+FFT(x, ...)
 
-\arguments{ \item{X}{ }\item{Fs}{ }\item{half}{ }\item{window}{ }\item{plot}{ }\item{optimised}{ }\item{...}{ }}
+\method{FFT}{default}(x, Fs = 1, half = FALSE, 
+window = NULL, plot = TRUE, optimised = TRUE, ...) 
 
-\details{}
+}
 
-\value{}
-
-\references{}
+\arguments{ \item{x}{ x}\item{Fs}{ Fs}\item{half}{ half}\item{window}{ window}
+\item{plot}{ LOGICAL. If TRUE plot is returned.}\item{optimised}{ optimised}\item{...}{ Further
+arguments to or from other methods}}
 
 \author{RAdamant Development Team \email{team@r-adamant.org}}
 
 \note{TO BE COMPLETED}
-
-\seealso{}
-
-\examples{}
-
 \keyword{ ~kwd1 }
 \keyword{ ~kwd2 }

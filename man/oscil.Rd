@@ -1,27 +1,22 @@
-\name{oscil}
+\name{Oscil}
+
+\alias{oscil.default}
 \alias{oscil}
 
-\title{Oscillator – method}
+\title{Oscillator default method}
 
-\description{Compute Oscillator – method (Technical Analysis)}
+\description{Compute Oscillator (Technical Analysis)}
 
-\usage{oscil(x, ...) }
+\usage{
+oscil(X, ...)
+\method{oscil}{default}(X, Y, pc = FALSE, type = "oscil", ...) 
+}
 
-\arguments{ \item{x}{ }\item{...}{ }}
 
-\details{}
-
-\value{}
-
-\references{}
+\arguments{ \item{X}{ X}\item{Y}{ Y}\item{pc}{ pc}\item{type}{ type}\item{...}{ Further arguments to
+or from other methods}}
 
 \author{RAdamant Development Team \email{team@r-adamant.org}}
-
 \note{TO BE COMPLETED}
-
-\seealso{}
-
-\examples{}
-
 \keyword{ ~kwd1 }
 \keyword{ ~kwd2 }

@@ -1,27 +1,13 @@
 \name{print.sme}
 \alias{print.sme}
-
-\title{Printing function for Sample Mean Excess class}
-
-\description{}
-
-\usage{print.sme(X) }
-
-\arguments{ \item{X}{ }}
-
-\details{}
-
-\value{}
-
-\references{}
-
+\title{Print Sample Mean Excess class}
+\description{Printing function for Sample Mean Excess class}
+\usage{
+\method{print}{sme}(x, ...) 
+}
+\arguments{ \item{x}{ OBJECT of class "sme".}\item{...}{ Further arguments to or from other
+methods}}
 \author{RAdamant Development Team \email{team@r-adamant.org}}
-
 \note{TO BE COMPLETED}
-
-\seealso{}
-
-\examples{}
-
 \keyword{ ~kwd1 }
 \keyword{ ~kwd2 }

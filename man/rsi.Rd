@@ -5,25 +5,19 @@
 
 \description{Compute Relative strength indicator (Technical Analysis)}
 
-\usage{rsi(X, plot = FALSE, ...) }
+\usage{rsi(X, lag, plot = FALSE, ...) }
 
-\arguments{ \item{X}{ }\item{plot}{ }\item{...}{ }}
-
-\details{
-
+\arguments{
+\item{X}{ X}
+\item{lag}{ INTEGER. Number of lag periods.}
+\item{plot}{ LOGICAL. If TRUE plot is returned.}
+\item{...}{ Further arguments to or from other methods.}
 }
 
-\value{}
 
-\references{}
 
 \author{RAdamant Development Team \email{team@r-adamant.org}}
 
 \note{TO BE COMPLETED}
-
-\seealso{}
-
-\examples{}
-
 \keyword{ ~kwd1 }
 \keyword{ ~kwd2 }

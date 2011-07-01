@@ -1,28 +1,13 @@
 \name{plot.ret}
 \alias{plot.ret}
-
 \title{Plot Returns}
-
 \description{Plot function for Returns}
-
-\usage{plot.ret(X, style = c("line", "bar"), xlabels = rownames(X), theme.params =
+\usage{
+\method{plot}{ret}(x, style = c("line", "bar"), xlabels = rownames(x), theme.params =
 getCurrentTheme(), ...) }
-
-\arguments{ \item{X}{ }\item{style}{ }\item{xlabels}{ }\item{theme.params}{ }\item{...}{ }}
-
-\details{}
-
-\value{}
-
-\references{}
-
+\arguments{ \item{x}{ x}\item{style}{ style}\item{xlabels}{ xlabels}\item{theme.params}{
+theme.params}\item{...}{ Further arguments to or from other methods}}
 \author{RAdamant Development Team \email{team@r-adamant.org}}
-
 \note{TO BE COMPLETED}
-
-\seealso{}
-
-\examples{}
-
 \keyword{ ~kwd1 }
 \keyword{ ~kwd2 }

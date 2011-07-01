@@ -1,27 +1,11 @@
 \name{gev.like}
 \alias{gev.like}
-
 \title{GEV - Log Likelihood}
-
-\description{}
-
+\description{GEV - Log Likelihood}
 \usage{gev.like(parms, Xbmax, ...) }
-
-\arguments{ \item{parms}{ }\item{Xbmax}{ }\item{...}{ }}
-
-\details{}
-
-\value{}
-
-\references{}
-
+\arguments{\item{parms}{ parms}\item{Xbmax}{ Xbmax}\item{...}{ Further arguments to or from other
+methods.}}
 \author{RAdamant Development Team \email{team@r-adamant.org}}
-
 \note{TO BE COMPLETED}
-
-\seealso{}
-
-\examples{}
-
 \keyword{ ~kwd1 }
 \keyword{ ~kwd2 }

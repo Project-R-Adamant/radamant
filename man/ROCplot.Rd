@@ -1,36 +1,20 @@
 \name{ROCplot}
-
 \alias{ROCplot}
 \alias{ROCplot.scorecard}
-
 \title{ROC analysis}
-
 \description{Plot ROC curve}
 
 \usage{
-ROCplot(x, ...) \cr
-ROCplot.scorecard(sc) 
+ROCplot(x, ...) 
+\method{ROCplot}{scorecard}(x, ...) 
 }
 
 \arguments{
-\item{sc}{ }
-\item{x}{ }
-\item{...}{ }
+\item{x}{ x}
+\item{...}{ Further arguments to or from other methods}
 }
 
-\details{}
-
-\value{}
-
-\references{}
-
 \author{RAdamant Development Team \email{team@r-adamant.org}}
-
 \note{TO BE COMPLETED}
-
-\seealso{}
-
-\examples{}
-
 \keyword{ ~kwd1 }
 \keyword{ ~kwd2 }

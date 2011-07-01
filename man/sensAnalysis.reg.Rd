@@ -1,27 +1,17 @@
 \name{sensAnalysis.reg}
 \alias{sensAnalysis.reg}
+\title{Sensitivity analysis method for reg}
 
-\title{Sensitivity analysis – method for reg}
 
-\description{}
+\description{Sensitivity analysis method for reg}
 
-\usage{sensAnalysis.reg(X, ...) }
+\usage{
+\method{sensAnalysis}{reg}(X, ...) 
+}
 
-\arguments{ \item{X}{ }\item{...}{ }}
-
-\details{}
-
-\value{}
-
-\references{}
-
+\arguments{ \item{X}{ OBJECT of class "reg".}\item{...}{ Further arguments to or from other
+methods}}
 \author{RAdamant Development Team \email{team@r-adamant.org}}
-
 \note{TO BE COMPLETED}
-
-\seealso{}
-
-\examples{}
-
 \keyword{ ~kwd1 }
 \keyword{ ~kwd2 }

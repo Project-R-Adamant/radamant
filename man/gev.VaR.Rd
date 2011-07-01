@@ -1,27 +1,11 @@
 \name{gev.VaR}
 \alias{gev.VaR}
-
 \title{GEV - VaR calculation}
-
-\description{}
-
+\description{GEV - VaR calculation}
 \usage{gev.VaR(Xbmax, mu = NULL, xi = NULL, sigma = NULL, prob = 0.01, ...) }
-
-\arguments{ \item{Xbmax}{ }\item{mu}{ }\item{xi}{ }\item{sigma}{ }\item{prob}{ }\item{...}{ }}
-
-\details{}
-
-\value{}
-
-\references{}
-
+\arguments{\item{Xbmax}{ Xbmax}\item{mu}{ mu}\item{xi}{ xi}\item{sigma}{ sigma}\item{prob}{
+prob}\item{...}{ Further arguments to or from other methods.}}
 \author{RAdamant Development Team \email{team@r-adamant.org}}
-
 \note{TO BE COMPLETED}
-
-\seealso{}
-
-\examples{}
-
 \keyword{ ~kwd1 }
 \keyword{ ~kwd2 }

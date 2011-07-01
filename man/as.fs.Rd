@@ -1,27 +1,10 @@
 \name{as.fs}
 \alias{as.fs}
-
 \title{Convert Yahoo! Data into Financial Series object}
-
-\description{}
-
+\description{Convert Yahoo! Data into Financial Series object}
 \usage{as.fs(X, SName = "", Symbol = "") }
-
-\arguments{ \item{X}{ }\item{SName}{ }\item{Symbol}{ }}
-
-\details{}
-
-\value{}
-
-\references{}
-
+\arguments{\item{X}{ X}\item{SName}{ SName}\item{Symbol}{ Symbol}}
 \author{RAdamant Development Team \email{team@r-adamant.org}}
-
 \note{TO BE COMPLETED}
-
-\seealso{}
-
-\examples{}
-
 \keyword{ ~kwd1 }
 \keyword{ ~kwd2 }

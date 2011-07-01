@@ -1,27 +1,10 @@
 \name{sme}
 \alias{sme}
-
 \title{Sample Mean Excess function}
-
-\description{}
-
+\description{Sample Mean Excess function}
 \usage{sme(X, plot = TRUE, ...) }
-
-\arguments{ \item{X}{ }\item{plot}{ }\item{...}{ }}
-
-\details{}
-
-\value{}
-
-\references{}
-
+\arguments{\item{X}{ X}\item{plot}{ plot}\item{...}{ ...}}
 \author{RAdamant Development Team \email{team@r-adamant.org}}
-
 \note{TO BE COMPLETED}
-
-\seealso{}
-
-\examples{}
-
 \keyword{ ~kwd1 }
 \keyword{ ~kwd2 }

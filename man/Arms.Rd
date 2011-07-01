@@ -1,27 +1,12 @@
 \name{Arms}
 \alias{Arms}
-
 \title{Arms index}
-
 \description{Compute Arms index (Technical Analysis)}
-
 \usage{Arms(X, Volume, lag, plot = FALSE, ...) }
-
-\arguments{ \item{X}{ }\item{Volume}{ }\item{lag}{ }\item{plot}{ }\item{...}{ }}
-
-\details{}
-
-\value{}
-
-\references{}
-
+\arguments{\item{X}{ X}\item{Volume}{ VECTOR. Asset traded Volume.}\item{lag}{ INTEGER. Number of
+lag periods.}\item{plot}{ LOGICAL. If TRUE plot is returned.}\item{...}{ Further arguments to or
+from other methods.}}
 \author{RAdamant Development Team \email{team@r-adamant.org}}
-
 \note{TO BE COMPLETED}
-
-\seealso{}
-
-\examples{}
-
 \keyword{ ~kwd1 }
 \keyword{ ~kwd2 }

@@ -1,27 +1,11 @@
 \name{gev.ml}
 \alias{gev.ml}
-
 \title{GEV - Maximum Likelihood Parameters Estimation}
-
-\description{}
-
+\description{GEV - Maximum Likelihood Parameters Estimation}
 \usage{gev.ml(Xbmax, init = c(0, 0.1, 1), ...) }
-
-\arguments{ \item{Xbmax}{ }\item{init}{ }\item{...}{ }}
-
-\details{}
-
-\value{}
-
-\references{}
-
+\arguments{\item{Xbmax}{ Xbmax}\item{init}{ init}\item{...}{ Further arguments to or from other
+methods.}}
 \author{RAdamant Development Team \email{team@r-adamant.org}}
-
 \note{TO BE COMPLETED}
-
-\seealso{}
-
-\examples{}
-
 \keyword{ ~kwd1 }
 \keyword{ ~kwd2 }

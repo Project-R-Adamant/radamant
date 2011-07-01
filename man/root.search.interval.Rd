@@ -1,27 +1,16 @@
 \name{root.search.interval}
 \alias{root.search.interval}
+\title{Interval for uniroot function}
+\description{Compute a proper search interval for uniroot function}
 
-\title{Compute a proper search interval for uniroot function}
+\usage{root.search.interval(from, func = NULL, 
+type = c("left", "both", "right"), max.iter = 500,
+show.warnings = FALSE, debug = FALSE, ...) }
 
-\description{}
-
-\usage{root.search.interval(from, func = NULL, type = c("left", "both", "right"), max.iter = 500, show.warnings = FALSE, debug = FALSE, ...) }
-
-\arguments{ \item{from}{ }\item{func}{ }\item{type}{ }\item{max.iter}{ }\item{show.warnings}{ }\item{debug}{ }\item{...}{ }}
-
-\details{}
-
-\value{}
-
-\references{}
-
+\arguments{\item{from}{ from}\item{func}{ func}\item{type}{ type}\item{max.iter}{
+max.iter}\item{show.warnings}{ show.warnings}\item{debug}{ debug}\item{...}{ Further arguments to or
+from other methods.}}
 \author{RAdamant Development Team \email{team@r-adamant.org}}
-
 \note{TO BE COMPLETED}
-
-\seealso{}
-
-\examples{}
-
 \keyword{ ~kwd1 }
 \keyword{ ~kwd2 }

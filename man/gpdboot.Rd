@@ -1,27 +1,11 @@
 \name{gpdboot}
 \alias{gpdboot}
-
 \title{GPD - parameters bootstrapping}
-
-\description{}
-
+\description{GPD - parameters bootstrapping}
 \usage{gpdboot(Xtail, trsh = 0, xi = NULL, sigma = NULL, nboots = 100, ...) }
-
-\arguments{ \item{Xtail}{ }\item{trsh}{ }\item{xi}{ }\item{sigma}{ }\item{nboots}{ }\item{...}{ }}
-
-\details{}
-
-\value{}
-
-\references{}
-
+\arguments{\item{Xtail}{ Xtail}\item{trsh}{ trsh}\item{xi}{ xi}\item{sigma}{ sigma}\item{nboots}{
+nboots}\item{...}{ Further arguments to or from other methods.}}
 \author{RAdamant Development Team \email{team@r-adamant.org}}
-
 \note{TO BE COMPLETED}
-
-\seealso{}
-
-\examples{}
-
 \keyword{ ~kwd1 }
 \keyword{ ~kwd2 }

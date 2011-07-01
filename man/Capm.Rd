@@ -1,27 +1,26 @@
 \name{Capm}
+
+\alias{Capm.default}
 \alias{Capm}
 
-\title{Capm – method}
+\title{Capm - default method}
 
-\description{Generic method for CAPM}
+\description{Default method for CAPM}
 
-\usage{Capm(x, ...) }
+\usage{
+Capm(PTF, ...)
+\method{Capm}{default}(PTF, PTF_M, rf = NULL, rfr = NULL, ...) 
+}
 
-\arguments{ \item{x}{ }\item{...}{ }}
-
-\details{}
-
-\value{}
-
-\references{}
+\arguments{ 
+\item{PTF}{ Prtfolio.}
+\item{PTF_M}{ Market portfolio.}
+\item{rf}{ Risk free asset.}
+\item{rfr}{ Risk free rate.}
+\item{...}{ Further arguments to or from other methods}}
 
 \author{RAdamant Development Team \email{team@r-adamant.org}}
 
 \note{TO BE COMPLETED}
-
-\seealso{}
-
-\examples{}
-
 \keyword{ ~kwd1 }
 \keyword{ ~kwd2 }

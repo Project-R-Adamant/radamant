@@ -1,4 +1,5 @@
 \name{FourMeasures}
+
 \alias{FourMeasures}
 \alias{FourMeasures.default}
 \alias{FourMeasures.Capm}
@@ -7,31 +8,24 @@
 
 \description{Calculate the Four Measures indexes}
 
-\usage{FourMeasures(PTF, PTF_M, rf = NULL, rfr = 0, ...) \cr
-FourMeasures.Capm(X, rfr = 0, ...) }
-
-\arguments{ 
-\item{PTF}{ Input portfolio}
-\item{PTF_M}{ Market/benchmark portfolio}
-\item{X}{An object of class "Capm"}
-\item{rfr}{ risk free rate}
-\item{rf}{ risk free asset}
-\item{...}{ }
+\usage{
+FourMeasures(PTF, ...)
+\method{FourMeasures}{default}(PTF, PTF_M, rf = NULL, rfr = 0, ...) 
+\method{FourMeasures}{Capm}(PTF, rfr = 0, ...) 
 }
 
-\details{}
+\arguments{ 
+\item{PTF}{ Input portfolio or an object of class "Capm"}
+\item{PTF_M}{ Market/benchmark portfolio}
+\item{rfr}{ risk free rate}
+\item{rf}{ risk free asset}
+\item{...}{ Further arguments to or from other methods}
+}
 
-\value{Return a matrix containing the values for the following indexes: Sharpe, Treynor, Jensen and Appraisal}
-
-\references{}
-
+\value{Return a matrix containing the values for the following indexes: Sharpe, Treynor, Jensen and
+Appraisal}
 \author{ RAdamant Development Team \email{team@r-adamant.org} }
-
-\note{}
-
-\seealso{\code{\link{Sharpe}},  \code{\link{Treynor}}, \code{\link{Jensen}}, \code{\link{Appraisal}} }
-
-\examples{}
-
+\seealso{\code{\link{Sharpe}},  \code{\link{Treynor}}, \code{\link{Jensen}}, \code{\link{Appraisal}}
+}
 \keyword{ ~kwd1 }
 \keyword{ ~kwd2 }

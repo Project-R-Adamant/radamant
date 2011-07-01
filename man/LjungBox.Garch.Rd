@@ -1,33 +1,21 @@
 \name{LjungBox.Garch}
-\alias{LjungBox.Garch}
+
+\alias{LjungBox}
 
 \title{Ljung-Box test}
 
 \description{Perform Ljung-Box test for residual correlation}
 
+
 \usage{
-LjungBox.Garch(x, lags, plot.acf = FALSE)
+LjungBox(x, lags, plot.acf = FALSE)
 }
 
 \arguments{
-\item{x}{ Residual series}
+\item{x}{ Residual series or object of class "Garch"}
 \item{lags}{ Number of lags to calculate the autocorrelation function}
 \item{plot.acf}{ LOGICAL. Plot ACF.}
 }
-
-\details{}
-
-\value{}
-
-\references{}
-
-\author{}
-
-\note{}
-
-\seealso{}
-
-\examples{}
 
 \keyword{ ~kwd1 }
 \keyword{ ~kwd2 }

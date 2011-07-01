@@ -1,27 +1,22 @@
 \name{sensAnalysis}
+
+\alias{sensAnalysis.default}
 \alias{sensAnalysis}
 
-\title{Sensitivity analysis – method}
+\title{Sensitivity analysis default method}
 
-\description{}
+\description{Sensitivity analysis default method}
 
-\usage{sensAnalysis(X, ...) }
+\usage{
+sensAnalysis(X, ...)
+\method{sensAnalysis}{default}(X, win.size = length(coef(X)), plot = FALSE, ...) 
+}
 
-\arguments{ \item{X}{ }\item{...}{ }}
-
-\details{}
-
-\value{}
-
-\references{}
+\arguments{ \item{X}{ X}\item{win.size}{ win.size}\item{plot}{ LOGICAL. If TRUE plot is returned.}
+\item{...}{ Further arguments to or from other methods}}
 
 \author{RAdamant Development Team \email{team@r-adamant.org}}
 
 \note{TO BE COMPLETED}
-
-\seealso{}
-
-\examples{}
-
 \keyword{ ~kwd1 }
 \keyword{ ~kwd2 }

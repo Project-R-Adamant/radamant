@@ -1,27 +1,12 @@
 \name{SummaryDD}
 \alias{SummaryDD}
-
-\title{Summary function for drawdown}
-
-\description{}
-
+\title{Summary drawdown}
+\description{Summary function for drawdown}
 \usage{SummaryDD(DD) }
 
-\arguments{ \item{DD}{ }}
-
-\details{}
-
-\value{}
-
-\references{}
+\arguments{ \item{DD}{ OBJECT of class "drawdown"}}
 
 \author{RAdamant Development Team \email{team@r-adamant.org}}
-
 \note{TO BE COMPLETED}
-
-\seealso{}
-
-\examples{}
-
 \keyword{ ~kwd1 }
 \keyword{ ~kwd2 }

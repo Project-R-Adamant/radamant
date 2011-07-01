@@ -1,27 +1,10 @@
 \name{InvPP}
 \alias{InvPP}
-
 \title{Peizer-Pratt Inversion formula}
-
 \description{Peizer-Pratt Inversion formula}
-
 \usage{InvPP(z, n) }
-
-\arguments{ \item{z}{ }\item{n}{ }}
-
-\details{}
-
-\value{}
-
-\references{}
-
+\arguments{\item{z}{ z}\item{n}{ n}}
 \author{RAdamant Development Team \email{team@r-adamant.org}}
-
 \note{TO BE COMPLETED}
-
-\seealso{}
-
-\examples{}
-
 \keyword{ ~kwd1 }
 \keyword{ ~kwd2 }
