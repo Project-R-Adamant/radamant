@@ -18,7 +18,7 @@ recycle = function(X, V = length(X)) {
 
 
 #######################################################################################################################
-# FUNCTION: sort.each.col
+# FUNCTION: SORT
 #
 # SUMMARY:
 # Sort each column of the input matrix X independently
@@ -31,7 +31,8 @@ recycle = function(X, V = length(X)) {
 #  A matrix V by 1 containing recycled entries of X
 #
 #######################################################################################################################
-sort.each.col = function(X, decreasing = FALSE) {
+SORT = function(x, decreasing = FALSE, ...){
+
 	# Get Data dimension
 	N = NROW(X);
 	V = NCOL(X);
@@ -407,24 +408,6 @@ MDiff = function(X, lag = 1, padding = NA, mode = c("auto", "range", "selected")
 	res
 	
 }
-
-
-#######################################################################################################################
-# FUNCTION: Ret
-#
-# SUMMARY:
-# Computes N-points Returns on each column of the input matrix. Sequences are treated as one-column matrices
-#
-# PARAMETERS:
-# - X: Input matrix/sequence
-# - lag: Integer lag. If lag >= 0 data are shifted to the right, else to the left. (DEFAULT = 1)
-# - log: LOGICAL. If TRUE, log returns are calculated
-# - na.rm: LOGICAL. If TRUE, N-lag entries are removed from the output (DEFAULT = FALSE)
-#
-# RETURNS:
-#  A matrix of N-points returns of X. Number of rows depends on the na.rm parameter. Number of columns is NCOL(X)
-#
-#######################################################################################################################
 #######################################################################################################################
 # FUNCTION: Ret
 #
@@ -485,9 +468,9 @@ Ret = function(X, lag = 1, log = FALSE, na.rm = FALSE, plot = FALSE, ...) {
 	res
 }
 
-plot.ret = function(X
+plot.ret = function(x
 					, style = c("line", "bar")
-					, xlabels = rownames(X)
+					, xlabels = rownames(x)
 					, theme.params = getCurrentTheme()
 					, ...
 					) {
@@ -499,17 +482,17 @@ plot.ret = function(X
 		# Get number of color levels
 		Ncols = length(cmap);
 
-		V = NCOL(X);
+		V = NCOL(x);
 		v = 0;
 		while(v < V) {
 			v = v + 1;
 			# Quantize levels
-			col.lev = unique(quantile(X[, v], seq(0, 1, len = Ncols+1), na.rm = TRUE));
-			cols = cmap[cut(X[, v], col.lev, include.lowest = TRUE)];
+			col.lev = unique(quantile(x[, v], seq(0, 1, len = Ncols+1), na.rm = TRUE));
+			cols = cmap[cut(x[, v], col.lev, include.lowest = TRUE)];
 			# Bar plot
 			if(v > 1)
 				dev.new();
-			cplot(X[, v, drop = FALSE]
+			cplot(x[, v, drop = FALSE]
 					, theme.params = theme.params
 					, xlabels = xlabels
 					, col = cols
@@ -522,7 +505,7 @@ plot.ret = function(X
 
 	} else {
 		# Standard plot
-		cplot(X
+		cplot(x
 				, theme.params = theme.params
 				, xlabels = xlabels
 				, ...
