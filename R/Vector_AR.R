@@ -1,13 +1,13 @@
 #############################################
-VecAr = function(x, ...) UseMethod("VecAr")
+VecAr = function(X, ...) UseMethod("VecAr")
 
-VecAr.default = function(Y, ar.lags = 1:2, type=c("const", "trend",
-"constrend", "none"), exog=NULL){
+VecAr.default = function(X, ar.lags = 1:2, type=c("const", "trend",
+"constrend", "none"), exog=NULL, ...){
 	
 	#browser()
 
-	N = NROW(Y)
-	C = NCOL(Y)
+	N = NROW(X)
+	C = NCOL(X)
 	
 	# VAR type
 	type = match.arg(type)
@@ -15,23 +15,23 @@ VecAr.default = function(Y, ar.lags = 1:2, type=c("const", "trend",
 
 	# include constant term
 	if(type == "const"){
-		Z = cbind(Const = rep(1, N), MLag(Y, ar.lags, mode="selected"))
+		Z = cbind(Const = rep(1, N), MLag(X, ar.lags, mode="selected"))
 	} 
 
 	# include trend
 	else if(type == "trend"){
-		Z = cbind(Trend = seq(1,N), MLag(Y, ar.lags, mode="selected"))
+		Z = cbind(Trend = seq(1,N), MLag(X, ar.lags, mode="selected"))
 	}
 
 	# include trend AND constant term
 	else if(type == "constrend"){
-		Z = cbind(Const = rep(1, N), Trend = seq(1,N), MLag(Y, ar.lags,
+		Z = cbind(Const = rep(1, N), Trend = seq(1,N), MLag(X, ar.lags,
 mode="selected"))
 	}
 
 	# neither trend nor constant term
 	else if(type == "none"){
-		Z = MLag(Y, ar.lags, mode="selected")
+		Z = MLag(X, ar.lags, mode="selected")
 	}	
 
 
@@ -47,7 +47,7 @@ performed.")
 			return(NULL)	
 		} else {
 		
-			Z = cbind(MLag(Y, ar.lags, mode="selected"), exog)
+			Z = cbind(MLag(X, ar.lags, mode="selected"), exog)
 		}
 	
 	} 
@@ -61,24 +61,24 @@ performed.")
 
 	if(type == "const" || type == "trend"){
 		temp[ ,1] = Z[ ,1]
-		temp[ ,2:(C+1)] = Y 
+		temp[ ,2:(C+1)] = X 
 		temp[ ,(C+2):NCOL(temp)] = Z[ ,-1] 
 	}
 	
 	else if(type == "constrend"){
 		temp[ ,1:2] = Z[ ,1:2]
-		temp[ ,3:(C+2)] = Y 
+		temp[ ,3:(C+2)] = X 
 		temp[ ,(C+3):NCOL(temp)] = Z[ ,-(1:2)] 
 	}
 	
 	else if(type == "none"){	
-		temp[ ,1:C] = Y
+		temp[ ,1:C] = X
 		temp[ ,(C+1):NCOL(temp)] = Z
 	}
 
 
 	# estimate parameters
-	est = lm(Y ~ -1 + ., data = as.data.frame(Z))
+	est = lm(X ~ -1 + ., data = as.data.frame(Z))
 
 	Results = vector("list", 2)
 	names(Results) = c("Results", "Info_Criteria")
@@ -91,7 +91,7 @@ performed.")
 	res2 = matrix(NA, 6, 1)
 	rownames(res2) = c("N_Obs", "N_Var", "N_Pars", "LogLik", "AIC", "BIC")
 	res2[1, ] = N
-	res2[2, ] = NCOL(Y)
+	res2[2, ] = NCOL(X)
 	res2[3, ] = K 
 	res2[4, ] = as.numeric(logLik(est))
 	res2[5, ] = log(det(crossprod(ee) / N)) + (2*p/N)
@@ -178,7 +178,7 @@ rownames(cc), sep = "*"), collapse = " + ")
 ################################################################
 ## ESTIMATES STRUCTURAL VAR ##
 
-Strvar.VecAr = function(X, A=NULL, B=NULL, inter=FALSE){
+Strvar.VecAr = function(X, A=NULL, B=NULL, inter=FALSE, ...){
 
 	if(class(X) != "VecAr"){
 		cat(" \'~\' Ops! Argument X must be an objekt of class \"VecAr\" ",
@@ -306,24 +306,24 @@ LogLik = optpar$value)
 
 ##################################################
 
-fitted.VecAr = function(Y, Coefs, ar.lags){
+fitted.VecAr = function(object, Coefs, ar.lags, ...){
 	
-	xx = MLag(Y, ar.lags, mode="selected", na.rm=FALSE)
+	xx = MLag(object, ar.lags, mode="selected", na.rm=FALSE)
 	fitt = (cbind(1, xx) %*% Coefs)
-	resid = Y - fitt
+	resid = xx - fitt
 	
 	# list of results
 	res = vector("list", 2)
 	names(res) = c("Fitted", "Residuals")
 	res[[1]] = fitt 
-	res[[2]] = resis
+	res[[2]] = resid
 	res  
 }
 
 ###################################################
 ## GRANGER CAUSALITY TEST ##
 
-GrangCas.VecAr = function(X, cause=NULL){
+GrangCas.VecAr = function(X, cause=NULL, ...){
 
 	if(class(X) != "VecAr"){
 		cat(" \'~\' Ops! Argument X must be an objekt of class \"VecAr\" ",
@@ -391,7 +391,7 @@ print.GrangCas = function(x, ...){
 
 ## MATRIX COEFFICIENTS FOR WOLD DECOMPOSIOTION - MA REPRESENTATION
 
-PHI.VecAr = function(X, steps, ortho=FALSE){
+PHI.VecAr = function(X, steps, ortho=FALSE, ...){
 
 	Lag = attr(X, "Lag")
 	type = attr(X, "Type")
@@ -474,7 +474,7 @@ P - K + 1
 
 ## FORECAST STANDARD ERROR ##
 
-FSE.VecAr = function(X, steps){
+FSE.VecAr = function(X, steps, ...){
 
 	K = attr(X, "nser")
 	# get number of observations
@@ -510,14 +510,14 @@ FSE.VecAr = function(X, steps){
 }
 
 ## PREDICTION FOR VAR ##
-predict.VecAr = function(X, steps=5, CI=0.95, viewby=c("vars","step")){
+predict.VecAr = function(object, steps=5, CI=0.95, viewby=c("vars","step"), ...){
 	
-	cc <- coef(X[[1]])
-	K = attr(X, "nser")
-	dm = attr(X, "Data")
-	N = attr(X, "nobs")
-	Lag = attr(X, "Lag") 
-	type = attr(X, "Type")
+	cc <- coef(object[[1]])
+	K = attr(object, "nser")
+	dm = attr(object, "Data")
+	N = attr(object, "nobs")
+	Lag = attr(object, "Lag") 
+	type = attr(object, "Type")
 
 	# index to consider constant and/or trend and get the last row of data
 matrix
@@ -557,7 +557,7 @@ matrix
 	colnames(res) = colnames(cc)
 	rownames(res) = paste("STEP_", steps:1, sep="")
 
-	LV = -1 * qnorm((1 - CI) / 2) * FSE.VecAr(X, steps)
+	LV = -1 * qnorm((1 - CI) / 2) * FSE.VecAr(object, steps)
 	
 	viewby = match.arg(viewby)
 	
@@ -585,7 +585,7 @@ LV[i,]  )
 }
 
 ## IMPULSE RESPONSE FUNCTION ##
-IRS.VecAr = function(X, imp, resp=NULL, steps=5, cum=TRUE, ortho=FALSE){
+IRS.VecAr = function(X, imp, resp=NULL, steps=5, cum=TRUE, ortho=FALSE, ...){
 	
 	if(class(X) != "VecAr"){
 		cat(" \'~\' Ops! Argument
