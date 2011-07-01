@@ -143,21 +143,21 @@ run = function(func = NULL
 		write.log(log, logfile);
 	}
 		
-	# Cleanup objects and release memory to the operating system
-	cleanup(keep = "res", gc = TRUE);
-	
 	# Return result
 	switch(match.arg(output),	
 		"console" = return(res) 
 		,
-		"singl.file" = {nn = paste("Run", "_", format(Sys.time(), "%H%M%S_%d%b%Y"), ".txt", sep="")
+		"sing.file" = {nn = paste("Run", "_", format(Sys.time(), "%H%M%S_%d%b%Y"), ".txt", sep="")
 						sink(file = nn)	
 						print.default(res)
 						sink(file=NULL)
 						}
 	)
 
-	res
+	# Cleanup objects and release memory to the operating system
+	cleanup(keep = "res", gc = TRUE);
+
+	res;
 }
 
 
@@ -232,7 +232,7 @@ multirun = function(func.array = character(0)
 		# match arguments with corresponding function
 		funid = match(func.array[n], names(args.list))
 		
-		res = tryCatch(run(func.array[n], args.list[[funid]], writelog = writelog, logfile = logfile, check.input = FALSE), error = error.handling);
+		res = tryCatch(run(func.array[n], args.list[[funid]], writelog = writelog, logfile = logfile, check.input = FALSE, output="console"), error = error.handling);
 		RES[[n]] = res;
 		
 		# Take timestamp after the call
@@ -260,7 +260,7 @@ multirun = function(func.array = character(0)
 	switch(match.arg(output),	
 		"console" = return(RES) 
 		,
-		"singl.file" = {nn = paste("Run", "_", format(Sys.time(), "%H%M%S_%d%b%Y"), ".txt", sep="")
+		"sing.file" = {nn = paste("Run", "_", format(Sys.time(), "%H%M%S_%d%b%Y"), ".txt", sep="")
 						sink(file = nn)	
 						print.default(RES)
 						sink(file=NULL)
