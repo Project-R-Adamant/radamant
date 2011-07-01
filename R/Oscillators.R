@@ -1,11 +1,8 @@
 ###############################################################
 ### GENERAL METHODS FOR CLASS "OSCIL"
 ###############################################################
-
-oscil = function(x,...) UseMethod("oscil")
-
-oscil.default = function(X, Y, pc = FALSE, type = "oscil") {
-
+oscil = function(X,...) UseMethod("oscil")
+oscil.default = function(X, Y, pc = FALSE, type = "oscil", ...) {
 	if(pc) {
 		# Take difference and convert to percentage terms
 		res = (X - Y) * 100;
@@ -22,9 +19,7 @@ oscil.default = function(X, Y, pc = FALSE, type = "oscil") {
 	# Return result
 	res
 }
-
-print.oscil = function(X, digits = 5) {
-
+print.oscil = function(x, digits = 5, ...) {
 	if(is.list(X)){
 		
 		X = lapply(X,round,5)
@@ -38,19 +33,18 @@ print.oscil = function(X, digits = 5) {
 	
 	
 }
-
-plot.oscil = function(Osc
-						, X = NULL
+plot.oscil = function(x
+						, Y = NULL
 						, main = ""
 						, show.trsh = NULL
-						, xlabels = rownames(X)
-						, theme.params = get.theme(1)
+						, xlabels = rownames(Y)
+						, theme.params = getTheme(1)
 						, overrides = NULL
 						, ...
 						) {
 						
 	# Get default plotting parameters
-	overrides.params = override.list(what = get.plot.params("oscil", attr(Osc, "type"))
+	overrides.params = override.list(what = get.plot.params("oscil", attr(x, "type"))
 									, overrides = overrides
 									, append = TRUE
 									);
@@ -60,12 +54,12 @@ plot.oscil = function(Osc
 		show.trsh = ifelse(is.null(overrides.params[["show.trsh"]]), FALSE, overrides.params[["show.trsh"]]);		
 	}
 	
-	if(is.null(X)) {
+	if(is.null(Y)) {
 		# Plot Oscillator
-		cplot(Osc
+		cplot(x
 					, main = main
 					, theme.params = theme.params
-					, overrides = override.params
+					, overrides = overrides.params
 					, ...
 					);
 	} else {
@@ -83,8 +77,8 @@ plot.oscil = function(Osc
 		
 		# Plot Series and oscillator
 		layout(matrix(c(1,2), nrow = 2, ncol = 1), height = c(3, 2));
-		# Plot X
-		cplot(X					
+		# Plot Y
+		cplot(Y					
 					, main = main
 					, show.xlabels = FALSE
 					, theme.params = theme.params
@@ -93,7 +87,7 @@ plot.oscil = function(Osc
 					, ...
 					);
 		# Plot Oscillator
-		cplot(Osc
+		cplot(x
 					, main = ""
 					, theme.params = theme.params
 					, overrides = overrides.bottom
@@ -104,16 +98,12 @@ plot.oscil = function(Osc
 	
 	if(show.trsh) {
 		# Draw thresholds
-		abline(h = c(30, 50, 70), lty = 2, lwd = 2, col = theme.params[["col"]][1:3 + NCOL(Osc)]);
+		abline(h = c(30, 50, 70), lty = 2, lwd = 2, col = theme.params[["col"]][1:3 + NCOL(x)]);
 	}
 }
-
-
 ##############################
 ## PPO ## PERCENTAGE PRICE OSCILLATOR
-
 ppo = function(X, fast.lag = 10, slow.lag = 30, plot = TRUE, ...) {
-
 	if(class(X) == "fs") {	
 		Y = X;
 		X = Y[, "Close", drop = FALSE];
@@ -131,22 +121,15 @@ ppo = function(X, fast.lag = 10, slow.lag = 30, plot = TRUE, ...) {
 	attr(res, "type") = "PPO";
 	# Remove EMA attributes
 	attr(res, "lambda") = NULL;
-
 	if(plot)
-		plot.oscil(Osc = res, X = X, ...);
+		plot.oscil(X = res, Y = X, ...);
 	
 	# clean up memory
 	cleanup(keep = "res")
 	# return results
 	res	
 }
-
-#plot.oscil(cbind(aroup(SPClose, 25), arodown(SPClose, 25)), cbind(SPClose, gmma(SPClose)), xlabel=SPLabel, show.legend=T )
-
-#########################################
-
 ### TRUE RANGE ###
-
 trf = function(Close, High = NULL, Low = NULL, lag = 1, average=TRUE, avg.lag=14, plot = FALSE, ...){
 	
 	if(class(Close) == "fs") {	
@@ -156,8 +139,6 @@ trf = function(Close, High = NULL, Low = NULL, lag = 1, average=TRUE, avg.lag=14
 		Low = X[, "Low", drop = FALSE];
 		colnames(Close) = attr(X, "SName");
 	}
-
-
 	if(NCOL(High) != NCOL(Low) 
 		|| NCOL(High) != NCOL(Close) 
 		|| NROW(High) != NROW(Low) 
@@ -175,7 +156,6 @@ trf = function(Close, High = NULL, Low = NULL, lag = 1, average=TRUE, avg.lag=14
 		dim(Low) = c(N, V);
 	if(is.null(dim(Close)))
 		dim(Close) = c(N, V);
-
 	# Declare output
 	res = matrix(NA, nrow = N, ncol = V);
 	colnames(res) = paste(get.col.names(Close), "TRF", sep = "_");
@@ -201,7 +181,7 @@ trf = function(Close, High = NULL, Low = NULL, lag = 1, average=TRUE, avg.lag=14
 	attr(res, "type") = "TRF";
 	
 	if(plot)
-		plot.oscil(Osc = res, X = Close, ...);
+		plot.oscil(X = res, Y = Close, ...);
 	
 	#clean up memory
 	cleanup(keep = "res")
@@ -209,14 +189,9 @@ trf = function(Close, High = NULL, Low = NULL, lag = 1, average=TRUE, avg.lag=14
 	# return results
 	res	
 }
-
-
-
 #######################################
-
 ### ACCUMULATION - DISTRIBUTION
 acdi = function(Close, High = NULL, Low = NULL, Vol = NULL, plot = TRUE, ...) {
-
 	if(class(Close) == "fs") {	
 		X = Close;
 		Close = X[, "Close", drop = FALSE];
@@ -225,7 +200,6 @@ acdi = function(Close, High = NULL, Low = NULL, Vol = NULL, plot = TRUE, ...) {
 		Vol = X[, "Volume", drop = FALSE];
 		colnames(Close) = attr(X, "SName");
 	}
-
 	if(NCOL(High) != NCOL(Low) 
 		|| NCOL(High) != NCOL(Close) 
 		|| NCOL(High) != NCOL(Vol) 
@@ -247,8 +221,6 @@ acdi = function(Close, High = NULL, Low = NULL, Vol = NULL, plot = TRUE, ...) {
 		dim(Close) = c(N, V);
 	if(is.null(dim(Vol)))
 		dim(Vol) = c(N, V);
-
-
 	# Compute Ranges
 	cl = Close - Low;
 	hc = High - Close;
@@ -261,21 +233,16 @@ acdi = function(Close, High = NULL, Low = NULL, Vol = NULL, plot = TRUE, ...) {
 	attr(res, "type") = "ACDI";
 	
 	if(plot)
-		plot.oscil(Osc = res, X = Volume, ...);
+		plot.oscil(X = res, Y = Vol, ...);
 	
 	#clean up memory
 	cleanup(keep = "res");
 	
 	res	
 }	
-
-
-
 ####################################
-
 ### CLOSE LOCATION VALUE
 clv = function(Close, High = NULL, Low = NULL, plot = TRUE, ...) {
-
 	if(class(Close) == "fs") {	
 		X = Close;
 		Close = X[, "Close", drop = FALSE];
@@ -283,7 +250,6 @@ clv = function(Close, High = NULL, Low = NULL, plot = TRUE, ...) {
 		Low = X[, "Low", drop = FALSE];
 		colnames(Close) = attr(X, "SName");
 	}
-
 	if(NCOL(High) != NCOL(Low) 
 		|| NCOL(High) != NCOL(Close) 
 		|| NROW(High) != NROW(Low) 
@@ -301,7 +267,6 @@ clv = function(Close, High = NULL, Low = NULL, plot = TRUE, ...) {
 		dim(Low) = c(N, V);
 	if(is.null(dim(Close)))
 		dim(Close) = c(N, V);
-
 	# Compute Ranges
 	cl = Close - Low;
 	hc = High - Close;
@@ -312,25 +277,18 @@ clv = function(Close, High = NULL, Low = NULL, plot = TRUE, ...) {
 	
 	class(res) = "oscil";
 	attr(res, "type") = "CLV";
-
 	if(plot)
-		plot.oscil(Osc = res, X = Close, ...);
+		plot.oscil(X = res, Y = Close, ...);
 	
 	#clean up memory
 	cleanup(keep = "res")
 	
 	# return results
 	res	
-
 }
-
-
-
 #################################
-
 ### EASE OF MOVEMENT
 eom = function(Close, High = NULL, Low = NULL, Vol = NULL, plot = TRUE, ...) {	
-
 	if(class(Close) == "fs") {	
 		X = Close;
 		Close = X[, "Close", drop = FALSE];
@@ -339,7 +297,6 @@ eom = function(Close, High = NULL, Low = NULL, Vol = NULL, plot = TRUE, ...) {
 		Vol = X[, "Volume", drop = FALSE];
 		colnames(Close) = attr(X, "SName");
 	}
-
 	if(NCOL(High) != NCOL(Low) 
 		|| NCOL(High) != NCOL(Vol) 
 		|| NROW(High) != NROW(Low) 
@@ -357,7 +314,6 @@ eom = function(Close, High = NULL, Low = NULL, Vol = NULL, plot = TRUE, ...) {
 		dim(Low) = c(N, V);
 	if(is.null(dim(Vol)))
 		dim(Vol) = c(N, V);
-
 	# Compute Ranges
 	hl = High - Low;
 	mid = (hl / 2) - (Lag(hl, lag = 1) / 2);
@@ -368,24 +324,18 @@ eom = function(Close, High = NULL, Low = NULL, Vol = NULL, plot = TRUE, ...) {
 	
 	class(res) = "oscil";
 	attr(res, "type") = "EOM";
-
 	if(plot)
-		plot.oscil(Osc = res, X = Close, ...);
+		plot.oscil(X = res, Y = Close, ...);
 	
 	#clean up memory
 	cleanup(keep = "res")
 	
 	# return results
 	res	
-
 }
-
-
 #################################
-
 ## RELATIVE VIGOR INDEX ##
 rvi = function(Close, High = NULL, Low = NULL, Open = NULL, plot = TRUE, ...) {
-
 	if(class(Close) == "fs") {	
 		X = Close;
 		Close = X[, "Close", drop = FALSE];
@@ -394,8 +344,6 @@ rvi = function(Close, High = NULL, Low = NULL, Open = NULL, plot = TRUE, ...) {
 		Open = X[, "Open", drop = FALSE];
 		colnames(Close) = attr(X, "SName");
 	}
-
-
 	if(NCOL(High) != NCOL(Low) 
 		|| NCOL(High) != NCOL(Close) 
 		|| NCOL(High) != NCOL(Open) 
@@ -417,7 +365,6 @@ rvi = function(Close, High = NULL, Low = NULL, Open = NULL, plot = TRUE, ...) {
 		dim(Close) = c(N, V);
 	if(is.null(dim(Open)))
 		dim(Open) = c(N, V);
-
 	# Compute Ranges
 	co = Close - Open;
 	hl = High - Low;
@@ -429,20 +376,16 @@ rvi = function(Close, High = NULL, Low = NULL, Open = NULL, plot = TRUE, ...) {
 	attr(res, "type") = "RVI";
 	
 	if(plot)
-		plot.oscil(Osc = res, X = Close, ...);
+		plot.oscil(X = res, Y = Close, ...);
 	
 	#clean up memory
 	cleanup(keep = "res");
 	
 	res	
-
 }
-
-
 #################################
 ### WILLIAMS'R ###
 wro = function(Close, High = NULL, Low = NULL, lag = 5, plot = TRUE, ...) {
-
 	if(class(Close) == "fs") {	
 		X = Close;
 		Close = X[, "Close", drop = FALSE];
@@ -458,12 +401,11 @@ wro = function(Close, High = NULL, Low = NULL, lag = 5, plot = TRUE, ...) {
 	# Compute Oscillator
 	res = (hMax - Close) / (hMax - lMax);
 	colnames(res) = paste(get.col.names(High), "WRO", sep = "_");
-
 	class(res) = "oscil";
 	attr(res, "type") = "WRO";
 	
 	if(plot)
-		plot.oscil(Osc = res, X = Close, ...);
+		plot.oscil(X = res, Y = Close, ...);
 	
 	#clean up memory
 	cleanup(keep = "res");
@@ -471,11 +413,9 @@ wro = function(Close, High = NULL, Low = NULL, lag = 5, plot = TRUE, ...) {
 	# Return result
 	res	
 }
-
 #################################
 ## TL - TRUE LOW ##
 tlow = function(Close, Low = NULL, lag = 5, plot = TRUE, ...) {
-
 	if(class(Close) == "fs") {	
 		X = Close;
 		Close = X[, "Close", drop = FALSE];
@@ -485,7 +425,6 @@ tlow = function(Close, Low = NULL, lag = 5, plot = TRUE, ...) {
 	
 	N = NROW(Close);
 	V = NCOL(Close);
-
 	# Low and lagged Close
 	LC = cbind(Low, Lag(Close, lag = lag, padding = Inf));
 	res = matrix(NA, nrow = N, ncol = V);
@@ -503,7 +442,7 @@ tlow = function(Close, Low = NULL, lag = 5, plot = TRUE, ...) {
 	attr(res, "type") = "TLOW";
 	
 	if(plot)
-		plot.oscil(Osc = res, X = Close, ...);
+		plot.oscil(X = res, Y = Close, ...);
 	
 	#clean up memory
 	cleanup(keep = "res");
@@ -511,19 +450,15 @@ tlow = function(Close, Low = NULL, lag = 5, plot = TRUE, ...) {
 	# Return result
 	res	
 }
-
 #################################
 ## TL - TRUE HIGH ##
 thigh = function(Close, High = NULL, lag = 5, plot = TRUE, ...) {
-
 	if(class(Close) == "fs") {	
 		X = Close;
 		Close = X[, "Close", drop = FALSE];
 		High = X[, "High", drop = FALSE];
 		colnames(Close) = attr(X, "SName");
 	}
-
-
 	N = NROW(Close);
 	V = NCOL(Close);
 	
@@ -544,7 +479,7 @@ thigh = function(Close, High = NULL, lag = 5, plot = TRUE, ...) {
 	attr(res, "type") = "THIGH";
 	
 	if(plot)
-		plot.oscil(Osc = res, X = Close, ...);
+		plot.oscil(X = res, Y = Close, ...);
 	
 	#clean up memory
 	cleanup(keep = "res");
@@ -552,13 +487,9 @@ thigh = function(Close, High = NULL, lag = 5, plot = TRUE, ...) {
 	# Return result
 	res	
 }
-
-
-
 #################################
 ## WILLIAMS AD ##
 wad = function(Close, High = NULL, Low = NULL, lag = 5, na.rm = FALSE, plot = TRUE, ...) {
-
 	if(class(Close) == "fs") {	
 		X = Close;
 		Close = X[, "Close", drop = FALSE];
@@ -605,89 +536,71 @@ wad = function(Close, High = NULL, Low = NULL, lag = 5, na.rm = FALSE, plot = TR
 	attr(res, "type") = "WAD";
 	
 	if(plot)
-		plot.oscil(Osc = res, X = Close, ...);
-
+		plot.oscil(X = res, Y = Close, ...);
 	#clean up memory
 	cleanup(keep = c("res", "sel.idx"));
 	
 	res[sel.idx, , drop = FALSE];
 }
-
-
 #################################
 ## ROC - RATE OF CHANGE ##
 roc = function(X, lag = 5, pc = TRUE, plot = TRUE, ...) {
-
 	if(class(X) == "fs") {	
 		Y = X;
 		X = Y[, "Close", drop = FALSE];
 		colnames(X) = attr(Y, "SName");
 	}
-
 	res = ifelse(pc, 100, 1) * Diff(X, lag = lag)/Lag(X, lag = lag);
 	colnames(res) = paste(get.col.names(X), "ROC", sep = "_");
 	rownames(res) = rownames(X);
 	
 	class(res) = "oscil";
 	attr(res, "type") = "ROC";
-
 	if(plot)
-		plot.oscil(Osc = res, X = X, ...);
+		plot.oscil(X = res, Y = X, ...);
 	
 	res
 }
-
 #################################
 ## PO - PRICE OSCILLATOR ##
 pro = function(Close, fast.lag = 5, slow.lag = 10, plot = TRUE, ...) {
-
 	if(class(Close) == "fs") {	
 		X = Close;
 		Close = X[, "Close", drop = FALSE];
 		colnames(Close) = attr(X, "SName");
 	}
-
 	res = ema(Close, win.size = fast.lag) - ema(Close, win.size = slow.lag);
 	colnames(res) = paste(get.col.names(Close), "PRO", sep = "_");
 	rownames(res) = rownames(Close);
 	
 	class(res) = "oscil";
 	attr(res, "type") = "PRO";
-
 	if(plot)
-		plot.oscil(Osc = res, X = Close, ...);
+		plot.oscil(X = res, Y = Close, ...);
 	
 	res
 }
-
-
 #################################
 ## MOMENTUM ##
 mom = function(X, lag = 5, plot = TRUE, ...) {
-
 	if(class(X) == "fs") {	
 		Y = X;
 		X = Y[, "Close", drop = FALSE];
 		colnames(X) = attr(Y, "SName");
 	}
-
 	res = Diff(X, lag = lag);
 	colnames(res) = paste(get.col.names(X), "MOM", sep = "_");
 	rownames(res) = rownames(X);
 	
 	class(res) = "oscil";
 	attr(res, "type") = "MOM";
-
 	if(plot)
-		plot.oscil(Osc = res, X = X, ...);
-
+		plot.oscil(X = res, Y = X, ...);
 	res
 }
-
 #################################
 ## ULTIMATE OSCILLATOR ##
 ultima = function(Close, High = NULL, Low = NULL, lag = 1, win1 = 7, win2 = 14, win3 = 28, plot = TRUE, ...) {
-
 	if(class(Close) == "fs") {	
 		X = Close;
 		Close = X[, "Close", drop = FALSE];
@@ -695,8 +608,6 @@ ultima = function(Close, High = NULL, Low = NULL, lag = 1, win1 = 7, win2 = 14, 
 		Low = X[, "Low", drop = FALSE];
 		colnames(Close) = attr(X, "SName");
 	}
-
-
 	# Buying Pressure
 	bp = Close - tlow(Close = Close, Low = Low, lag = lag, plot = FALSE);
 	# True Range
@@ -717,25 +628,20 @@ ultima = function(Close, High = NULL, Low = NULL, lag = 1, win1 = 7, win2 = 14, 
 	attr(res, "type") = "ULTIMA"
 	
 	if(plot)
-		plot.oscil(Osc = res, X = Close, ...);
+		plot.oscil(X = res, Y = Close, ...);
 	
 	# clean up memory
 	cleanup(keep = "res");
-
 	res
 }
-
-
 #################################
 ## DETRENDED PRICE OSCILLATOR ##
 dpo = function(Close, lag = 5, plot = TRUE, ...) {
-
 	if(class(Close) == "fs") {	
 		X = Close;
 		Close = X[, "Close", drop = FALSE];
 		colnames(Close) = attr(X, "SName");
 	}
-
 	res = Lag(Close, lag = lag) - sma(Close, win.size = (NROW(Close)/2)+1);
 	colnames(res) = paste(get.col.names(Close), "DPO", sep = "_");
 	rownames(res) = rownames(Close);
@@ -744,15 +650,13 @@ dpo = function(Close, lag = 5, plot = TRUE, ...) {
 	attr(res, "type") = "DPO";
 	
 	if(plot)
-		plot.oscil(Osc = res, X = Close, ...);
+		plot.oscil(X = res, Y = Close, ...);
 	
 	res
 }
-
 #################################
 ## CHAIKIN OSCILLATOR ##
 chaikin = function(Close, High = NULL, Low = NULL, Vol = NULL, fast.lag = 3, slow.lag = 10, plot = TRUE, ...) {
-
 	if(class(Close) == "fs") {	
 		X = Close;
 		Close = X[, "Close", drop = FALSE];
@@ -771,16 +675,13 @@ chaikin = function(Close, High = NULL, Low = NULL, Vol = NULL, fast.lag = 3, slo
 	attr(res, "type") = "CHAIKIN";
 	
 	if(plot)
-		plot.oscil(Osc = res, X = Close, ...);
+		plot.oscil(X = res, Y = Close, ...);
 	
 	res
 }
-
-
 ###########################
 ## AROON UP
 aroup = function(X, lag = 5, plot = TRUE, ...) {
-
 	if(class(X) == "fs") {	
 		Y = X;
 		X = Y[, "Close", drop = FALSE];
@@ -797,20 +698,12 @@ aroup = function(X, lag = 5, plot = TRUE, ...) {
 	attr(res, "type") = "AROUP";
 	
 	if(plot)
-		plot.oscil(Osc = res, X = X, ...);
-
+		plot.oscil(X = res, Y = X, ...);
 	res
 }
-
-oscil.AROUP.plot.params = function(Osc = NULL, ...) {
-	default.params = list(show.trsh = TRUE);
-}
-
-
 #############################
  ## AROON DOWN
 arodown = function(X, lag = 5, plot = TRUE, ...) {
-
 	if(class(X) == "fs") {	
 		Y = X;
 		X = Y[, "Close", drop = FALSE];
@@ -827,75 +720,53 @@ arodown = function(X, lag = 5, plot = TRUE, ...) {
 	attr(res, "type") = "ARODOWN";
 	
 	if(plot)
-		plot.oscil(Osc = res, X = X, ...);
-
+		plot.oscil(X = res, Y = X, ...);
 	res
 }
-
-oscil.ARODOWN.plot.params = function(Osc = NULL, ...) {
-	default.params = list(show.trsh = TRUE);
-}
-
 #############################
 ## AROON UP and DOWN
 aroud = function(X, lag = 5, plot = TRUE, ...) {
-
 	if(class(X) == "fs") {	
 		Y = X;
 		X = Y[, "Close", drop = FALSE];
 		colnames(X) = attr(Y, "SName");
 	}
-
 	# Compute AROON UP and DOWN
 	res = cbind(aroup(X, lag = lag, plot = FALSE), arodown(X, lag = lag, plot = FALSE));
 	
 	class(res) = "oscil";
 	attr(res, "type") = "AROUD";
-
 	if(plot)
-		plot.oscil(Osc = res, X = X, ...);
-
+		plot.oscil(X = res, Y = X, ...);
 	res
 	
 }
-oscil.AROUD.plot.params = function(Osc = NULL, ...) {
-	default.params = list(show.trsh = TRUE);
-}
-
 ##################################
 ## AROON OSCILLATOR
 aroon = function(X, lag = 5, plot = TRUE, ...) {	
-
 	if(class(X) == "fs") {	
 		Y = X;
 		X = Y[, "Close", drop = FALSE];
 		colnames(X) = attr(Y, "SName");
 	}
-
 	res = aroup(X, lag = lag, plot = FALSE) - arodown(X, lag = lag, plot = FALSE);
 	colnames(res) = paste(get.col.names(X), "AROON", sep = "_");
 	rownames(res) = rownames(X);
 	
 	class(res) = "oscil";
 	attr(res, "type") = "AROON";
-
 	if(plot)
-		plot.oscil(Osc = res, X = X, ...);
-
+		plot.oscil(X = res, Y = X, ...);
 	res
 }
-
-
 #######################
 ## McOsc - McClellan Oscillator:
 mcosc = function(X, fast.lag = 19, slow.lag = 39, hist.lag = 9, plot = TRUE, ...) {
-
 	if(class(X) == "fs") {	
 		Y = X;
 		X = Y[, "Close", drop = FALSE];
 		colnames(X) = attr(Y, "SName");
 	}
-
 	N = NROW(X);
 	V = NCOL(X);
 	
@@ -915,17 +786,13 @@ mcosc = function(X, fast.lag = 19, slow.lag = 39, hist.lag = 9, plot = TRUE, ...
 	attr(res, "type") = "MCOSC";
 	
 	if(plot)
-		plot.oscil(Osc = res, X = X, ...);
+		plot.oscil(X = res, Y = X, ...);
 	
 	res
 }
-
-
-
 #################################
 ## KLINGER OSCILLATOR ##
 kvo = function(Close, High = NULL, Low = NULL, Vol = NULL, cumulative = FALSE, plot = TRUE, ...) {
-
 	if(class(Close) == "fs") {	
 		X = Close;
 		Close = X[, "Close", drop = FALSE];
@@ -934,8 +801,6 @@ kvo = function(Close, High = NULL, Low = NULL, Vol = NULL, cumulative = FALSE, p
 		Vol = X[, "Volume", drop = FALSE];
 		colnames(Close) = attr(X, "SName");
 	}
-
-
 	if(NCOL(High) != NCOL(Low) 
 		|| NCOL(High) != NCOL(Close) 
 		|| NROW(High) != NROW(Low) 
@@ -953,7 +818,6 @@ kvo = function(Close, High = NULL, Low = NULL, Vol = NULL, cumulative = FALSE, p
 		dim(Low) = c(N, V);
 	if(is.null(dim(Close)))
 		dim(Close) = c(N, V);
-
 	# Prices Sum
 	HLC = High + Low + Close;
 	# Trend
@@ -995,21 +859,16 @@ kvo = function(Close, High = NULL, Low = NULL, Vol = NULL, cumulative = FALSE, p
 	}
 	colnames(res) = paste(get.col.names(Close), "KVO", sep = "_");
 	rownames(res) = rownames(Close);
-
 	class(res) = "oscil";
 	attr(res, "type") = "KVO";
-
 	if(plot)
-		plot.oscil(Osc = res, X = Close, ...);
+		plot.oscil(X = res, Y = Close, ...);
 	
 	#clean up memory
 	cleanup(keep = "res");
 	
 	res
 }
-
-
-
 ### MACD ###
 macd = function(X, fast.lag = 12, slow.lag = 26, signal.lag = 14, plot = TRUE, ...) {
 		
@@ -1040,13 +899,11 @@ macd = function(X, fast.lag = 12, slow.lag = 26, signal.lag = 14, plot = TRUE, .
 	res[, signal.idx] = ema(res[, macd.idx, drop = FALSE], win.size = signal.lag); 
 	# histogram
 	res[, h.idx] = res[, macd.idx, drop = FALSE] - res[, signal.idx, drop = FALSE];
-
 	# assign class and attributes
 	class(res) = "oscil";
 	attr(res,"type") = "MACD"
-
 	if(plot)
-		plot.oscil(Osc = res, X = X, ...);
+		plot.oscil(X = res, Y = X, ...);
 		
 	#clean memory
 	cleanup(keep = "res");
@@ -1054,16 +911,9 @@ macd = function(X, fast.lag = 12, slow.lag = 26, signal.lag = 14, plot = TRUE, .
 	# return results
 	res
 }
-
-oscil.MACD.plot.params = function(Osc = NULL, ...) {
-	default.params = list(type = c("l", "l", "h"));
-}
-
-
 #########################################
  #APO: Absolute price oscillator
 apo = function(X, fast.lag = 10, slow.lag = 30, plot = FALSE, ...) {
-
     if(class(X) == "fs") {    
         Y = X;
         X = Y[, "Close", drop = FALSE];
@@ -1081,11 +931,10 @@ apo = function(X, fast.lag = 10, slow.lag = 30, plot = FALSE, ...) {
     attr(res, "type") = "APO";
     # Remove EMA attributes
     attr(res, "lambda") = NULL;
-
     if(plot){
 	name = deparse(substitute(X))
 	main = paste("Absolute_Price_oscillator: ", name, " - ", "Fast_", fast.lag, "Slow_", slow.lag, sep="")
-	plot.oscil(Osc = res, X = X, main=main, ...)
+	plot.oscil(X = res, Y = X, main=main, ...)
 	}
     
     # clean up memory
@@ -1093,9 +942,7 @@ apo = function(X, fast.lag = 10, slow.lag = 30, plot = FALSE, ...) {
     # return results
     res    
 }
-
 #########################################
-
 wildAvg = function(X, lag=5, plot=FALSE, ...){
     
 	# series name
@@ -1113,13 +960,11 @@ wildAvg = function(X, lag=5, plot=FALSE, ...){
 	
 	res = rep(NA, length(X))
 	res[lag] = mean(X[1:lag])    
-
 	i = lag+1
 	while(i <= lx){
 		res[i] = (X[i] + ((lag-1) * res[i-1])) / lag
 		i = i + 1    
 	}
-
 	class(res) = "ma";
 	attr(res, "type") = "WILD";
 	attr(res, "win.size") = lag;
@@ -1131,20 +976,14 @@ wildAvg = function(X, lag=5, plot=FALSE, ...){
 	
 	res;
 }
-
-
 wildSum = function(x, lag=5){
     
     res = filter(x, filter = (lag-1)/lag, "recursive", init=x[lag-1] );
-
     res;
 }
-
-
 ####################################################
 ####################################################
 ####################################################
-
 ## Average directional Index
 ADind = function(close, high,low, lag=5)
 {
@@ -1158,11 +997,9 @@ ADind = function(close, high,low, lag=5)
    # Negative directional movement 
    negDM <- ifelse(dh<dl, dl, 0);
    sumn = wildSum(negDM, lag);
-
    # true range
    tr = trf(close, high, low, lag);
-
-   posDI = 100 * (sumdmp / wildSum(tr, lag));
+   posDI = 100 * (sump / wildSum(tr, lag));
    negDI = 100 * (sumn / wildSum(tr, lag));
     
    res = 100 * wildSum( abs(posDI - negDI) / (posDI - negDI), lag);
@@ -1170,11 +1007,8 @@ ADind = function(close, high,low, lag=5)
    res;
     
 }
-
-
 ## Average Directional Rating
-ADrat = function(close,high,low,lag){
-
+ADrating = function(close,high,low,lag){
 	# calculate average directional index
 	ind = ADind(close,high,low,lag);
 	# calculate rating
@@ -1182,11 +1016,8 @@ ADrat = function(close,high,low,lag){
 	
 	res;
 }
-
-
 # Balance of Power
 Bop = function(Close, Open, High, Low, smoothed=TRUE, ...){
-
 	# calculate index
 	res = (Close - Open) / (High - Low);
 	
@@ -1197,10 +1028,7 @@ Bop = function(Close, Open, High, Low, smoothed=TRUE, ...){
 	} else {
 		res;
 	};
-
 }
-
-
 # Bollinger bands
 BolBand = function(Close, High, Low, fact=2, win.size=5, plot=FALSE, ...){
 	
@@ -1211,7 +1039,6 @@ BolBand = function(Close, High, Low, fact=2, win.size=5, plot=FALSE, ...){
 		Low = X[, "Low", drop = FALSE];
 		colnames(Close) = attr(X, "SName");
 	}
-
 	# typical price
 	tp = tyP(High, Low, Close);
 	
@@ -1243,7 +1070,6 @@ BolBand = function(Close, High, Low, fact=2, win.size=5, plot=FALSE, ...){
 						
 	Results;
 }
-
 # Bollinger bands % B
 BolBandB = function(Close, High, Low, fact=2, win.size=5, plot=FALSE, ...){
 	
@@ -1254,7 +1080,6 @@ BolBandB = function(Close, High, Low, fact=2, win.size=5, plot=FALSE, ...){
 		Low = X[, "Low", drop = FALSE];
 		colnames(Close) = attr(X, "SName");
 	}
-
 	# typical price
 	tp = tyP(High, Low, Close);
 	
@@ -1263,14 +1088,10 @@ BolBandB = function(Close, High, Low, fact=2, win.size=5, plot=FALSE, ...){
 	
 	class(res) = "oscil";
 	attr(res, "type") = "BBB";
-
 	if(plot)
-		plot.oscil(Osc = res, X = Close, ...);
-
+		plot.oscil(X = res, Y = Close, ...);
 	res;
-
 }
-
 # Bollinger bands - Fibonacci Ratio
 Bol.Fib = function(Close, High, Low, win.size=5, fibo=c(1.618, 2.618, 4.236), plot=FALSE, ...){
 	
@@ -1281,8 +1102,6 @@ Bol.Fib = function(Close, High, Low, win.size=5, fibo=c(1.618, 2.618, 4.236), pl
 		Low = X[, "Low", drop = FALSE];
 		colnames(Close) = attr(X, "SName");
 	}
-
-
 	# Adjust Fibonacci ratio
 	if(any(fibo < 1 | fibo > 13)){
 		fibo[fibo[fibo < 1]] = 1
@@ -1290,7 +1109,6 @@ Bol.Fib = function(Close, High, Low, win.size=5, fibo=c(1.618, 2.618, 4.236), pl
 		
 		cat("Ratios out of ranges have been adjusted!");
 	};
-
 	# calculate average true range
 	atr = trf(Close, High, Low, average=TRUE)[-(1:win.size)];
 	
@@ -1312,28 +1130,21 @@ Bol.Fib = function(Close, High, Low, win.size=5, fibo=c(1.618, 2.618, 4.236), pl
 		cplot(res, ...)
 	
 	res;
-
 }
-
 # On balance volume
 Obv = function(Close, Volume){
-
 	# Volume path
 	vp = ifelse(Close > Lag(Close,1), 1, ifelse(Close < Lag(Close,1), -1, 0));
 	
 	# calculate on balance volume
-	res = cumsum(vp * V);
+	res = cumsum(vp * Volume);
 	
 	res;
-
 }
-
-
 # Relative volatiliy index
 RelVol = function(Close, sdlag=9, lag=5 ){
-
 	# compute rolling variance
-	mv = rolVar(Close, sdlag, om.na=TRUE);
+	mv = movVar(Close, sdlag, rm.transient=TRUE);
 	
 	# difference between lagged price
 	dc = Diff(Close, lag)[-(1:sdlag)];
@@ -1347,24 +1158,16 @@ RelVol = function(Close, sdlag=9, lag=5 ){
 	res = 100 - (100 / (1 + (up / down)));
 	
 	res;
-
 }
-
 # Inertia indicator
 Inertia = function(X, lag, ...){
-
 	# calculate inertia indicator
 	res = epma(RelVol(X, ...),10);
 	
 	res;
-
 }
-
-
-
 # BDPL Indicator
 BPDLind = function(Close, lag=1, smoothed=TRUE, slag= 5){
-
 	# lagged price difference
 	dp = Diff(Close, lag);
 	
@@ -1373,19 +1176,14 @@ BPDLind = function(Close, lag=1, smoothed=TRUE, slag= 5){
 	
 	# return results
 	if(smoothed){
-
 		sma(res, slag);
-
 	} else {
 		
 		res;
 	};
 }
-
-
 # Chaos Accelerator oscillator
 chaosAcc = function(X){
-
 	# 5 days sma
 	short = sma(X, 5);
 	# 34 days sma
@@ -1397,15 +1195,3 @@ chaosAcc = function(X){
 	res;
 	
 }
-
-#plot(chaosAcc(X[,1]))
-
-####################################################
-####################################################
-####################################################
-
-
-
-
-
-
