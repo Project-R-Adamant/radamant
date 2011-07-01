@@ -219,7 +219,7 @@ absrs = function(X, lag=14, na.rm=FALSE, plot=FALSE, ...){
 # RETURNS:
 #  Vector of results 
 #######################################################################################################################	
-rsi = function(X, plot=FALSE, ...){
+rsi = function(X, lag = 5, plot=FALSE, ...){
 
 	if(class(Close) == "fs") {	
 		X = Y;
@@ -239,7 +239,7 @@ rsi = function(X, plot=FALSE, ...){
 	}	
 
 	# calculate index based on absolute relative strenght
-	res = 100 * ( 1 / (1 + rs(x)) )
+	res = 100 * ( 1 / (1 + absrs(X, lag)) )
 
 	class(res) = "oscil";
 	attr(res, "type") = "ABSRS";
@@ -893,7 +893,7 @@ vidyaf = function (X, lag=5, plot=FALSE, ...){
 	i = 2
 	while(i <= l-lag)
 	{		
-		res[i] = X[i-1] * sm.fac * cmo[i] + vidya[i-1] * (1 - (sm.fac * cmo[i])) 
+		res[i] = X[i-1] * sm.fac * cmo[i] + res[i-1] * (1 - (sm.fac * cmo[i])) 
 		i = i + 1
 	}
 	
@@ -923,7 +923,7 @@ vidyaf = function (X, lag=5, plot=FALSE, ...){
 # RETURNS:
 #  Vector of results
 #######################################################################################################################	
-vhff<- function (X, lag=9, plot=FALSE, ...){ 	
+vhff = function (X, lag=9, plot=FALSE, ...){ 	
 
 	if(class(Close) == "fs") {	
 		Y = X;
@@ -945,11 +945,11 @@ vhff<- function (X, lag=9, plot=FALSE, ...){
 	dab = abs(Diff(X, 1)) 
 	
 	# scaled Max/Min
-	hh = scalMax(x, lag)
-	ll = scalMin(x, lag)
+	hh = scalMax(X, lag)
+	ll = scalMin(X, lag)
 
 	# rate of change
-	den = roc(x, lag, plot=FALSE)	
+	den = roc(X, lag, plot=FALSE)	
 		 
 	res = (hh-ll)/den;
 
@@ -1023,7 +1023,7 @@ demark = function(High, Low, Close, lag=5, plot=FALSE, ...){
 # RETURNS:
 #  Matrix of results with "Lower" , "Center" and "Upper" bands
 #######################################################################################################################	
-tirLev = function(High, Low, lag=5, plot=FALSE, ...){
+tirLev = function(High, Low, Close, lag=5, plot=FALSE, ...){
 
 	if(class(High) == "fs") {	
 		Y = High;
@@ -1175,7 +1175,7 @@ prbsar = function(Close, High, Low, accel=c(0.02,0.2), plot=FALSE, ...){
 	if(plot){
 		name = deparse(substitute(Close))
 		main = paste("Parabolic_SAR: ", name, " - ", "Acc.fact_", accel, sep="")
-		plot.oscil(Osc = sar, X = Close, ...)
+		plot.oscil(Osc = sar, Y = Close, ...)
 	};
 
 	sar;
@@ -1224,7 +1224,7 @@ mass.cum = function(High, Low, Close=NULL, lag=9, plot=FALSE, ...){
 	if(plot){
 		name = deparse(substitute(Close))
 		main = paste("Mass_Cumulative_index: ", name, " - ", "Lags_", lag, sep="")
-		plot.oscil(Osc = res, X = Close, ...)
+		plot.oscil(Osc = res, Y = Close, ...)
 	};
 
 	res;
@@ -1301,7 +1301,7 @@ mcgind = function(X, lag=12, plot=FALSE, ...){
 
 	if(plot){
 		main = paste("McGinley_Dynamic_index: ", name, " - ", "Lags_", lag, sep="")
-		plot.oscil(Osc = res, X = X, main = main, ...);
+		plot.oscil(Osc = res, Y = X, main = main, ...);
 	}
 	
 	res;	
@@ -1342,7 +1342,7 @@ Mflow = function(Close, High, Low, Volume, plot=FALSE, ...){
 	if(plot){
 		name = deparse(substitute(Close))
 		main = paste("Money_Flow: ", name, sep="")
-		plot.oscil(Osc = res, X = Close, main=main, ...);
+		plot.oscil(Osc = res, Y = Close, main=main, ...);
 	}
 	
 	res;
@@ -1404,7 +1404,7 @@ Mflow.ratio = function(Close, High, Low, Volume, plot=FALSE, ...){
 	if(plot){
 		name = deparse(substitute(Close))
 		main = paste("Money_Flow_ratio: ", name, sep="")
-		plot.oscil(Osc = res, X = Close, main=main, ...);
+		plot.oscil(Osc = res, Y = Close, main=main, ...);
 	}
 	
 	res;
@@ -1439,7 +1439,7 @@ Mflow.ind = function(Close, High, Low, Volume, plot=FALSE, ...){
 	}
 
 	# get money ratio
-	mr = mf_ratio(High,Low,Close,Volume);
+	mr = Mflow.ratio(High,Low,Close,Volume);
 	
 	# get money flow index
 	res = 100 - (100 / (1+mr));
@@ -1450,7 +1450,7 @@ Mflow.ind = function(Close, High, Low, Volume, plot=FALSE, ...){
 	if(plot){
 		main = paste("Money_Flow_index: ", name, sep="")
 		name = deparse(substitute(Close))
-		plot.oscil(Osc = res, X = Close, main=main, ...);
+		plot.oscil(Osc = res, Y = Close, main=main, ...);
 	}
 	
 	res;
@@ -1498,7 +1498,7 @@ kri = function(X, lag1=10, lag2=20, plot=FALSE, ...){
 
 	if(plot){
 		main = paste("Kairi_Relative_Index: ", name, " - ", "Lags_", lag1, "/", lag2, sep="")
-		plot.oscil(Osc = res, X = X, main = main, ...);
+		plot.oscil(Osc = res, Y = X, main = main, ...);
 	}
 	
 	res;
@@ -1551,7 +1551,7 @@ Swing = function(Close, High, Low, Open, ret_cum=FALSE, plot=FALSE, ...){
 	# denominator
 	den = apply(rr * dis, 1, sum, na.rm=TRUE);
 	
-	fact = rowMax(cbind(h_lc, l_lc)) / vl;
+	fact = rowMax(cbind(h_lc, l_lc)) / max(c_lc);
 	
 	# calculate swing index
 	res = 50 * (num / den) * fact;
@@ -1734,7 +1734,7 @@ ADratio = function(X, lag=5, plot=FALSE, ...){
 	}
 
 	# calculate advance / decline
-	ad = AdvDec(X, lag, FALSE, FALS);
+	ad = AdvDec(X, lag, FALSE, FALSE);
 
 	res = ad[,1] / ad[,2];
 
@@ -1772,7 +1772,7 @@ Arms = function(X, Volume, lag, plot=FALSE, ...){
 	}
 
 	# calculate trin index 
-	res = ADratio(X, lag) / ADratio(XV, lag);
+	res = ADratio(X, lag) / ADratio(Volume, lag);
 	
 	class(res) = "oscil";
 	attr(res, "type") = "TRIN";
