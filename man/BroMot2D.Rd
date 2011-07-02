@@ -1,4 +1,4 @@
-\name{BroMot2D}
+\name{bromot2d}
 \alias{BroMot2D}
 \title{2-dimensional Browniam motion}
 \description{Simulate a bi-dimensional standard Brownian motion }

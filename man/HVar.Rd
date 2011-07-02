@@ -1,4 +1,4 @@
-\name{HVar}
+\name{hvar}
 
 \alias{hVaR}
 

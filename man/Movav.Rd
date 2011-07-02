@@ -1,4 +1,4 @@
-\name{Movav}
+\name{movav}
 
 \alias{Movav}
 \alias{Movav.default}

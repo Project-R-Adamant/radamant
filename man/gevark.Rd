@@ -1,4 +1,4 @@
-\name{gev.VaR.like}
+\name{gevark}
 \alias{gev.VaR.like}
 \title{GEV - VaR Log Likelihood}
 \description{GEV - VaR Log Likelihood}

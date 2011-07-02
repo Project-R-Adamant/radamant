@@ -1,4 +1,4 @@
-\name{PtfBeta}
+\name{ptfbeta}
 \alias{PtfBeta}
 \title{Portfolio Beta}
 \description{Get portfolio Beta}

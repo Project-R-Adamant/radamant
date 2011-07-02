@@ -1,4 +1,4 @@
-\name{gpd.ES.surface}
+\name{gpdesfce}
 \alias{gpd.ES.surface}
 \title{GPD - Log Likelihood 3D surface as a function of Expected Shortfall}
 \description{GPD - Log Likelihood 3D surface as a function of Expected Shortfall}

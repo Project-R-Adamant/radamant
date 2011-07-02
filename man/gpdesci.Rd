@@ -1,4 +1,4 @@
-\name{gpd.ES.ci}
+\name{gpdesci}
 \alias{gpd.ES.ci}
 \title{GPD - ES calculation and Confidence Intervals}
 \description{GPD - ES calculation and Confidence Intervals}

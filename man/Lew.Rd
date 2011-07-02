@@ -1,4 +1,4 @@
-\name{Lew}
+\name{lew}
 \alias{lew}
 \title{Moving window}
 \description{Apply a given function to an extending window of the lagged data series of the input

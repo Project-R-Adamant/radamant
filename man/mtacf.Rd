@@ -1,4 +1,4 @@
-\name{MethodAcf}
+\name{mtacf}
 
 \alias{print.cool.acf}
 \alias{plot.cool.acf}

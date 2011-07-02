@@ -1,4 +1,4 @@
-\name{Runner}
+\name{runner}
 \alias{run}
 \alias{multirun}
 

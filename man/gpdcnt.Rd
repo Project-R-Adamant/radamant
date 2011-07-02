@@ -1,4 +1,4 @@
-\name{gpd.contour}
+\name{gpdcnt}
 \alias{gpd.contour}
 
 \title{GPD - Joint Confidence Intervals by Profile Likelihood}

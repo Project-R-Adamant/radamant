@@ -1,4 +1,4 @@
-\name{get.acf.ci}
+\name{getacfci}
 \alias{get.acf.ci}
 \title{Normal confidence intervals for correlation}
 \description{Compute the Normal confidence intervals for correlation and partial autocorrelation

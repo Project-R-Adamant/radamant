@@ -1,4 +1,4 @@
-\name{Wma}
+\name{wma}
 \alias{wma}
 \title{Weighted Moving Averages}
 \description{Compute multiple Weighted Moving Averages on the input data, one for each column of X[,

@@ -1,4 +1,4 @@
-\name{BS.ImpVol}
+\name{bslmpvol}
 \alias{BS.ImpVol}
 \title{Black & Scholes Implied volatility}
 \description{Calculate Black & Scholes Implied volatility}

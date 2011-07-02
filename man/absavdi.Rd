@@ -1,4 +1,4 @@
-\name{abs_avdi}
+\name{absavdi}
 \alias{abs_avdi}
 \title{Absolute average discard}
 \description{Calculate Absolute average discard for model evaluation }

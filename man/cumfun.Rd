@@ -1,4 +1,4 @@
-\name{CumFun}
+\name{cumfun}
 
 \alias{cumMax}
 \alias{cumMin}

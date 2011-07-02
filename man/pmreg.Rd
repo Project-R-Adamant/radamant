@@ -1,4 +1,4 @@
-\name{print.mreg}
+\name{pmreg}
 \alias{print.mreg}
 \title{Print function for mreg}
 \description{Print function for class 'mreg'}

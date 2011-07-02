@@ -1,4 +1,4 @@
-\name{gpd.ci}
+\name{gpdci}
 \alias{gpd.ci}
 \title{GPD - Distribution fitting and Confidence Intervals}
 \description{GPD - Distribution fitting and Confidence Intervals}

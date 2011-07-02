@@ -1,4 +1,4 @@
-\name{sensAnalysis}
+\name{sensan}
 
 \alias{sensAnalysis.default}
 \alias{sensAnalysis}

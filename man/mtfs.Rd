@@ -1,4 +1,4 @@
-\name{MethodFs}
+\name{mtfs}
 
 \alias{plot.fs}
 \alias{print.fs}

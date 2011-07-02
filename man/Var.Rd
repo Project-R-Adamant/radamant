@@ -1,4 +1,4 @@
-\name{Var}
+\name{var}
 
 \alias{VaR}
 \alias{VaR.default}

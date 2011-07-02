@@ -1,4 +1,4 @@
-\name{get.lm.weights}
+\name{getlmwgh}
 \alias{get.lm.weights}
 \title{Extract weights percentages of the coefficients of a linear model}
 \description{Extract weights percentages of the coefficients of a linear model}

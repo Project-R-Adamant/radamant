@@ -1,4 +1,4 @@
-\name{InvPP}
+\name{invp}
 \alias{InvPP}
 \title{Peizer-Pratt Inversion formula}
 \description{Peizer-Pratt Inversion formula}

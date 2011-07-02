@@ -1,4 +1,4 @@
-\name{Cplot}
+\name{cplot}
 
 \alias{cplot}
 

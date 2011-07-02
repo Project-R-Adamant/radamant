@@ -1,4 +1,4 @@
-\name{PtfUtility}
+\name{ptfutil}
 \alias{PtfUtility}
 \title{Portfolio Utility}
 \description{Calculate utility and plot for efficient portfolio}

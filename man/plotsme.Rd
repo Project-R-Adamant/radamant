@@ -1,4 +1,4 @@
-\name{plot.sme}
+\name{plotsme}
 \alias{plot.sme}
 \title{Plot Sample Mean Excess class}
 \description{Plotting function for Sample Mean Excess class}

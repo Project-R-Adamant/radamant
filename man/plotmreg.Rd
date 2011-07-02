@@ -1,4 +1,4 @@
-\name{plot.mreg}
+\name{plotmreg}
 \alias{plot.mreg}
 \title{Plot function for mreg}
 \description{Plot function for class 'mreg'}

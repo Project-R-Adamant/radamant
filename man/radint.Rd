@@ -1,4 +1,4 @@
-\name{RAdamant-internal}
+\name{radint}
 \title{Internal RAdamant objects}
 \alias{.First.lib}
 \description{Internal RAdamant objects.}

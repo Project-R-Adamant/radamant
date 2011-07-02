@@ -1,4 +1,4 @@
-\name{Lag_Return}
+\name{lagret}
 \alias{Ret}
 \alias{Lag}
 \alias{MLag}

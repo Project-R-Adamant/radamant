@@ -1,4 +1,4 @@
-\name{FourMeasures}
+\name{fmeas}
 
 \alias{FourMeasures}
 \alias{FourMeasures.default}

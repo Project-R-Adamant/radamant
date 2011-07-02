@@ -1,4 +1,4 @@
-\name{Moving_functions}
+\name{movfunc}
 \alias{movMax}
 \alias{movMin}
 \alias{movSd}

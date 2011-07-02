@@ -1,4 +1,4 @@
-\name{Rema}
+\name{rema}
 \alias{rema}
 \title{Regularised Exponential Moving Averages}
 \description{Compute multiple Regularised Exponential Moving Averages on the input data, one for

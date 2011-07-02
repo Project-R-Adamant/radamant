@@ -1,4 +1,4 @@
-\name{plot.ret}
+\name{plotret}
 \alias{plot.ret}
 \title{Plot Returns}
 \description{Plot function for Returns}

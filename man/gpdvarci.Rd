@@ -1,4 +1,4 @@
-\name{gpd.VaR.ci}
+\name{gpdvarci}
 \alias{gpd.VaR.ci}
 \title{GPD - VaR calculation and Confidence Intervals}
 \description{GPD - VaR calculation and Confidence Intervals}

@@ -1,4 +1,4 @@
-\name{Emat}
+\name{emat}
 \alias{emat}
 \title{Trend corrected Exponential Moving Averages}
 \description{Compute multiple Trend corrected Exponential Moving Averages on the input data, one for

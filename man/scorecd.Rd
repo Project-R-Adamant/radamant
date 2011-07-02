@@ -1,4 +1,4 @@
-\name{Score.card}
+\name{scorecd}
 \alias{Score.card}
 \title{Score Card}
 \description{Create Credit Score Card based on Logistic Regression }

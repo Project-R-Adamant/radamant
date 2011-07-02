@@ -1,4 +1,4 @@
-\name{print.Garch}
+\name{pgarch}
 \alias{print.Garch}
 \title{Print Garch}
 \description{Print function for Garch model}

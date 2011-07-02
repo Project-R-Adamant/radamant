@@ -1,4 +1,4 @@
-\name{plike.contour}
+\name{plikecnt}
 \alias{plike.contour}
 \title{Likelihood joint confidence intervals contour}
 \description{General function for profile likelihood joint confidence intervals contour}

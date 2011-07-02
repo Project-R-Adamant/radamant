@@ -1,4 +1,4 @@
-\name{SampMom}
+\name{sampmom}
 \alias{SampMom}
 \title{Sample moments (Brownian motion)}
 \description{Calculate sample moments of a Brownian motion}

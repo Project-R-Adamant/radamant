@@ -1,4 +1,4 @@
-\name{GKgamma}
+\name{gkgamma}
 \alias{GKgamma}
 \title{GK Gamma}
 \description{GK Gamma statistic}

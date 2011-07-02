@@ -1,4 +1,4 @@
-\name{Vwma}
+\name{vwma}
 \alias{vwma}
 \title{Volume Weighted Moving Averages}
 \description{Compute multiple Volume Weighted Moving Averages on the input data, one for each column

@@ -1,4 +1,4 @@
-\name{Swing}
+\name{swing}
 \alias{Swing}
 \title{Swing Index}
 \description{Calculate Swing index (Technical Analysis)}

@@ -1,4 +1,4 @@
-\name{Garch}
+\name{garch}
 
 \alias{Garch}
 \alias{Garch.default}

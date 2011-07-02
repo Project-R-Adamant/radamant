@@ -1,4 +1,4 @@
-\name{JR.BinTree}
+\name{jrbtree}
 \alias{JR.BinTree}
 \title{JR Binomial Tree}
 \description{Option evaluation with Jarrow and Rudd Binomial Tree}

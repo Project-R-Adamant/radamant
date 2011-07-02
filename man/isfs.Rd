@@ -1,4 +1,4 @@
-\name{is.fs}
+\name{isfs}
 \alias{is.fs}
 \title{Check for inheritance from Financial Series class}
 \description{Check for inheritance from Financial Series class}

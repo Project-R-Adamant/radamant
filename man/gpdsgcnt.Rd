@@ -1,4 +1,4 @@
-\name{gpd.sigma.constraint}
+\name{gpdsgcnt}
 \alias{gpd.sigma.constraint}
 \title{GPD - Domain range for the sigma parameter}
 \description{GPD - Domain range for the sigma parameter}

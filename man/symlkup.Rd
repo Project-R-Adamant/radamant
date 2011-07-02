@@ -1,4 +1,4 @@
-\name{symbol.lookup}
+\name{symlkup}
 \alias{symbol.lookup}
 \title{Lookup Stock Symbol from Yahoo!}
 \description{Lookup Stock Symbol from Yahoo!}

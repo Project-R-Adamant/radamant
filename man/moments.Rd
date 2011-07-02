@@ -1,4 +1,4 @@
-\name{Moments}
+\name{moments}
 \alias{moments}
 \title{Main Moments}
 \description{Calculate sample moments on each columns of X}

@@ -1,4 +1,4 @@
-\name{Freq_wind}
+\name{freqwind}
 
 \alias{barthann}
 \alias{bartlet}

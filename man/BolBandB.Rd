@@ -1,4 +1,4 @@
-\name{BolBandB}
+\name{bolbandb}
 
 \alias{BolBandB}
 

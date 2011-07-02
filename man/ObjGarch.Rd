@@ -1,4 +1,4 @@
-\name{ObjGarch}
+\name{objgarch}
 
 \alias{vcov.Garch}
 \alias{coef.Garch}

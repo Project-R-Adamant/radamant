@@ -1,4 +1,4 @@
-\name{cross.colin}
+\name{crscolin}
 \alias{cross.colin}
 \title{Cross collinearity}
 \description{Perform a cross Co-Linearity analysis between the columns of Y and X: Correlation

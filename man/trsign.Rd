@@ -1,4 +1,4 @@
-\name{track_sign}
+\name{trsign}
 \alias{track_sign}
 \title{Track signal}
 \description{Calculate Track signal for model evaluation }

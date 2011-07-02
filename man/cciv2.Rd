@@ -1,4 +1,4 @@
-\name{cci.v2}
+\name{cciv2}
 \alias{cci.v2}
 \title{Commodity channel index v02}
 \description{Compute Commodity channel index v02 (Technical Analysis)}

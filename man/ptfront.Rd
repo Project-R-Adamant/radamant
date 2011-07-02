@@ -1,4 +1,4 @@
-\name{PtfFront}
+\name{ptfront}
 \alias{PtfFront}
 \title{Portfolio efficient frontier}
 \description{Compute / Simulate portfolio mean-variance efficient frontier}

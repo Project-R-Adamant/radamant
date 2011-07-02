@@ -1,4 +1,4 @@
-\name{Method_ccf}
+\name{mtccf}
 
 \alias{print.cross.ccf}
 \alias{plot.cross.ccf}

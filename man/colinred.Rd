@@ -1,4 +1,4 @@
-\name{colin.reduce}
+\name{colinred}
 \alias{colin.reduce}
 \title{Co-Linearity reduction}
 \description{Perform a cross Co-Linearity analysis between the columns of Y and X, and for each Yi

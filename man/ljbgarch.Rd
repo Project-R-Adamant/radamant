@@ -1,4 +1,4 @@
-\name{LjungBox.Garch}
+\name{ljbgarch}
 
 \alias{LjungBox}
 

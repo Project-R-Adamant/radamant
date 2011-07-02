@@ -1,4 +1,4 @@
-\name{inv.logit}
+\name{invlogit}
 \alias{inv.logit}
 \title{Inverse Logit transformation}
 \description{Inverse Logit transformation}

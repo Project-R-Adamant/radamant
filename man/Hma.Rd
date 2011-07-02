@@ -1,4 +1,4 @@
-\name{Hma}
+\name{hma}
 \alias{hma}
 \title{Hull Moving Averages}
 \description{Compute multiple Hull Moving Averages on the input data, one for each column of X[, i]

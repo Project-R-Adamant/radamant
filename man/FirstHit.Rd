@@ -1,4 +1,4 @@
-\name{FirstHit}
+\name{firsthit}
 \alias{FirstHit}
 \title{First Hit time barrier (Brownian motion)}
 \description{Calculate expected time of the First Hitting for a Brownian motion}

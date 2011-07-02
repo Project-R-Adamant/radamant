@@ -1,4 +1,4 @@
-\name{Bol.Fib}
+\name{bolfib}
 \alias{Bol.Fib}
 \title{Bollinger Bands - Fibonacci ratio}
 \description{Compute Bollinger Bands - Fibonacci ratio (Technical Analysis)}

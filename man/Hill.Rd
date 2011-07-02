@@ -1,4 +1,4 @@
-\name{Hill}
+\name{hill}
 
 \alias{Hill}
 

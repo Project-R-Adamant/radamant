@@ -1,4 +1,4 @@
-\name{Gmma}
+\name{gmma}
 \alias{gmma}
 \title{Guppy's Multiple EMA}
 \description{Compute  Guppy's Multiple EMA on the input data, one for each column of X[, i].}

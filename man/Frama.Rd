@@ -1,4 +1,4 @@
-\name{Frama}
+\name{frama}
 
 \alias{frama}
 

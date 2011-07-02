@@ -1,4 +1,4 @@
-\name{gev.range}
+\name{gevrng}
 \alias{gev.range}
 \title{GEV - Parameters range grid for contour calculation}
 \description{GEV - Parameters range grid for contour calculation}

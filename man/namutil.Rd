@@ -1,4 +1,4 @@
-\name{Names_util}
+\name{namutil}
 
 \alias{get.col.names}
 \alias{get.row.names}

@@ -1,4 +1,4 @@
-\name{Multi.Styles}
+\name{mstyles}
 \alias{Multi.Styles}
 \title{Multiple Style analysis (Portfolio)}
 \description{Perform Style analysis for multiple time periods }

@@ -1,4 +1,4 @@
-\name{BS.moments}
+\name{bsmomt}
 \alias{BS.moments}
 \title{Black & Scholes moments}
 \description{Calculate first four moments for Black & Scholes}

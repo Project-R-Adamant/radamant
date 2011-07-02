@@ -1,4 +1,4 @@
-\name{splitWindow}
+\name{splitwdw}
 \alias{splitWindow}
 \title{Sliding windows}
 \description{Sliding windows}

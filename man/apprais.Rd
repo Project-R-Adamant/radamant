@@ -1,4 +1,4 @@
-\name{Appraisal}
+\name{apprais}
 \alias{Appraisal}
 \alias{Appraisal.default}
 \alias{Appraisal.Capm}

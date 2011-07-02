@@ -1,4 +1,4 @@
-\name{predict.reg}
+\name{predreg}
 
 \alias{predict.reg}
 

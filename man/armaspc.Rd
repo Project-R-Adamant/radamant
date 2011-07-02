@@ -1,4 +1,4 @@
-\name{Arma.Spec}
+\name{armaspc}
 \alias{Arma.Spec}
 \title{Arma spectral representation}
 \description{Spectral representation based on ARMA models}

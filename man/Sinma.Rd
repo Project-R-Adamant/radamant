@@ -1,4 +1,4 @@
-\name{Sinma}
+\name{sinma}
 \alias{sinma}
 \title{(Normalised) Sine Weighted Moving Averages}
 \description{Compute multiple (Normalised) Sine Weighted Moving Averages on the input data, one for

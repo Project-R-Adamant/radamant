@@ -1,4 +1,4 @@
-\name{combine.fs}
+\name{combfs}
 \alias{combine.fs}
 \title{Combine Multiple Financial Series}
 \description{Combine Multiple Financial Series}

@@ -1,4 +1,4 @@
-\name{movApply}
+\name{movapply}
 \alias{movApply}
 \title{Moving Apply function}
 \description{Applies a given function to a sliding window of the input data}

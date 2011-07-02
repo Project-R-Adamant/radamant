@@ -1,4 +1,4 @@
-\name{state_space}
+\name{sssym}
 \alias{ss.sym}
 \title{State Space system simulation}
 \description{Generic function for State Space system simulation. The system can be either linear or

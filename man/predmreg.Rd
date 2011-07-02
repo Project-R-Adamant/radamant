@@ -1,4 +1,4 @@
-\name{predict.mreg}
+\name{predmreg}
 \alias{predict.mreg}
 \title{Predict method for Multiple regressions}
 \description{Predict function for class 'mreg'}

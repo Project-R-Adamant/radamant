@@ -1,4 +1,4 @@
-\name{FormulaMreg}
+\name{fmlmreg}
 
 \alias{formula.mreg}
 \alias{formula.reg}

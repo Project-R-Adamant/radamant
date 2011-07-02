@@ -1,4 +1,4 @@
-\name{Dema}
+\name{dema}
 \alias{dema}
 \title{Double EMA}
 \description{Compute multiple Double EMA on the input data, one for each column of X[, i] and window

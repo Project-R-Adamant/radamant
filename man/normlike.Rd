@@ -1,4 +1,4 @@
-\name{norm.like}
+\name{normlike}
 \alias{norm.like}
 \title{Normal Distribution - Log Likelihood function}
 \description{Normal Distribution - Log Likelihood function}

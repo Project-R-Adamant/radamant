@@ -1,4 +1,4 @@
-\name{Means}
+\name{means}
 \alias{gmean}
 \alias{hmean}
 \title{Geometric and Harmonic means}

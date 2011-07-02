@@ -1,4 +1,4 @@
-\name{RelVol}
+\name{relvol}
 \alias{RelVol}
 \title{Relative Volatility oscillator}
 \description{Compute Relative Volatility oscillator (Technical Analysis)}

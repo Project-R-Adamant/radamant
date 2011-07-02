@@ -1,4 +1,4 @@
-\name{gpd.VaR.ml}
+\name{gpdvarml}
 \alias{gpd.VaR.ml}
 \title{GPD - Maximum Likelihood VaR Estimation}
 \description{GPD - Maximum Likelihood VaR Estimation}

@@ -1,4 +1,4 @@
-\name{MethodMcf}
+\name{mtmcf}
 
 \alias{print.mcf}
 \alias{plot.mcf}

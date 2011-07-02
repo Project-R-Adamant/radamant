@@ -1,4 +1,4 @@
-\name{Sma}
+\name{sma}
 \alias{sma}
 \title{Simple Moving Average}
 \description{Compute multiple Simple Moving Averages on the input data, one for each column of X[,

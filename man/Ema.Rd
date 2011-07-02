@@ -1,4 +1,4 @@
-\name{Ema}
+\name{ema}
 \alias{ema}
 \title{Exponential Moving Average}
 \description{Compute multiple Exponential Moving Averages on the input data, one for each column of

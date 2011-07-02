@@ -1,4 +1,4 @@
-\name{Mqt}
+\name{mqt}
 
 \alias{mqt}
 

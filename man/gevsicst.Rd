@@ -1,4 +1,4 @@
-\name{gev.sigma.constraint}
+\name{gevsicst}
 \alias{gev.sigma.constraint}
 \title{GEV - Domain range for the sigma parameter}
 \description{GEV - Domain range for the sigma parameter}

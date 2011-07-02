@@ -1,4 +1,4 @@
-\name{gpd.VaR}
+\name{gpdvar}
 \alias{gpd.VaR}
 \title{GPD - VaR calculation}
 \description{GPD - VaR calculation}

@@ -1,4 +1,4 @@
-\name{gpd.VaR.surface}
+\name{gpdvarsf}
 \alias{gpd.VaR.surface}
 \title{GPD - Log Likelihood 3D surface as a function of VaR}
 \description{GPD - Log Likelihood 3D surface as a function of VaR}

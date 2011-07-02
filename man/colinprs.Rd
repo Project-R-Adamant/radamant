@@ -1,4 +1,4 @@
-\name{colin.pairs}
+\name{colinprs}
 \alias{colin.pairs}
 \title{Co-Linearity analysis}
 \description{This function performs a Co-Linearity analysis between the columns of X: Correlation

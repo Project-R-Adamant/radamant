@@ -1,4 +1,4 @@
-\name{like.garch}
+\name{lkgarch}
 \alias{like.garch}
 \title{GARCH likelihood function}
 \description{Calculate GARCH likelihood function}

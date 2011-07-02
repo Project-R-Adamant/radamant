@@ -1,4 +1,4 @@
-\name{Mcf}
+\name{mcf}
 \alias{mcf}
 \title{Auto-Correlation and Partial Auto-Correlation}
 \description{Compute auto-correlation and partial auto-correlation function on a matrix}

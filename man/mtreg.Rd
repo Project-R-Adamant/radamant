@@ -1,4 +1,4 @@
-\name{MethodReg}
+\name{mtreg}
 
 \alias{summary.reg}
 \alias{print.reg}

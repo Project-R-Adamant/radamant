@@ -1,4 +1,4 @@
-\name{root.search.interval}
+\name{rschint}
 \alias{root.search.interval}
 \title{Interval for uniroot function}
 \description{Compute a proper search interval for uniroot function}

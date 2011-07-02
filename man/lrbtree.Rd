@@ -1,4 +1,4 @@
-\name{LR.BinTree}
+\name{lrbtree}
 \alias{LR.BinTree}
 \title{LR Binomial Tree}
 \description{Option evaluation with Leinsen and Reimer Binomial Tree}

@@ -1,4 +1,4 @@
-\name{Graph_utils}
+\name{grautil}
 \alias{getTheme}
 \alias{getCurrentTheme}
 \alias{getThemeAttr}

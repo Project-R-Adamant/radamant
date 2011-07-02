@@ -1,4 +1,4 @@
-\name{norm.fit}
+\name{normfit}
 \alias{norm.fit}
 \title{Fit normal distribution}
 \description{Fit normal distribution}

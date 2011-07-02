@@ -1,4 +1,4 @@
-\name{plike.range}
+\name{plikerng}
 \alias{plike.range}
 \title{Range grid for contour calculation}
 \description{General range grid for contour calculation}

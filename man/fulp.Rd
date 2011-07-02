@@ -1,4 +1,4 @@
-\name{fullP}
+\name{fulp}
 \alias{fullP}
 \title{Full price}
 \description{Compute Full price (Technical Analysis)}

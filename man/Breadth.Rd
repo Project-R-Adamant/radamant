@@ -1,4 +1,4 @@
-\name{Breadth}
+\name{breadth}
 \alias{Breadth}
 \title{Breadth trusth indicator}
 \description{Compute Breadth trusth indicator (Technical Analysis)}

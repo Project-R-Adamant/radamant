@@ -1,4 +1,4 @@
-\name{gev.like}
+\name{gevlike}
 \alias{gev.like}
 \title{GEV - Log Likelihood}
 \description{GEV - Log Likelihood}

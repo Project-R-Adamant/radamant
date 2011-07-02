@@ -1,4 +1,4 @@
-\name{Gini}
+\name{gini}
 
 \alias{Gini}
 \alias{Gini.scorecard}

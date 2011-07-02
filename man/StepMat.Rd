@@ -1,4 +1,4 @@
-\name{StepMat}
+\name{stepmat}
 \alias{StepMat}
 \title{Step matrix for binomial tree}
 \description{Simulate binomial path of a binomial tree}

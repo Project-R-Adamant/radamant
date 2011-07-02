@@ -1,4 +1,4 @@
-\name{JB.test}
+\name{jbtest}
 \alias{JB.test}
 \title{Jaques-Brera normality test}
 \description{Compute Jaques-Brera normality test for each column of X}

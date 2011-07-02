@@ -1,4 +1,4 @@
-\name{PDFHit}
+\name{pdfhit}
 \alias{PDFHit}
 \title{Density of Hitting probability}
 \description{Density for the First Hitting time}

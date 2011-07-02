@@ -1,4 +1,4 @@
-\name{SummaryDD}
+\name{sumdd}
 \alias{SummaryDD}
 \title{Summary drawdown}
 \description{Summary function for drawdown}

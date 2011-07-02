@@ -1,4 +1,4 @@
-\name{get.predictors}
+\name{getpred}
 \alias{get.predictors}
 \title{Extract the column names of the regression terms of a linear model}
 \description{Extract the column names of the regression terms of a linear model}

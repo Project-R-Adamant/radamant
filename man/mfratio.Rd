@@ -1,4 +1,4 @@
-\name{Mflow.ratio}
+\name{mfratio}
 \alias{Mflow.ratio}
 \title{Money flow ratio}
 \description{Compute Money flow ratio (Technical Analysis)}

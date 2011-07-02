@@ -1,4 +1,4 @@
-\name{Tma}
+\name{tma}
 \alias{tma}
 \title{Triangular Moving Averages}
 \description{Compute multiple Triangular Moving Averages on the input data, one for each column of

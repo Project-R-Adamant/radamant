@@ -1,4 +1,4 @@
-\name{statusbar}
+\name{statbar}
 \alias{statusbar}
 \title{Status bar}
 

@@ -1,4 +1,4 @@
-\name{Sharpe}
+\name{sharpe}
 \alias{Sharpe}
 \alias{Sharpe.default}
 \alias{Sharpe.Capm}

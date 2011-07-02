@@ -1,4 +1,4 @@
-\name{Ch.vol}
+\name{chvol}
 \alias{Ch.vol}
 \title{Chaikin volatility indicator}
 \description{Compute Chaikin volatility indicator (Technical Analysis)}

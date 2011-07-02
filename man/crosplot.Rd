@@ -1,4 +1,4 @@
-\name{Cross_plot}
+\name{crosplot}
 
 \alias{cross.plot}
 \title{Cross Plot}

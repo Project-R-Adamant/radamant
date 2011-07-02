@@ -1,4 +1,4 @@
-\name{gpd.xi.constraint}
+\name{gpdxicst}
 \alias{gpd.xi.constraint}
 \title{GPD - Domain range for the xi parameter}
 \description{GPD - Domain range for the xi parameter}

@@ -1,4 +1,4 @@
-\name{Inertia}
+\name{inertia}
 \alias{Inertia}
 \title{Inertia oscillator}
 \description{Compute Inertia oscillator (Technical Analysis)}

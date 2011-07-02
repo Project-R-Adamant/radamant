@@ -1,4 +1,4 @@
-\name{Tema}
+\name{tema}
 \alias{tema}
 \title{Triple EMA}
 \description{Compute multiple Triple EMA on the input data, one for each column of X[, i] and window

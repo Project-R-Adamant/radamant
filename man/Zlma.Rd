@@ -1,4 +1,4 @@
-\name{Zlma}
+\name{zlma}
 \alias{zlma}
 \title{Zero lag Moving Average}
 \description{Compute multiple Zero-Lag Exponential Moving Averages on the input data, one for each

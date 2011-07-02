@@ -1,4 +1,4 @@
-\name{scaled_fun}
+\name{scaledf}
 \alias{scalApply}
 \alias{scalMin}
 \alias{scalMax}

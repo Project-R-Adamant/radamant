@@ -1,4 +1,4 @@
-\name{confusionMat}
+\name{confmat}
 \alias{confusionM.default}
 \alias{confusionM}
 \alias{confusionM.scorecard}

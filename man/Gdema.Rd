@@ -1,4 +1,4 @@
-\name{Gdema}
+\name{gdema}
 \alias{gdema}
 \title{Generalised Double EMA}
 \description{Compute multiple Generalised Double EMA on the input data, one for each column of X[,

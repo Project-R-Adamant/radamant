@@ -1,4 +1,4 @@
-\name{track_sign_exp}
+\name{trsigexp}
 \alias{track_sign_exp}
 \title{Exponential track signal}
 \description{Calculate Exponential track signal for model evaluation }

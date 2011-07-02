@@ -1,4 +1,4 @@
-\name{ADrating}
+\name{adrating}
 
 \alias{ADrating}
 

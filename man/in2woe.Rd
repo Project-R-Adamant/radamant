@@ -1,4 +1,4 @@
-\name{input2woe}
+\name{in2woe}
 \alias{input2woe}
 \title{Data to Weight of Evidence}
 \description{Transform input data according to weight of evidence}

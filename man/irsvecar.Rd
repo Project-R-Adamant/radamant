@@ -1,4 +1,4 @@
-\name{IRS.VecAr}
+\name{irsvecar}
 \alias{IRS.VecAr}
 \title{VAR Impulse response}
 \description{Compute and plot Impulse response function calculated for VAR model}

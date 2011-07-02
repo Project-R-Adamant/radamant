@@ -1,4 +1,4 @@
-\name{BS.formula}
+\name{bsfml}
 \alias{BS.formula}
 \title{Black & Scholes formula}
 \description{Black & Scholes analytical formula}

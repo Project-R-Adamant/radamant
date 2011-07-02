@@ -1,4 +1,4 @@
-\name{print.VecAr}
+\name{pvecar}
 
 \alias{print.VecAr}
 

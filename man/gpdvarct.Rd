@@ -1,4 +1,4 @@
-\name{gpd.VaR.constraint}
+\name{gpdvarct}
 \alias{gpd.VaR.constraint}
 \title{GPD - Domain range for the VaR parameter}
 \description{GPD - Domain range for the VaR parameter}

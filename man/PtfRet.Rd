@@ -1,4 +1,4 @@
-\name{PtfRet}
+\name{ptfret}
 \alias{PtfRet}
 \title{Portfolio returns}
 \description{Calculate portfolio returns}

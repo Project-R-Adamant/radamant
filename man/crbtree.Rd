@@ -1,4 +1,4 @@
-\name{CRR.BinTree}
+\name{crbtree}
 \alias{CRR.BinTree}
 \title{CRR Binomial Tree}
 \description{Option evaluation with Cox, Rossand and Rubinstein Binomial Tree}

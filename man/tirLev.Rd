@@ -1,4 +1,4 @@
-\name{tirLev}
+\name{tirlev}
 \alias{tirLev}
 \title{Trione levels}
 \description{Compute Trione levels (Technical Analysis)}

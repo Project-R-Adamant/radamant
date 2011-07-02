@@ -1,4 +1,4 @@
-\name{Jensen}
+\name{jensen}
 \alias{Jensen}
 \alias{Jensen.default}
 \alias{Jensen.Capm}

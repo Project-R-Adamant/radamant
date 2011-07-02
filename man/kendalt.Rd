@@ -1,4 +1,4 @@
-\name{KendallTau}
+\name{kendalt}
 \alias{KendallTau}
 \title{KendallTau}
 \description{Calculate KendallTau statistic}

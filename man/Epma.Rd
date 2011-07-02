@@ -1,4 +1,4 @@
-\name{Epma}
+\name{epma}
 
 \alias{epma}
 

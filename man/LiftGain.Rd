@@ -1,4 +1,4 @@
-\name{LiftGain}
+\name{liftgain}
 
 \alias{Gain}
 \alias{Gain.scorecard}

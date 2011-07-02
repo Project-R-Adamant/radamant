@@ -1,4 +1,4 @@
-\name{Accuracy}
+\name{accuracy}
 \alias{accuracy}
 \alias{accuracy.scorecard}
 \title{Accuracy}

@@ -1,4 +1,4 @@
-\name{tyP}
+\name{typ}
 \alias{tyP}
 \title{Typical price}
 \description{Compute Typical price (Technical Analysis)}

@@ -1,4 +1,4 @@
-\name{Minmaxscal}
+\name{minmaxs}
 \alias{Minmaxscal}
 \title{Mini/Max Scale}
 \description{Compute minimum / maximum scale of a vector}

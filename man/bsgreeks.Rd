@@ -1,4 +1,4 @@
-\name{BS.greeks}
+\name{bsgreeks}
 \alias{BS.greeks}
 \title{Black & Scholes greeks}
 \description{Calculate analytically Black & Scholes greeks}

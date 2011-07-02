@@ -1,4 +1,4 @@
-\name{gev.mu.constraint}
+\name{gevmcst}
 \alias{gev.mu.constraint}
 \title{GEV - Domain range for the mu parameter}
 \description{GEV - Domain range for the mu parameter}

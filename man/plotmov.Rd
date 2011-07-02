@@ -1,4 +1,4 @@
-\name{PlotMovav}
+\name{plotmov}
 
 \alias{plot.Movav}
 

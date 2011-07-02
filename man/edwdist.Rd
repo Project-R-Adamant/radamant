@@ -1,4 +1,4 @@
-\name{EdgeWorthDist}
+\name{edwdist}
 \alias{EdgeWorthDist}
 \title{Edgeworth distribution}
 \description{Simulate empirical Edgeworth distribution}

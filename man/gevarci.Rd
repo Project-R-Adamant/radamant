@@ -1,4 +1,4 @@
-\name{gev.VaR.ci}
+\name{gevarci}
 \alias{gev.VaR.ci}
 \title{GEV - VaR calculation and Confidence Intervals}
 \description{GEV - VaR calculation and Confidence Intervals}

@@ -1,4 +1,4 @@
-\name{func.line.cnt}
+\name{funlcnt}
 \alias{func.line.cnt}
 
 \title{Function line counting}

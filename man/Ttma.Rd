@@ -1,4 +1,4 @@
-\name{Ttma}
+\name{ttma}
 \alias{ttma}
 \title{T3 EMA}
 \description{Compute multiple T3 EMA on the input data, one for each column of X[, i] and window

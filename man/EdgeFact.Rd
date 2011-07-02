@@ -1,4 +1,4 @@
-\name{EdgeFact}
+\name{edgefact}
 \alias{EdgeFact}
 \title{Edge Factor (B&S)}
 \description{Edgeworth adaption factors}

@@ -1,4 +1,4 @@
-\name{FW_movav}
+\name{fwmovav}
 \alias{fw1}
 \alias{fw2}
 \alias{fw3}

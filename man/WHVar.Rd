@@ -1,4 +1,4 @@
-\name{WHVar}
+\name{whvar}
 
 \alias{whVaR}
 

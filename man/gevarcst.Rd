@@ -1,4 +1,4 @@
-\name{gev.VaR.constraint}
+\name{gevarcst}
 \alias{gev.VaR.constraint}
 \title{GEV - Domain range for the VaR parameter}
 \description{GEV - Domain range for the VaR parameter}

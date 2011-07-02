@@ -1,4 +1,4 @@
-\name{Newsimp}
+\name{newsimp}
 
 \alias{newsimp.default}
 \alias{newsimp.Garch}

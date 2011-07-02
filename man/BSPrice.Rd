@@ -1,4 +1,4 @@
-\name{BSprice}
+\name{bsprice}
 
 \alias{BS.price.default}
 \alias{BS.price}

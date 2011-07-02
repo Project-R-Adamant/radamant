@@ -1,4 +1,4 @@
-\name{Decscal}
+\name{decscal}
 \alias{Decscal}
 \title{Decimal scale}
 \description{Compute decimal scale of a vector}

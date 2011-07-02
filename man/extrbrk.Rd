@@ -1,4 +1,4 @@
-\name{extrBreak}
+\name{extrbrk}
 \alias{extrBreak}
 \title{Extract breaks}
 \description{extract specificied break from an object of class Factorise}

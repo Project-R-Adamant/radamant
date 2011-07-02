@@ -1,4 +1,4 @@
-\name{Factorise}
+\name{factor}
 \alias{Factorise}
 \title{Factorise variable}
 \description{Factorise numerical variables according with defined bins}

@@ -1,4 +1,4 @@
-\name{MethodFFT}
+\name{mtfft}
 
 \alias{plot.FFT}
 \alias{print.FFT}

@@ -1,4 +1,4 @@
-\name{Bop}
+\name{bop}
 \alias{Bop}
 \title{Balance of Power}
 \description{Compute Balance of Power (Technical Analysis)}

@@ -1,4 +1,4 @@
-\name{Kurt_Skew}
+\name{kurtskew}
 \alias{kurt}
 \alias{skew}
 \title{Kurtosis and Skewness}

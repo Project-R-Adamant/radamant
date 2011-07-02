@@ -1,4 +1,4 @@
-\name{Mndma}
+\name{mndma}
 
 \alias{mndma}
 

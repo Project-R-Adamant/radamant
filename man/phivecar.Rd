@@ -1,4 +1,4 @@
-\name{PHI.VecAr}
+\name{phivecar}
 \alias{PHI.VecAr}
 \title{VAR - PHI}
 \description{Estimate PHI matrix for MA (Wold) representation of VAR model}

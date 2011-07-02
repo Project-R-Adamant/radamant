@@ -1,4 +1,4 @@
-\name{wildAvg}
+\name{wildavg}
 \alias{wildAvg}
 \title{Wilder Moving Average}
 \description{Compute Wilder Moving Average (Technical Analysis)}

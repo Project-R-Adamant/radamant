@@ -1,4 +1,4 @@
-\name{print.Factorise}
+\name{pfactor}
 \alias{print.Factorise}
 \title{Print "factorise"}
 \description{Print method for "factorise"}

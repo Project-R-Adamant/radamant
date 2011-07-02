@@ -1,4 +1,4 @@
-\name{ExtremeDD}
+\name{extrdd}
 \alias{ExtremeDD}
 \title{Maximum / Minimum drawdown}
 \description{Calculate Mximum / Minimum DrawDown}

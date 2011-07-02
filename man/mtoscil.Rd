@@ -1,4 +1,4 @@
-\name{MethodOscil}
+\name{mtoscil}
 
 \alias{plot.oscil}
 \alias{print.oscil}

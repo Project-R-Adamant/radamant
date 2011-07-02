@@ -1,4 +1,4 @@
-\name{PredVecAr}
+\name{predvear}
 
 \alias{predict.VecAr}
 

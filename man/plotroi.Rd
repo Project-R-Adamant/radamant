@@ -1,4 +1,4 @@
-\name{plot.roi}
+\name{plotroi}
 \alias{plot.roi}
 \title{Plot Return on Investment objects}
 \description{Plotting function for Return on Investment objects}

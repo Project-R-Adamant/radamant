@@ -1,4 +1,4 @@
-\name{Dma}
+\name{dma}
 \alias{dma}
 \title{Derivative Moving Averages}
 \description{Compute multiple Derivative Moving Averages on the input data, one for each column of

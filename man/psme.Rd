@@ -1,4 +1,4 @@
-\name{print.sme}
+\name{psme}
 \alias{print.sme}
 \title{Print Sample Mean Excess class}
 \description{Printing function for Sample Mean Excess class}

@@ -1,4 +1,4 @@
-\name{Mma}
+\name{mma}
 \alias{mma}
 \title{Modified EMA}
 \description{Compute multiple Modified EMA on the input data, one for each column of X[, i] and

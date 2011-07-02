@@ -1,4 +1,4 @@
-\name{gpd.ml}
+\name{gpdml}
 \alias{gpd.ml}
 \title{GPD - Maximum Likelihood Parameters Estimation}
 \description{GPD - Maximum Likelihood Parameters Estimation}

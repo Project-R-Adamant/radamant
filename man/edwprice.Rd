@@ -1,4 +1,4 @@
-\name{Edgeworth.price}
+\name{edwprice}
 \alias{Edgeworth.price}
 \title{Edgeworth option price}
 \description{Option evaluation with Edgeworth adapted Binomial Tree}

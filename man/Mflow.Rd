@@ -1,4 +1,4 @@
-\name{Mflow}
+\name{mflow}
 \alias{Mflow}
 \title{Money flow }
 \description{Compute Money flow  (Technical Analysis)}

@@ -1,4 +1,4 @@
-\name{Capm}
+\name{capm}
 
 \alias{Capm.default}
 \alias{Capm}

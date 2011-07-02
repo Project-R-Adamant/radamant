@@ -1,4 +1,4 @@
-\name{sensAnalysis.reg}
+\name{sensanrg}
 \alias{sensAnalysis.reg}
 \title{Sensitivity analysis method for reg}
 

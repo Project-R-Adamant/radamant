@@ -1,4 +1,4 @@
-\name{GrangCas}
+\name{grangcas}
 
 \alias{GrangCas.VecAr}
 

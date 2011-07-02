@@ -1,4 +1,4 @@
-\name{Cplot3d}
+\name{cplot3d}
 
 \alias{cplot3d}
 

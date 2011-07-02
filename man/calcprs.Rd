@@ -1,4 +1,4 @@
-\name{CalcPairs}
+\name{calcprs}
 \alias{CalcPairs}
 \title{Calculated Pairs}
 \description{Calculated the number of pairs based on the results of a classification model.}

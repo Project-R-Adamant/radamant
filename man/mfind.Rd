@@ -1,4 +1,4 @@
-\name{Mflow.ind}
+\name{mfind}
 \alias{Mflow.ind}
 \title{Money flow indicator}
 \description{Compute Money flow indicator (Technical Analysis)}

@@ -1,4 +1,4 @@
-\name{RowMax}
+\name{rowmax}
 \alias{rowMax}
 \alias{rowMin}
 \title{Maximum / Minimum by row}

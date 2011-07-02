@@ -1,4 +1,4 @@
-\name{Treynor}
+\name{treynor}
 \alias{Treynor}
 \alias{Treynor.default}
 \alias{Treynor.Capm}

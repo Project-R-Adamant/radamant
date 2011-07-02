@@ -1,4 +1,4 @@
-\name{Arms}
+\name{arms}
 \alias{Arms}
 \title{Arms index}
 \description{Compute Arms index (Technical Analysis)}

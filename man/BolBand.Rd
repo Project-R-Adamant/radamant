@@ -1,4 +1,4 @@
-\name{BolBand}
+\name{bolband}
 \alias{BolBand}
 \title{Bollinger Bands}
 \description{Compute Bollinger Bands (Technical Analysis)}

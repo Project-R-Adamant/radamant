@@ -1,4 +1,4 @@
-\name{BinCoef}
+\name{bincoef}
 \alias{BinCoef}
 \title{Binomial coefficient}
 \description{Calculate binomial coefficient}

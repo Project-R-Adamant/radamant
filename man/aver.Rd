@@ -1,4 +1,4 @@
-\name{av_er}
+\name{aver}
 \alias{av_er}
 \title{Average error}
 \description{Calculate Average error for model evaluation }

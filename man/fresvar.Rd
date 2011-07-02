@@ -1,4 +1,4 @@
-\name{FitRes.VecAr}
+\name{fresvar}
 
 \alias{fitted.VecAr}
 

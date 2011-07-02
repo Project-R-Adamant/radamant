@@ -1,4 +1,4 @@
-\name{Drawdown}
+\name{drawdown}
 
 \alias{drawdown.default}
 \alias{drawdown}

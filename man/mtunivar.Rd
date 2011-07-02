@@ -1,4 +1,4 @@
-\name{MethodUnivar}
+\name{mtunivar}
 
 \alias{plot.univar}
 \alias{print.univar}

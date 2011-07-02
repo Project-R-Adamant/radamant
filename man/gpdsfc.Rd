@@ -1,4 +1,4 @@
-\name{gpd.surface}
+\name{gpdsfc}
 \alias{gpd.surface}
 \title{GPD - Log Likelihood 3D surface}
 \description{GPD - Log Likelihood 3D surface}

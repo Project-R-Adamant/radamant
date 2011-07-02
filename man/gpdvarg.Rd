@@ -1,4 +1,4 @@
-\name{gpd.VaR.range}
+\name{gpdvarg}
 \alias{gpd.VaR.range}
 \title{GPD - VaR range grid for contour calculation}
 \description{GPD - VaR range grid for contour calculation}

@@ -1,4 +1,4 @@
-\name{mass.cum}
+\name{masscum}
 \alias{mass.cum}
 \title{Mass indicator cumulative}
 \description{Compute Mass indicator cumulative (Technical Analysis)}

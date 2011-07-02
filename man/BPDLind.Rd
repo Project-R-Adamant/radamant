@@ -1,4 +1,4 @@
-\name{BPDLind}
+\name{bpdlind}
 \alias{BPDLind}
 \title{BPDL indicator}
 \description{Compute BPDL indicator (Technical Analysis)}

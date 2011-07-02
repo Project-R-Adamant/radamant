@@ -1,4 +1,4 @@
-\name{Clust}
+\name{clust}
 
 \alias{TSClust}
 \alias{TSClust.default}

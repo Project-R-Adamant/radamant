@@ -1,4 +1,4 @@
-\name{Plotting_tools}
+\name{plotkit}
 \alias{draw.grid}
 \alias{draw.legend}
 \alias{draw.projections}

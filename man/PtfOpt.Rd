@@ -1,4 +1,4 @@
-\name{PtfOpt}
+\name{ptfopt}
 \alias{PtfOpt}
 \title{Mean-Variance optimum portfolio}
 \description{Calculate mean-variance efficient portfolio}

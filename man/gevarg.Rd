@@ -1,4 +1,4 @@
-\name{gev.VaR.range}
+\name{gevarg}
 \alias{gev.VaR.range}
 \title{GEV - VaR range grid for contour calculation}
 \description{GEV - VaR range grid for contour calculation}

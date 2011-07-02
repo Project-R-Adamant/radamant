@@ -1,4 +1,4 @@
-\name{plike.ci}
+\name{plikeci}
 \alias{plike.ci}
 \title{Likelihood confidence intervals calculation}
 \description{General function for profile likelihood confidence intervals calculation}

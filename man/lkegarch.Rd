@@ -1,4 +1,4 @@
-\name{like.egarch}
+\name{lkegarch}
 \alias{like.egarch}
 \title{EGARCH likelihood function}
 \description{Calculate EGARCH likelihood function}

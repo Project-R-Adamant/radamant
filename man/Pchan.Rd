@@ -1,4 +1,4 @@
-\name{Pchan}
+\name{pchan}
 \alias{Pchan}
 \title{Price channel}
 \description{Compute Price channel (Technical Analysis)}

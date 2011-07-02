@@ -1,4 +1,4 @@
-\name{PtfVar}
+\name{ptfvar}
 \alias{PtfVar}
 \title{Portfolio variance}
 \description{Calculate portfolio variance}

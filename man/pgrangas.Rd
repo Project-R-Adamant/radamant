@@ -1,4 +1,4 @@
-\name{print.GrangCas}
+\name{pgrangas}
 \alias{print.GrangCas}
 \title{Print Granger test}
 \description{Print function for Granger test}

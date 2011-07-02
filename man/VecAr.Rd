@@ -1,4 +1,4 @@
-\name{VecAr}
+\name{vecar}
 
 \alias{VecAr}
 \alias{VecAr.default}

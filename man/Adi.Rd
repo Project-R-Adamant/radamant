@@ -1,4 +1,4 @@
-\name{Adi}
+\name{adi}
 \alias{ADind}
 \title{Advance-Decline Indicator}
 \description{Advance-Decline Indicator (Technical Analysis)}

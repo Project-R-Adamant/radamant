@@ -1,4 +1,4 @@
-\name{FFT}
+\name{fft}
 
 \alias{FFT}
 \alias{FFT.default}

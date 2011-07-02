@@ -1,4 +1,4 @@
-\name{3D_Plot_elem}
+\name{3dptelem}
 \alias{lines3d}
 \alias{points3d}
 \alias{rect3d}

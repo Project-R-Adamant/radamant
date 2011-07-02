@@ -1,4 +1,4 @@
-\name{factor2woe}
+\name{fact2woe}
 \alias{factor2woe}
 \title{Factor to Weight of Evidence}
 \description{Transform factorise data to weight of evidence}

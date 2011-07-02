@@ -1,4 +1,4 @@
-\name{like.tgarch}
+\name{lktgarch}
 \alias{like.tgarch}
 \title{TGARCH likelihood function}
 \description{Calculate TGARCH likelihood function}

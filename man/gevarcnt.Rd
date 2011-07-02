@@ -1,4 +1,4 @@
-\name{gev.VaR.contour}
+\name{gevarcnt}
 \alias{gev.VaR.contour}
 \title{GEV - VaR Joint Confidence Intervals by Profile Likelihood}
 \description{GEV - VaR Joint Confidence Intervals by Profile Likelihood}

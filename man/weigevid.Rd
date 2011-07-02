@@ -1,4 +1,4 @@
-\name{WeightEvid}
+\name{weigevid}
 \alias{WeightEvid}
 \title{Weight of Evidence}
 \description{Calculate weight of evidence for a matrix with target variable}

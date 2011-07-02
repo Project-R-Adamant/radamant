@@ -1,4 +1,4 @@
-\name{RAdamant}
+\name{radpkg}
 \alias{RAdamant}
 \alias{RAdamant}
 \docType{package}

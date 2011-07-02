@@ -1,4 +1,4 @@
-\name{sensAnalysis.lm}
+\name{sensanlm}
 \alias{sensAnalysis.lm}
 
 \title{Sensitivity analysis method for lm}

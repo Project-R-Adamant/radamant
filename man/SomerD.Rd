@@ -1,4 +1,4 @@
-\name{SomerD}
+\name{somerd}
 \alias{SomerD}
 \title{Somers D}
 \description{Calculate Somers d statistic}

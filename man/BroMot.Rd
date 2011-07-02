@@ -1,4 +1,4 @@
-\name{BroMot}
+\name{bromot}
 \alias{BroMot}
 \title{Browniam motion}
 \description{Simulate a standard Brownian motion }

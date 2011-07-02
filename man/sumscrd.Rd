@@ -1,4 +1,4 @@
-\name{summary.scorecard}
+\name{sumscrd}
 
 \alias{summary.scorecard}
 

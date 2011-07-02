@@ -1,4 +1,4 @@
-\name{Univar}
+\name{univar}
 \alias{univar}
 \title{Univariate analysis}
 \description{Perform univariate analisys of the dependent variable Y versus each independent

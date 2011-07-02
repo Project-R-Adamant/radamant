@@ -1,4 +1,4 @@
-\name{Kama}
+\name{kama}
 
 \alias{kama}
 

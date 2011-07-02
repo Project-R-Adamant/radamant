@@ -1,4 +1,4 @@
-\name{3D_Plot_pars}
+\name{3dptpars}
 \alias{x.axis3d}
 \alias{y.axis3d}
 \alias{z.axis3d}

@@ -1,4 +1,4 @@
-\name{pred_error}
+\name{preder}
 \alias{pred_error}
 \title{Prediction error}
 \description{Calculate Prediction error for model evaluation }

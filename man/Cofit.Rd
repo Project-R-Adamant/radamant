@@ -1,4 +1,4 @@
-\name{Cofit}
+\name{cofit}
 
 \alias{cofit}
 

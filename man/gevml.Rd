@@ -1,4 +1,4 @@
-\name{gev.ml}
+\name{gevml}
 \alias{gev.ml}
 \title{GEV - Maximum Likelihood Parameters Estimation}
 \description{GEV - Maximum Likelihood Parameters Estimation}

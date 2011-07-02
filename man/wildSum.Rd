@@ -1,4 +1,4 @@
-\name{wildSum}
+\name{wildsum}
 \alias{wildSum}
 \title{Wilder Summation}
 \description{Compute Wilder Summation (Technical Analysis)}

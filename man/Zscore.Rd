@@ -1,4 +1,4 @@
-\name{Zscore}
+\name{zscore}
 \alias{Zscore}
 \title{Z Score}
 \description{Compute the Z-score of X (Standardize each column of X)}

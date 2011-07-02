@@ -1,4 +1,4 @@
-\name{gpd.VaR.like}
+\name{gpdvarlk}
 \alias{gpd.VaR.like}
 \title{GPD - VaR Log Likelihood}
 \description{GPD - VaR Log Likelihood}

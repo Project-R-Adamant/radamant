@@ -1,4 +1,4 @@
-\name{fin.plot}
+\name{finplot}
 \alias{fin.plot}
 \title{Plot financial time series}
 \description{Plot financial time series}

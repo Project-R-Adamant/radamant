@@ -1,4 +1,4 @@
-\name{ProbHit}
+\name{probhit}
 \alias{ProbHit}
 \title{Probability of first hit (Brownian motion)}
 \description{Calcualte probability to Hit a barrier}

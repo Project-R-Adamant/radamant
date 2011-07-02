@@ -1,4 +1,4 @@
-\name{Oscil}
+\name{oscil}
 
 \alias{oscil.default}
 \alias{oscil}

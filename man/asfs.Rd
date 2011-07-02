@@ -1,4 +1,4 @@
-\name{as.fs}
+\name{asfs}
 \alias{as.fs}
 \title{Convert Yahoo! Data into Financial Series object}
 \description{Convert Yahoo! Data into Financial Series object}

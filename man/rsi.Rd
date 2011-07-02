@@ -14,6 +14,10 @@
 \item{...}{ Further arguments to or from other methods.}
 }
 
+\details{The Relative Strength Index (RSI) is an oscillator that measures current price strength in
+relation to previous prices. \cr The RSI is a versatile tool, it can be used to generate buy and
+sell signals, show overbought and oversold conditions, confirm price movement and warn of potential
+price reversals through divergences.}
 
 
 \author{RAdamant Development Team \email{team@r-adamant.org}}

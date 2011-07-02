@@ -1,4 +1,4 @@
-\name{get.fs}
+\name{getfs}
 \alias{get.fs}
 \title{Download Financial Series data from Yahoo!}
 \description{Download Financial Series data from Yahoo!}

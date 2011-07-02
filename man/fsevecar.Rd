@@ -1,4 +1,4 @@
-\name{FSE.VecAr}
+\name{fsevecar}
 \alias{FSE.VecAr}
 \title{VAR Forecast Standard Error }
 \description{Compute forecast standard error for VAR model}

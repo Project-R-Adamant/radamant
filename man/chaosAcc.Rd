@@ -1,4 +1,4 @@
-\name{chaosAcc}
+\name{chaosacc}
 \alias{chaosAcc}
 \title{Chaos Accelerator oscillator}
 \description{Compute Chaos Accelerator oscillator (Technical Analysis)}

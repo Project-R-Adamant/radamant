@@ -1,4 +1,4 @@
-\name{Abi}
+\name{abi}
 
 \alias{Abi}
 

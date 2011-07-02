@@ -1,4 +1,4 @@
-\name{PrintVar}
+\name{printvar}
 
 \alias{print.VaR}
 

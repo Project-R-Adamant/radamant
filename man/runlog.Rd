@@ -1,4 +1,4 @@
-\name{Run_Log}
+\name{runlog}
 \alias{write.log}
 \alias{error.handling}
 \title{Error Handling and Log with runner}

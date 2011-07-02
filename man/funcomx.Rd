@@ -1,4 +1,4 @@
-\name{func.comment.idx}
+\name{funcomx}
 \alias{func.comment.idx}
 \title{Function comment}
 

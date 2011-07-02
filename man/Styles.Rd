@@ -1,4 +1,4 @@
-\name{Styles}
+\name{styles}
 \alias{Styles}
 \title{Styles analysis (portfolio)}
 \description{Perform Style analysis  }

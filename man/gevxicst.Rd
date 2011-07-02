@@ -1,4 +1,4 @@
-\name{gev.xi.constraint}
+\name{gevxicst}
 \alias{gev.xi.constraint}
 \title{GEV - Domain range for the xi parameter}
 \description{GEV - Domain range for the xi parameter}

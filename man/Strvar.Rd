@@ -1,4 +1,4 @@
-\name{Strvar}
+\name{strvar}
 
 \alias{Strvar.VecAr}
 

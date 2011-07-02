@@ -1,4 +1,4 @@
-\name{gev.contour}
+\name{gevcont}
 \alias{gev.contour}
 \title{GEV - Joint Confidence Intervals by Profile Likelihood}
 \description{GEV - Joint Confidence Intervals by Profile Likelihood}

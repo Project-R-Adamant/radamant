@@ -1,4 +1,4 @@
-\name{gpd.like}
+\name{gpdlk}
 \alias{gpd.like}
 \title{GPD - Log Likelihood}
 \description{GPD - Log Likelihood}

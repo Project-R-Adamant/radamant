@@ -1,4 +1,4 @@
-\name{ADratio}
+\name{adratio}
 \alias{ADratio}
 
 \title{Advance Decline ratio}
@@ -9,6 +9,10 @@
 
 \arguments{ \item{X}{ X}\item{lag}{ INTEGER. Number of lag periods.}\item{plot}{ LOGICAL. If TRUE
 plot is returned.}\item{...}{ Further arguments to or from other methods.}}
+
+\details{The Advance Decline Ratio is a market breadth indicator that calculates the ratio of
+advancing amount to declining amount.}
+
 
 \author{RAdamant Development Team \email{team@r-adamant.org}}
 

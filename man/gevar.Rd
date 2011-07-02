@@ -1,4 +1,4 @@
-\name{gev.VaR}
+\name{gevar}
 \alias{gev.VaR}
 \title{GEV - VaR calculation}
 \description{GEV - VaR calculation}

@@ -1,4 +1,4 @@
-\name{Zind}
+\name{zind}
 \alias{Zind}
 \title{Z index}
 \description{Compute the Z-score of X (Standardize each column of X)}

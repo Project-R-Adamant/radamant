@@ -1,4 +1,4 @@
-\name{gpd.range}
+\name{gpdrng}
 \alias{gpd.range}
 \title{GPD - Parameters range grid for contour calculation}
 \description{GPD - Parameters range grid for contour calculation}

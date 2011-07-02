@@ -1,4 +1,4 @@
-\name{gpd.VaR.contour}
+\name{gpdvarcn}
 \alias{gpd.VaR.contour}
 \title{GPD - VaR Joint Confidence Intervals by Profile Likelihood}
 \description{GPD - VaR Joint Confidence Intervals by Profile Likelihood}

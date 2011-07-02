@@ -1,4 +1,4 @@
-\name{ROCplot}
+\name{rocplot}
 \alias{ROCplot}
 \alias{ROCplot.scorecard}
 \title{ROC analysis}

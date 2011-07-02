@@ -1,4 +1,4 @@
-\name{print.PtfOpt}
+\name{pptfopt}
 \alias{print.PtfOpt}
 \title{Print Optimum Portfolio}
 \description{Print function for Optimum Ptf}

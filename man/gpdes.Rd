@@ -1,4 +1,4 @@
-\name{gpd.ES}
+\name{gpdes}
 \alias{gpd.ES}
 \title{GPD - Expected Shortfall (ES) calculation}
 \description{GPD - Expected Shortfall (ES) calculation}

@@ -1,4 +1,4 @@
-\name{like.mgarch}
+\name{lkmgarch}
 
 \alias{like.mgarch}
 

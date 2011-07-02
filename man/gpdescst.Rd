@@ -1,4 +1,4 @@
-\name{gpd.ES.constraint}
+\name{gpdescst}
 \alias{gpd.ES.constraint}
 \title{GPD - Domain range for the ES parameter}
 \description{GPD - Domain range for the ES parameter}

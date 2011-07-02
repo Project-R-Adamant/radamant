@@ -1,4 +1,4 @@
-\name{Ichkh}
+\name{ichkh}
 \alias{Ichkh}
 \title{Ichimoku Kinko Hyo}
 \description{Compute Ichimoku Kinko Hyo (Technical Analysis)}

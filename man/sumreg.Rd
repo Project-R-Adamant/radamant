@@ -1,4 +1,4 @@
-\name{summary.mreg}
+\name{sumreg}
 \alias{summary.mreg}
 \title{Summary method for mreg}
 \description{Summary method for mreg}

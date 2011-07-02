@@ -1,4 +1,4 @@
-\name{SORT}
+\name{sort}
 
 \alias{SORT}
 

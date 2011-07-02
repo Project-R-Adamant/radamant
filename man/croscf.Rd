@@ -1,4 +1,4 @@
-\name{Cross_ccf}
+\name{croscf}
 
 \alias{cross.ccf}
 \alias{cross.ccf.default}

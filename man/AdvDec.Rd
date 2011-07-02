@@ -1,4 +1,4 @@
-\name{AdvDec}
+\name{advdec}
 \alias{AdvDec}
 \title{Advance Decline issues}
 \description{Compute Advance Decline issues (Technical Analysis)}

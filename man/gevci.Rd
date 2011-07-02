@@ -1,4 +1,4 @@
-\name{gev.ci}
+\name{gevci}
 \alias{gev.ci}
 \title{GEV - Distribution fitting and Confidence Intervals}
 \description{GEV - Distribution fitting and Confidence Intervals}
