@@ -4,16 +4,14 @@ logit = function(x, adjust = 0.00005) {
     p = pmin(pmax(x, adjust), 1-adjust);
     log(p/(1 - p))
 }
-
 # Inverse Logit transform
 inv.logit = function(y) {
     exp(y)/(1+exp(y))
 }
-
 # Function to load theme files
 loadThemes = function(env = getOption("RAdamant")) {
 	# Get theme path
-	theme.path = paste(library(help = RAdamant)$path, "Themes", sep = "/");
+	theme.path = paste(library(help = RAdamant)$path, "themes", sep = "/");
 	files = list.files(theme.path, pattern = "\\.[Rr]$", ignore.case = TRUE); 
 	
 	# Number of themes to process
@@ -60,13 +58,11 @@ loadThemes = function(env = getOption("RAdamant")) {
 										, "projection.lty"
 										);
 		
-
 	}
 	
 	# Store themes in the given environment
 	assign("Themes", themes, env);
 }
-
 getTheme = function(which = 1, env = getOption("RAdamant")) {
 	# Get Themes from the environment
 	Themes = get("Themes", env);
@@ -102,11 +98,9 @@ getTheme = function(which = 1, env = getOption("RAdamant")) {
 	# Return result
 	res
 }
-
 getCurrentTheme = function(env = getOption("RAdamant")) {
 	get("currentTheme", env);
 }
-
 setCurrentTheme = function(which = 1, env = getOption("RAdamant")) {
 	if(class(which) %in% c("numeric", "character")) {
 		assign("currentTheme", getTheme(which, env), env);
@@ -116,7 +110,6 @@ setCurrentTheme = function(which = 1, env = getOption("RAdamant")) {
 		warning("Input argument 'which' must be a valid theme name or number or parameters list!\n\tNo change will be done.");
 	}
 }
-
 setThemeAttr = function(..., env = getOption("RAdamant")) {
 	# Get current theme parameters
 	currentTheme = getCurrentTheme(env);
@@ -125,7 +118,6 @@ setThemeAttr = function(..., env = getOption("RAdamant")) {
 	# Store result in the environment
 	setCurrentTheme(newTheme, env);
 }
-
 getThemeAttr = function(what = NULL, env = getOption("RAdamant"), exact.match = FALSE) {
 	# Get current theme parameters
 	currentTheme = getCurrentTheme(env);
@@ -142,24 +134,19 @@ getThemeAttr = function(what = NULL, env = getOption("RAdamant"), exact.match = 
 	# Return matched entries
 	res
 }
-
 # Override list with another list
 override.list = function(what = list()
                          , overrides = NULL
                          , append = FALSE
                          ) {
-
     # Init output result
     res = what;
-
     if(is.list(overrides) && length(overrides) >  0) {
         # find matching attributes
         matched = match(names(overrides), names(what));
         matched.names = names(what)[matched[!is.na(matched)]];
-
         # Override  matched attributes
         res[matched.names] = overrides[matched.names];
-
         if(append) {
             #  Find  non matching attributes
 			matched.idx = which(names(overrides) %in% c("", matched.names));
@@ -172,10 +159,8 @@ override.list = function(what = list()
             res[not.matched.names] = overrides[not.matched.names];
         }
     }
-
     res
 }
-
 # Compute Matlab color gradient
 jet.colors = function(npoints = 100, alpha = 1) {
 	# Define Matlab style colors
@@ -185,14 +170,10 @@ jet.colors = function(npoints = 100, alpha = 1) {
 	# Return Result
 	paste(colorRampPalette(jet)(npoints), alpha.hex, sep="")
 }
-
-
 # Compute color gradient
 gradient = function(col = "white", npoints = 1, alpha = 1) {
-
 	# Number of colors
 	N = max(length(col), length(alpha), na.rm = TRUE);
-
 	# Index of transparent colors
 	trans.idx = which(col == "transparent");
 	if(length(trans.idx) > 0) {
@@ -235,19 +216,15 @@ gradient = function(col = "white", npoints = 1, alpha = 1) {
     # Return result
     res
 }
-
 # Compute coordinate transition 
 transition = function(from
                        , to
                        , transition = "linear"
                        , npoints = 100
                        ) {
-
     # Number of data points
     N = min(NROW(from), NROW(to));
-
     data.range = range(from, to, na.rm = TRUE);
-
     # Compute transition between from and  to range values
     if (length(grep("exp", transition, ignore.case = TRUE)) > 0){
         # Exponential transition
@@ -262,10 +239,8 @@ transition = function(from
         # Linear transition
         trans = seq(0, 1, len = npoints + 1);
     }
-
     # Split points
     splits = data.range[1] + diff(data.range)*trans;
-
     # Compute coordinates
     out.from = matrix(NA, nrow = N, ncol = npoints);
     out.to = matrix(NA, nrow = N, ncol = npoints);
@@ -274,11 +249,9 @@ transition = function(from
         #out.to[, n] = pmin(to, splits[n + 1]);
         out.to[, n] = pmax(pmin(to, splits[n + 1]), from);
     }
-
     # Return result
     list(from = out.from, to = out.to)
 }
-
 # Set gradient background on a given rectangle
 set.bg = function(x = par("usr")[1:2]
                    , y = par("usr")[3:4]
@@ -288,10 +261,7 @@ set.bg = function(x = par("usr")[1:2]
                    , direction = "horisontal"
                    , stripes = 100
                    ) {
-
-
     RGB.cols = gradient(col = col, npoints = stripes, alpha = alpha);
-
     if(length(grep("hor", direction, ignore.case = TRUE)) > 0) {
         y.regions = transition(from = y[1], to = y[2], transition = transition, npoints = stripes);
         for(n in 1:stripes)
@@ -301,7 +271,6 @@ set.bg = function(x = par("usr")[1:2]
                  , border = "transparent"
                  , lty = 0
                  );
-
     } else {
         x.regions = transition(from = x[1], to = x[2], transition = transition, npoints = stripes + 1);
         for(n in 1:stripes)
@@ -312,9 +281,7 @@ set.bg = function(x = par("usr")[1:2]
                  , lty = 0
                  );
     }
-
 }
-
 # Generate empty plot
 create.empty.plot = function(X
                             , base = NULL
@@ -327,7 +294,6 @@ create.empty.plot = function(X
                             ) {
     if(new.device)
         dev.new();
-
     # Set margins
     if(set.margins) {
         if(two.sides) {
@@ -336,18 +302,13 @@ create.empty.plot = function(X
             par(mar = theme.params[["one.side.margin"]], bg = theme.params[["fg.col"]]);
         }
     }
-
     N = NROW(X);
-
     if(is.null(base))
         base = c(1, N);
-
-
     # Get X-axis  limits
     x.limits = range(base, na.rm = TRUE);
     # Get Y-axis  limits
     y.limits = range(X, na.rm = TRUE);
-
     # Create empty plot
     plot(x.limits
          , y.limits
@@ -360,21 +321,15 @@ create.empty.plot = function(X
          , xlab = ""
          , ylab = ""
         );
-
 }
-
-
 # polygon coordinate optimisation
 optimize.polycords = function(x, y) {
     N = NROW(x);
-
     # Init coordinates
     x.cords = double(N);
     y.cords = double(N);
-
     # Init optimisation
     k = 0;
-
     if(N > 1) {
         for(n in 1:(N-1)) {
             if(!is.na(y[n]) && !is.na(y[n+1]) && y[n] != y[n+1]) {
@@ -386,18 +341,14 @@ optimize.polycords = function(x, y) {
                 k = k + 1;
                 x.cords[k] = x[n+1];
                 y.cords[k] = y[n+1];
-
                 # Skip next iteration
                 n = n + 1;
             }
         }
     }
-
     #  Return output
     cbind(x.cords[1:k],y.cords[1:k])
-
 }
-
 # Draw a shaded area between two series
 shade.plot = function(to = NULL
                     , from = NULL
@@ -406,16 +357,13 @@ shade.plot = function(to = NULL
 					, overrides = list(...)
 					, ...
 					) {
-
 	# Override theme parameters (if necessary)
 	theme.params = override.list(what = theme.params, override = overrides);
-
     #  Compute Colour Gradient
     RGB.cols = gradient(col = theme.params[["shade.col"]]
                         , npoints = theme.params[["shade.stripes"]]
 						, alpha = theme.params[["shade.alpha"]]
                         );
-
     #  use x-axis as  baseline for the shading
     if(is.null(from)) {
         # Get data lenght
@@ -430,13 +378,11 @@ shade.plot = function(to = NULL
         y.cords.from = from[1:N];
         y.cords.to = to[1:N];
     }
-
     if(is.null(base) ) {
         base = 1:N;
     }
     # Set X coordinates
     x.cords = base[c(1, 1:N, N:1)];
-
     # Apply Transition
     if(length(RGB.cols) > 1) {
         y.trans.cords = transition(from = y.cords.from
@@ -447,12 +393,10 @@ shade.plot = function(to = NULL
     } else {
         y.trans.cords = list(from = as.matrix(y.cords.from), to = as.matrix(y.cords.to));
     }
-
     y.cords = rbind(y.trans.cords$from[1, , drop = FALSE]
                     , y.trans.cords$to[, , drop = FALSE]
                     , y.trans.cords$from[N:1, , drop = FALSE]
                     );
-
     # Draw shade
     for(n in 1:dim(y.trans.cords$from)[2]) {
         optim.cords = optimize.polycords(x.cords, y.cords[, n]);
@@ -465,25 +409,19 @@ shade.plot = function(to = NULL
                 , border = theme.params[["shade.border"]]
                 );
     }
-
 }
-
 # Comma style formatting
 comma.Fmt = function(x, digits = 3, ...) {
 	prettyNum(round(x, digits), big.mark = ",", ...);
 }
-
 # Comma style formatting
 comma.kFmt = function(x, digits = 0, ...) {
 	paste(prettyNum(round(x/1e3), big.mark = ",", ...), "k", sep = "");
 }
-
 # Comma style formatting
 comma.mFmt = function(x, digits = 0, ...) {
 	paste(prettyNum(round(x/1e6, digits), big.mark = ",", ...), "m", sep = "");
 }
-
-
 # Convert number using International System format
 SI.format = function(x) {
     suffix = c("y"
@@ -504,7 +442,6 @@ SI.format = function(x) {
 				, "Z"
                 , "Y"
                 );
-
     idx = floor(log10(abs(x))/3);
     res = vector("list", 2);
     if (idx >= -8 && idx <= 8 && idx != -1) {
@@ -516,12 +453,9 @@ SI.format = function(x) {
             res = x;
         }
     }
-
     res
 }
-
 apply.format = function(x, fmt = NULL) {
-
 	if(is.character(fmt)) {
 		# Apply C-style format
 		res = sprintf(fmt, x);
@@ -539,7 +473,6 @@ apply.format = function(x, fmt = NULL) {
 	# Return result
 	res
 }
-
 # Draw x-axis ticks and labels
 draw.x.axis = function(X
                         , base = NULL
@@ -547,13 +480,10 @@ draw.x.axis = function(X
                         , theme.params = getCurrentTheme()
 						, show.labels = TRUE
                         ) {
-
     # Number of data points of the series
     N = NROW(X);
-
     # Number of axis ticks
     N.ticks = ifelse(toupper(theme.params[["x.ticks"]]) == "ALL", N, as.numeric(theme.params[["x.ticks"]]));
-
     if(is.null(base)) {
         base = 1:N;
         # Tick points
@@ -568,22 +498,16 @@ draw.x.axis = function(X
     } else {
         x.ticks = seq(min(base, na.rm = TRUE), max(base, na.rm = TRUE), len = min(N, N.ticks, na.rm = TRUE));
     }
-
     # Default labels if null
     if(is.null(xlabels)) {
         xlabels = apply.format(x.ticks, fmt = theme.params[["xlab.fmt"]]);
     }
-
     # Padding labels
     if(length(xlabels) < length(x.ticks))
         xlabels = c(xlabels, 1:(length(x.ticks)-length(xlabels)));
-
-
     # Add horisontal axis  lines
     abline(h = par("usr")[3], col = theme.params[["axis.col"]]);
-
 	if(show.labels) {
-
 		# Add prefix if required
 		if(any(nchar(theme.params[["xlab.prefix"]]) > 0)) {
 			xlabels = paste(theme.params[["xlab.prefix"]], xlabels, sep = "");
@@ -603,7 +527,6 @@ draw.x.axis = function(X
 			, lwd = 0
 			, lwd.ticks = 1
 			);
-
 		# Add rotated text labels
 		adj = 0.5;
 		if(theme.params[["xlab.srt"]] != 0)
@@ -617,9 +540,7 @@ draw.x.axis = function(X
 			, xpd = TRUE
 			);
 	}
-
 }
-
 # Draw y-axis ticks and labels
 draw.y.axis = function(X
                     , ylabels = NULL
@@ -627,22 +548,16 @@ draw.y.axis = function(X
                     , side = 1
 					, show.labels = TRUE
                     ) {
-
     # Number of data points of the series
     N = NROW(X);
-
     # Set which theme parameters  should be used
     param.prefix = ifelse(side == 1, "ylab", "ylab2");
-
     # Process y-axis labels
     y.ticks = seq(min(X, na.rm = TRUE), max(X, na.rm = TRUE), len = theme.params[["y.ticks"]]);
     if(is.null(ylabels))
         ylabels = apply.format(y.ticks, fmt = theme.params[[paste(param.prefix, "fmt", sep = ".")]]);
-
-
     # Add vertical axis line
     abline(v = par("usr")[side], col = theme.params[["axis.col"]]);
-
 	if(show.labels) {
 		# Add prefix if required
 		if(any(nchar(theme.params[[paste(param.prefix, "prefix", sep = ".")]]) > 0)) {
@@ -669,7 +584,6 @@ draw.y.axis = function(X
 			, at = y.ticks
 			, labels = FALSE
 			);
-
 		
 		# Add rotated text labels
 #		adj = 0.5;
@@ -685,47 +599,35 @@ draw.y.axis = function(X
 			);
 	}
 }
-
-
 draw.grid = function(X
                      , base = NULL
                      , theme.params = getCurrentTheme()
                      ) {
-
     # Number of data points of the series
     N = NROW(X);
-
     # Number of grid ticks
     N.ticks = ifelse(toupper(theme.params[["grid.vlines"]]) == "ALL", N, as.numeric(theme.params[["grid.vlines"]]));
-
     # Vertical lines coordinates
     if(is.null(base)) {
         grid.v = round(seq(1, N, len = min(N, N.ticks), na.rm = TRUE));
     } else {
         grid.v = seq(min(base, na.rm = TRUE), max(base, na.rm = TRUE), len = min(N, N.ticks), na.rm = TRUE);
     }
-
     # Draw vertical lines
     abline(v = grid.v, col = theme.params[["grid.col"]], lty=3);
     # Horisontal lines coordinates
     grid.h = seq(min(X, na.rm = TRUE), max(X, na.rm = TRUE), len = theme.params[["grid.hlines"]]);
     # Draw horisontal lines
     abline(h = grid.h, col = theme.params[["grid.col"]], lty=3);
-
 }
-
-
 # Draw X axis title            
 draw.x.title = function(xtitle = ""
                         , theme.params = getCurrentTheme()
                         ) {
-
-
     if(any(nchar(xtitle) > 0)) {
         x.adj = 0.5;
         if(theme.params[["xtitle.srt"]] != 0)
             x.adj = 1;
-
         text(x = par("usr")[1] + (par("usr")[2] - par("usr")[1])*theme.params[["xtitle.pos"]]
             , y = par("usr")[3] - (par("usr")[4] - par("usr")[3])*0.10
             , srt = theme.params[["xtitle.srt"]]
@@ -735,21 +637,15 @@ draw.x.title = function(xtitle = ""
             , xpd = TRUE
             );
     }
-
 }
-
-
 # Draw Y axis title
 draw.y.title = function(ytitle = ""
                         , theme.params = getCurrentTheme()
                         , side = 1
                         ) {
-
-
     if(any(nchar(ytitle) > 0)) {
         # Set which theme parameters should be  used
         param.prefix = ifelse(side == 1, "ytitle", "ytitle2");
-
         # Set text adjustment (left/middle/right)
         adj = 0.5;
         x.ratio = 5/100;
@@ -757,11 +653,9 @@ draw.y.title = function(ytitle = ""
             adj = 2-side;
             x.ratio = x.ratio - 2*side/100;
         }
-
         # Calculate coordinates
         x.cord = par("usr")[side] + sign(side-1.5)*(par("usr")[2] - par("usr")[1]) * x.ratio;
         y.cord = par("usr")[3] + (par("usr")[4] - par("usr")[3])*theme.params[[paste(param.prefix, "pos", sep = ".")]];
-
         text(x = x.cord
             , y = y.cord
             , srt = theme.params[[paste(param.prefix, "srt", sep=".")]]
@@ -770,21 +664,16 @@ draw.y.title = function(ytitle = ""
             , col = theme.params[[paste(param.prefix, "col", sep=".")]]
             , xpd = TRUE
             );
-
     }
-
 }
-
 # Draw legend on a plot
 draw.legend = function(legend = ""
                         , theme.params = getCurrentTheme()
 						, overrides = list(...)
 						, ...
                         ) {
-
 	# Override theme parameters (if necessary)
 	theme.params = override.list(what = theme.params, override = overrides);
-
 	Ncols = ceiling(length(legend)/theme.params[["legend.maxrows"]]);
     # Get legend position
     legend.pos = legend(x = theme.params[["legend.pos"]]
@@ -799,7 +688,6 @@ draw.legend = function(legend = ""
                         , text.col = theme.params[["col"]]
                         , plot = FALSE
                         )$rect;
-
     # Set background
     set.bg(x = legend.pos$left + c(0, legend.pos$w)
             , y = legend.pos$top - c(legend.pos$h, 0)
@@ -809,7 +697,6 @@ draw.legend = function(legend = ""
             , transition = theme.params[["legend.transition"]]
             , stripes = theme.params[["legend.stripes"]]
             );
-
     # plot legend
     legend(x = theme.params[["legend.pos"]]
             , lty = 1
@@ -822,10 +709,7 @@ draw.legend = function(legend = ""
             , bg = "transparent"
             , text.col = theme.params[["col"]][1:length(legend)]
             );
-
 }
-
-
 # Workhorse function for automatic plotting
 cplot = function(X
 				 , base = NULL
@@ -852,20 +736,16 @@ cplot = function(X
 				 , multicolor = FALSE
 				 , ...
 				 ) {
-
     # Number of data points of the series
     N = NROW(X);
     V = NCOL(X);
     if(is.null(dim(X)))
         dim(X) = c(N, V);
-
     # Get Series names
 	X.names = get.col.names(X);
-
 	x.base = base;
 	if(is.null(x.base))
 		x.base = 1:N;
-
 	# Define x-axis range
 	if(is.null(xrange)) {
 		xrange = range(x.base, na.rm = TRUE);
@@ -874,20 +754,16 @@ cplot = function(X
 		
 	# Override theme parameters (if necessary)
 	theme.params = override.list(what = theme.params, override = overrides);
-
 	# Recycle plotting parameters (make same length)
 	for(param in theme.params[["recyclable"]])
 		if(!multicolor || (multicolor && param != "col"))
 			theme.params[[param]] = recycle(theme.params[[param]], V);
-
 	
 	# Indexes to identify plots on the same scale
 	side1.idx = which(theme.params[["side"]] == 1);
 	if(length(side1.idx) == 0)
 		side1.idx = 1:V;
-
 	side2.idx = (1:V)[-side1.idx];
-
 	# Define y-axis range
 	if(is.null(yrange)) {
 		ylim1 = range(X[, side1.idx, drop = FALSE], na.rm = TRUE);
@@ -912,7 +788,6 @@ cplot = function(X
 							 , two.sides = ifelse(length(side2.idx) > 0, TRUE, FALSE)
 							 , ...
 							);
-
 		# Set background
 		set.bg(x = par("usr")[1:2]
 				, y = par("usr")[3:4]
@@ -923,7 +798,6 @@ cplot = function(X
 				, stripes = theme.params[["bg.stripes"]]
 				);
 	}
-
 	# Padding of the 'shaded' paremeter with 'FALSE'.
 	shaded = c(shaded, rep(FALSE, V-length(shaded)))[1:V];
 	
@@ -935,7 +809,6 @@ cplot = function(X
 						, theme.params = theme.params
 						, shade.col = if(length(shaded == TRUE) > 1) theme.params[["col"]][v] else theme.params[["shade.col"]]
 						);
-
 	# Plot Series (Left side scale)
 	for(v in side1.idx) {
 		points(x.base
@@ -949,10 +822,7 @@ cplot = function(X
 				, lwd = theme.params[["lwd"]][v]
 				, col = if(multicolor) theme.params[["col"]] else theme.params[["col"]][v]
 				);
-
-
 	}
-
 	if(!append) {
 		# Add x-axis
 		draw.x.axis(X[, side1.idx, drop = FALSE]
@@ -963,7 +833,6 @@ cplot = function(X
 					);
 		# Add x title
 		draw.x.title(xtitle = xtitle, theme.params = theme.params);
-
 		# Add y-axis (left side)
 		draw.y.axis(X[, side1.idx, drop = FALSE]
 					, ylabels = ylabels
@@ -981,7 +850,6 @@ cplot = function(X
 	
 	
 	if(length(side2.idx) > 0) {
-
 		par(new = TRUE)
 		# Create new empty plot (set the limits)
 		create.empty.plot(ylim2
@@ -991,7 +859,6 @@ cplot = function(X
 							 , set.margins = FALSE
 							 , theme.params = theme.params
 							 );
-
 		# Add Shading Area
 		for(v in side2.idx)
 			if(shaded[v])
@@ -1014,9 +881,7 @@ cplot = function(X
 					, lwd = theme.params[["lwd"]][v]
 					, col = if(multicolor) theme.params[["col"]] else theme.params[["col"]][v]
 					);
-
 		}
-
 		if(!append) {
 			# Add y-axis (right side)
 			draw.y.axis(X[, side2.idx, drop = FALSE]
@@ -1028,26 +893,18 @@ cplot = function(X
 				# Add y title  (right side)
 				draw.y.title(ytitle = ytitle2, theme.params = theme.params, side = 2);
 		}
-
 	}
-
     # Add legend
     if(show.legend) {
         # Assign default legend names if null
         if(is.null(legend))
             legend = X.names;
-
         draw.legend(legend = legend, theme.params = theme.params, col = legend.col);
     }
-
 }
-
-
 ##########################################################################################
 #############################
 # FUNCTION:  draw.projections
-#
-# AUTHOR: RCC
 #
 # SUMMARY:
 # This function draws the vertical projection of one serie  (Y) over the other  (Y.fit)
@@ -1063,7 +920,6 @@ cplot = function(X
 #
 ##########################################################################################
 #############################
-
 draw.projections = function(X
                             , Y
                             , Y.fit
@@ -1071,12 +927,9 @@ draw.projections = function(X
                             , type = getCurrentTheme()[["projection.type"]][1]
                             , lty = getCurrentTheme()[["projection.lty"]][1]
                             ) {
-
-
     draw.points = cbind(X, Y, Y.fit);
     # Number of data points
     N = dim(draw.points)[1];
-
     for(n in 1:N) {
         # Draw the vertical line
         points(rep(draw.points[n, 1], 2)
@@ -1086,19 +939,13 @@ draw.projections = function(X
                 , lty = lty
                );
     }
-
 }
-
-
 # Retrieve plot layout from theme parameters
 get.plot.layout = function(N = 1, theme.params = getCurrentTheme(), overrides = NULL) {
-
     # Apply overrides if necessary
     theme.params = override.list(what = theme.params, overrides = overrides);
-
     max.nrow = theme.params[["plot.max.nrow"]];
     max.ncol = theme.params[["plot.max.ncol"]];
-
     if(N >= max.nrow*max.ncol) {
         # Use default
         res = c(max.nrow, max.ncol);
@@ -1106,11 +953,8 @@ get.plot.layout = function(N = 1, theme.params = getCurrentTheme(), overrides = 
         # Maximise plot layout
         res = c(min(max.nrow, N), min(max(N-max.nrow, 1), max.ncol));
     }
-
     res
-
 }
-
 get.plot.params = function(class = NULL, type = NULL, ...) {
 	# Define function name
 	strfun = paste(class, type, "plot.params", sep = ".");

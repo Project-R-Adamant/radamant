@@ -13,8 +13,6 @@
 impulse = function(N, value = 1) {
 	c(value, rep(0, N-1))
 }
-
-
 #######################################################################################################################
 # FUNCTION: plot.ma
 #
@@ -62,11 +60,8 @@ plot.Movav = function(x, fs = NULL, main = attr(x, "desc"), ...) {
 		cplot(x, main = main, ...);
 	}
 }
-
-
 #######################################################################################################################
 # FUNCTION: movApply
-
 #
 # SUMMARY:
 # Applies a given function to a sliding window of the input data
@@ -85,7 +80,6 @@ plot.Movav = function(x, fs = NULL, main = attr(x, "desc"), ...) {
 movApply = function(X, win.size = 1, padding = NA, rm.transient = FALSE, func = NULL, ...) {
 	# Check func parameter
 	stopifnot(func != NULL);
-
 	# Check if input is an instance of the Financial Series class
 	fs.flag = FALSE;
 	if(class(X) == "fs") {
@@ -97,7 +91,6 @@ movApply = function(X, win.size = 1, padding = NA, rm.transient = FALSE, func = 
 		# Assign Column Name
 		colnames(X) = attr(Y, "SName");
 	}
-
 	
 	# Check win.size parameter
 	if(length(win.size) > 1) {
@@ -130,18 +123,14 @@ movApply = function(X, win.size = 1, padding = NA, rm.transient = FALSE, func = 
 			res[n, v] = func(X[max(n-win.size+1, 1):n, v], ...);
 		}
 	}
-
 	cleanup(keep = "res");
 	
 	# Return result
 	res
 	
 }
-
-
 #######################################################################################################################
 # FUNCTION: movMax
-
 #
 # SUMMARY:
 # Applies the max function to a sliding window of the input data
@@ -158,10 +147,8 @@ movApply = function(X, win.size = 1, padding = NA, rm.transient = FALSE, func = 
 movMax = function(X, win.size = 1, ...) {
 	movApply(X, win.size = win.size, padding = -Inf, func = max, ...);
 }
-
 #######################################################################################################################
 # FUNCTION: movMin
-
 #
 # SUMMARY:
 # Applies the min function to a sliding window of the input data
@@ -178,7 +165,6 @@ movMax = function(X, win.size = 1, ...) {
 movMin = function(X, win.size = 1, ...) {
 	movApply(X, win.size = win.size, func = min, ...);
 }
-
 #######################################################################################################################
 # FUNCTION: movSd
 #
@@ -197,8 +183,6 @@ movMin = function(X, win.size = 1, ...) {
 movSd = function(X, win.size = 1, ...) {
 	movApply(X, win.size = win.size, func = sd, ...);
 }
-
-
 #######################################################################################################################
 # FUNCTION: movVar
 #
@@ -217,8 +201,6 @@ movSd = function(X, win.size = 1, ...) {
 movVar = function(X, win.size = 1, ...) {
 	movApply(X, win.size = win.size, func = var, ...);
 }
-
-
 #######################################################################################################################
 # FUNCTION: Movav
 #
@@ -237,9 +219,7 @@ movVar = function(X, win.size = 1, ...) {
 #   
 #######################################################################################################################
 Movav = function(X, ...) UseMethod("Movav")
-
 Movav.default = function(X, win.size = NULL, func = NULL, type = "MA", desc = "Moving Average", plot = FALSE, ...) {
-
 	if(length(win.size) == 0)
 		stop("Argument 'win.size' has zero length.");
 	
@@ -251,7 +231,6 @@ Movav.default = function(X, win.size = NULL, func = NULL, type = "MA", desc = "M
 	
 	if(!is.function(func))
 		stop(func, " is not a valid function!");
-
 	# Check if input is an instance of the Financial Series class
 	fs.flag = FALSE;
 	if(class(X) == "fs") {
@@ -291,7 +270,6 @@ Movav.default = function(X, win.size = NULL, func = NULL, type = "MA", desc = "M
 	attr(res, "type") = type;
 	attr(res, "desc") = desc;
 	attr(res, "win.size") = win.size;
-
 	if(plot)
 		plot(x = res
 			, fs = if(fs.flag) Y else X
@@ -305,10 +283,6 @@ Movav.default = function(X, win.size = NULL, func = NULL, type = "MA", desc = "M
 	res
 	
 }
-
-
-
-
 #######################################################################################################################
 # FUNCTION: ss.sym
 #
@@ -340,9 +314,7 @@ Movav.default = function(X, win.size = NULL, func = NULL, type = "MA", desc = "M
 #   
 #######################################################################################################################
 ss.sym = function(X, F = NULL, G = NULL, H = NULL, D = NULL, init = 0, SLen = ifelse(is.function(F), NA, NROW(F)), YLen = ifelse(is.function(H), NA, NROW(H)), ...) {
-
 	stopifnot(!(is.null(F) || is.null(G)));
-
 	# Check if input is an instance of the Financial Series class
 	fs.flag = FALSE;
 	if(class(X) == "fs") {
@@ -371,7 +343,6 @@ ss.sym = function(X, F = NULL, G = NULL, H = NULL, D = NULL, init = 0, SLen = if
 	
 	if(!is.function(G) && V != NCOL(G))
 		stop("Input->State matrix G has wrong dimension: NCOL(G) != NCOL(X).");
-
 	# Check State->Output matrix H
 	if(is.null(H))
 		H = diag(SLen);
@@ -385,7 +356,6 @@ ss.sym = function(X, F = NULL, G = NULL, H = NULL, D = NULL, init = 0, SLen = if
 	
 	if(!is.function(D) && V != NCOL(D))
 		stop("Input->Output matrix D has wrong dimension: NCOL(D) != NCOL(X).");
-
 	
 	# Declare output
 	res = matrix(NA, nrow = N, ncol = YLen);
@@ -393,7 +363,6 @@ ss.sym = function(X, F = NULL, G = NULL, H = NULL, D = NULL, init = 0, SLen = if
 	
 	# Init the system state S
 	St = matrix(init, nrow = SLen, ncol = 1);
-
 #	for(n in seq(1, N, len = N)) {
 	n = 0;
 	while(n < N) {
@@ -443,8 +412,6 @@ ss.sym = function(X, F = NULL, G = NULL, H = NULL, D = NULL, init = 0, SLen = if
 	# Return result
 	res
 }
-
-
 #######################################################################################################################
 # FUNCTION: sma
 #
@@ -472,7 +439,6 @@ sma = function(X, win.size = 10, plot = FALSE, ...) {
 			);
 			
 }
-
 #######################################################################################################################
 # FUNCTION: tma
 #
@@ -509,8 +475,6 @@ tma = function(X, win.size = 10, plot = FALSE, ...) {
 			, ...
 			)
 }
-
-
 #######################################################################################################################
 # FUNCTION: wma
 #
@@ -538,9 +502,6 @@ wma = function(X, win.size = 10, plot = FALSE, ...) {
 			, ...
 			)
 }
-
-
-
 #######################################################################################################################
 # FUNCTION: ema
 #
@@ -559,7 +520,6 @@ wma = function(X, win.size = 10, plot = FALSE, ...) {
 #   
 #######################################################################################################################
 ema = function(X, win.size = NROW(X), plot = FALSE, ...) {
-
 	if(length(win.size) == 0)
 		stop("Argument 'win.size' has zero length.");
 	
@@ -619,7 +579,6 @@ ema = function(X, win.size = NROW(X), plot = FALSE, ...) {
 	attr(res, "type") = "EMA";
 	attr(res, "desc") = "Exponential Moving Average";
 	attr(res, "lambda") = lambda;
-
 	# Plot Results if required
 	if(plot)
 		plot(res
@@ -634,8 +593,6 @@ ema = function(X, win.size = NROW(X), plot = FALSE, ...) {
 	res
 	
 }
-
-
 #######################################################################################################################
 # FUNCTION: dema
 #
@@ -674,7 +631,6 @@ dema = function(X, win.size = NROW(X), plot = FALSE, ...) {
 	# Return result
 	res
 }
-
 #######################################################################################################################
 # FUNCTION: gdema
 #
@@ -699,15 +655,12 @@ gdema = function(X, win.size = NROW(X), alpha = 0.7, plot = FALSE, ...) {
 	colnames(res) = gsub("DEMA", "GDEMA", colnames(res));
 	attr(res, "type") = "GDEMA";
 	attr(res, "desc") = "Generalised Exponential Moving Average";
-
 	# Plot results if required
 	if(plot)
 		plot(res, X, ...);
 		
 	res
 }
-
-
 #######################################################################################################################
 # FUNCTION: tema
 #
@@ -747,8 +700,6 @@ tema = function(X, win.size = NROW(X), plot = FALSE, ...) {
 	# Return result
 	res
 }
-
-
 #######################################################################################################################
 # FUNCTION: ttma
 #
@@ -769,7 +720,6 @@ tema = function(X, win.size = NROW(X), plot = FALSE, ...) {
 #   
 #######################################################################################################################
 ttma = function(X, win.size = NROW(X), alpha = 0.7, plot = FALSE, ...) {
-
 	gd1 = gdema(X, win.size = win.size, alpha = alpha, ...);
 	gd2 = gdema(gd1, win.size = win.size, alpha = alpha, ...);
 	
@@ -777,7 +727,6 @@ ttma = function(X, win.size = NROW(X), alpha = 0.7, plot = FALSE, ...) {
 	colnames(res) = gsub("GDEMA", "TTMA", colnames(res));
 	attr(res, "type") = "TTMA";
 	attr(res, "desc") = "T3 Moving Average";
-
 	# Plot Results if required
 	if(plot)
 		plot(res, X, ...);
@@ -789,8 +738,6 @@ ttma = function(X, win.size = NROW(X), alpha = 0.7, plot = FALSE, ...) {
 	res
 	
 }
-
-
 #######################################################################################################################
 # FUNCTION: mma
 #
@@ -814,7 +761,6 @@ mma = function(X, win.size = NROW(X), plot = FALSE, ...) {
 	res = ema(X, win.size = 2 * win.size - 1, ...);
 	attr(res, "type") = "MMA";
 	attr(res, "desc") = "Modified Exponential Moving Average";
-
 	# Plot Results if required
 	if(plot)
 		plot(res, X, ...);
@@ -822,7 +768,6 @@ mma = function(X, win.size = NROW(X), plot = FALSE, ...) {
 	# Return result
 	res
 }
-
 #######################################################################################################################
 # FUNCTION: gmma
 #
@@ -842,7 +787,6 @@ mma = function(X, win.size = NROW(X), plot = FALSE, ...) {
 #   
 #######################################################################################################################
 gmma = function(X, plot = FALSE, ...) {
-
 	# Check if input is an instance of the Financial Series class
 	fs.flag = FALSE;
 	if(class(X) == "fs") {
@@ -854,19 +798,15 @@ gmma = function(X, plot = FALSE, ...) {
 		# Assign Column Name
 		colnames(X) = attr(Y, "SName");
 	}
-
 	N = NROW(X);
 	V = NCOL(X);
 	
 	# gmma requires at least 60 data points
 	stopifnot(N >= 60);
-
 	# Short windows
 	ws = c(3, 5, 8, 10, 12, 15);
 	# Long Windows
 	wl = c(30, 35, 40, 45, 50, 60);
-
-
 	# Compute twelve ema with lambda = 2/(win.size+1)
 	#res = ema(X, lambda = 2/(c(ws, wl) + 1), ...);
 	res = ema(X, win.size = c(ws, wl), ...);
@@ -887,11 +827,6 @@ gmma = function(X, plot = FALSE, ...) {
 	res
 	
 }
-
-
-
-
-
 #######################################################################################################################
 # FUNCTION: rema
 #
@@ -911,7 +846,6 @@ gmma = function(X, plot = FALSE, ...) {
 #   
 #######################################################################################################################
 rema = function(X, win.size = NROW(X), alpha = 0.5, plot = FALSE, ...) {
-
 	if(length(win.size) == 0)
 		stop("Argument 'win.size' has zero length.");
 	
@@ -920,7 +854,6 @@ rema = function(X, win.size = NROW(X), alpha = 0.5, plot = FALSE, ...) {
 	
 	if(!all(win.size > 0))
 		stop("Argument 'win.size' contains negative values.");
-
 	if(!(length(alpha) == 1 && alpha >= 0))
 		stop("Argument 'alpha' must be a single positive number.");
 		
@@ -979,7 +912,6 @@ rema = function(X, win.size = NROW(X), alpha = 0.5, plot = FALSE, ...) {
 	attr(res, "desc") = "Regularised Exponential Moving Average";
 	attr(res, "lambda") = lambda;
 	attr(res, "alpha") = alpha;
-
 	# Plot Results if required
 	if(plot)
 		plot(res
@@ -994,11 +926,6 @@ rema = function(X, win.size = NROW(X), alpha = 0.5, plot = FALSE, ...) {
 	res
 	
 }
-
-
-
-
-
 #######################################################################################################################
 # FUNCTION: emat
 #
@@ -1017,14 +944,12 @@ rema = function(X, win.size = NROW(X), alpha = 0.5, plot = FALSE, ...) {
 #   
 #######################################################################################################################
 emat = function(X, win.size = NROW(X), alpha = 0.1, plot = FALSE, ...) {
-
 	if(length(alpha) > 1) {
 		warning("Argument 'alpha' has length > 1 and only first element will be used");
 		alpha = alpha[1];
 	}
 	
 	stopifnot(length(alpha) == 1 && is.finite(alpha));
-
 	# Check if input is an instance of the Financial Series class
 	fs.flag = FALSE;
 	if(class(X) == "fs") {
@@ -1091,7 +1016,6 @@ emat = function(X, win.size = NROW(X), alpha = 0.1, plot = FALSE, ...) {
 	attr(res, "desc") = "Trend-Adjusted Exponential Moving Average";
 	attr(res, "lambda") = lambda;
 	attr(res, "alpha") = alpha;
-
 	# Plot Results if required
 	if(plot)
 		plot(res
@@ -1106,7 +1030,6 @@ emat = function(X, win.size = NROW(X), alpha = 0.1, plot = FALSE, ...) {
 	res
 	
 }
-
 #######################################################################################################################
 # FUNCTION: zlma
 #
@@ -1125,7 +1048,6 @@ emat = function(X, win.size = NROW(X), alpha = 0.1, plot = FALSE, ...) {
 #   
 #######################################################################################################################
 zlma = function(X, win.size = NROW(X), plot = FALSE, ...) {
-
 	# Check if input is an instance of the Financial Series class
 	fs.flag = FALSE;
 	if(class(X) == "fs") {
@@ -1143,10 +1065,8 @@ zlma = function(X, win.size = NROW(X), plot = FALSE, ...) {
 	# Adjust ema to the average error
 	res =  ema.x + ema(X - ema.x, win.size = win.size);
 	colnames(res) = gsub("EMA", "ZLMA", colnames(res));
-
 	attr(res, "type") = "ZLMA";
 	attr(res, "desc") = "Zero Lag Moving Average";
-
 	# Plot Results if required
 	if(plot)
 		plot(res
@@ -1156,13 +1076,10 @@ zlma = function(X, win.size = NROW(X), plot = FALSE, ...) {
 	
 	# Cleanup memory
 	cleanup(keep = "res");
-
 	# Return result
 	res
 	
 }
-
-
 #######################################################################################################################
 # FUNCTION: vwma
 #
@@ -1180,7 +1097,6 @@ zlma = function(X, win.size = NROW(X), plot = FALSE, ...) {
 #   
 #######################################################################################################################
 vwma = function(X, Vol = NULL, win.size = 10, plot = FALSE, ...) {
-
 	# Check if input is an instance of the Financial Series class
 	fs.flag = FALSE;
 	if(class(X) == "fs") {
@@ -1195,7 +1111,6 @@ vwma = function(X, Vol = NULL, win.size = 10, plot = FALSE, ...) {
 		# Assign Column Name
 		colnames(X) = attr(Y, "SName");
 	}
-
 	
 	if(NCOL(X) != NCOL(Vol))
 		stop("Arguments 'X' and 'Vol' have different number of columns.");
@@ -1205,7 +1120,6 @@ vwma = function(X, Vol = NULL, win.size = 10, plot = FALSE, ...) {
 	colnames(res) = gsub("SMA", "VWMA", colnames(res));
 	attr(res, "type") = "vwma";
 	attr(res, "desc") = "Volume Weighted Moving Average";
-
 	# Plot Results if required
 	if(plot)
 		plot(res
@@ -1217,9 +1131,6 @@ vwma = function(X, Vol = NULL, win.size = 10, plot = FALSE, ...) {
 	res
 		
 }
-
-
-
 #######################################################################################################################
 # FUNCTION: hma
 #
@@ -1242,7 +1153,6 @@ hma = function(X, win.size = NROW(X), plot = FALSE, ...) {
 	colnames(res) = gsub("WMA", "HMA", colnames(res));
 	attr(res, "type") = "HMA";
 	attr(res, "desc") = "Hull Moving Average";
-
 	# Plot Results if required
 	if(plot)
 		plot(res, X, ...);
@@ -1250,8 +1160,6 @@ hma = function(X, win.size = NROW(X), plot = FALSE, ...) {
 	# return results
 	res
 }
-
-
 #######################################################################################################################
 # FUNCTION: dma
 #
@@ -1270,7 +1178,6 @@ hma = function(X, win.size = NROW(X), plot = FALSE, ...) {
 #   
 #######################################################################################################################
 dma = function(X, fast.win = 5, slow.win = 28, plot = FALSE, ...) {
-
 	# Check if input is an instance of the Financial Series class
 	fs.flag = FALSE;
 	if(class(X) == "fs") {
@@ -1282,7 +1189,6 @@ dma = function(X, fast.win = 5, slow.win = 28, plot = FALSE, ...) {
 		# Assign Column Name
 		colnames(X) = attr(Y, "SName");
 	}
-
 	res = 100 * ( 
 			movMax(sma(X, win.size = fast.win), win.size = slow.win)	
 			- movMin(sma(X, win.size = fast.win), win.size = slow.win) 
@@ -1292,7 +1198,6 @@ dma = function(X, fast.win = 5, slow.win = 28, plot = FALSE, ...) {
 	attr(res, "type") = "DMA";
 	attr(res, "desc") = "Derivative Moving Average";
 	attr(res, "win.size") = c(fast.win, slow.win);
-
 	# Plot Results if required
 	if(plot)
 		plot(res
@@ -1304,7 +1209,6 @@ dma = function(X, fast.win = 5, slow.win = 28, plot = FALSE, ...) {
 	
 	res
 }
-
 #######################################################################################################################
 # FUNCTION: sinma
 #
@@ -1332,7 +1236,6 @@ sinma = function(X, win.size = 10, plot = FALSE, ...) {
 			, ...
 			)
 }
-
 #######################################################################################################################
 # FUNCTION: fw1
 #
@@ -1360,7 +1263,6 @@ fw1 = function(X, plot = FALSE, ...) {
 		plot(res, X, ...);
 	res
 }
-
 #######################################################################################################################
 # FUNCTION: fw2
 #
@@ -1388,7 +1290,6 @@ fw2 = function(X, plot = FALSE, ...){
 		plot(res, X, ...);
 	res
 }
-
 #######################################################################################################################
 # FUNCTION: fw3
 #
@@ -1417,7 +1318,6 @@ fw3 = function(X, plot = FALSE, ...) {
 	res
 				
 }
-
 #######################################################################################################################
 # FUNCTION: epma
 #
@@ -1445,7 +1345,6 @@ epma = function(X, win.size = 10, plot = FALSE, ...) {
 		, ...
 		)
 }
-
 #######################################################################################################################
 # FUNCTION: mndma
 #
@@ -1463,7 +1362,6 @@ epma = function(X, win.size = 10, plot = FALSE, ...) {
 #   
 #######################################################################################################################
 mndma = function(X, win.size = 50, plot = FALSE, ...) {
-
 	if(length(win.size) == 0)
 		stop("Argument 'win.size' has zero length.");
 	
@@ -1472,7 +1370,6 @@ mndma = function(X, win.size = 50, plot = FALSE, ...) {
 	
 	if(!all(win.size > 0))
 		stop("Argument 'win.size' contains negative values.");
-
 	# Check if input is an instance of the Financial Series class
 	fs.flag = FALSE;
 	if(class(X) == "fs") {
@@ -1484,7 +1381,6 @@ mndma = function(X, win.size = 50, plot = FALSE, ...) {
 		# Assign Column Name
 		colnames(X) = attr(Y, "SName");
 	}
-
 	# Get data dimensions
 	N = NROW(X);
 	V = NCOL(X);
@@ -1517,7 +1413,6 @@ mndma = function(X, win.size = 50, plot = FALSE, ...) {
 	class(res) = "Movav";
 	attr(res, "type") = "MNDMA";
 	attr(res, "desc") = "Multiple N-Day Moving Average";
-
 	# Plot Results if required
 	if(plot)
 		plot(res
@@ -1528,9 +1423,6 @@ mndma = function(X, win.size = 50, plot = FALSE, ...) {
 	res
 	
 }
-
-
-
 #######################################################################################################################
 # FUNCTION: ama
 #
@@ -1579,7 +1471,6 @@ ama = function(X, ar.ord = 1, ma.ord = 1, func = NULL, padding = 0, type = "AMA"
 	# Check Func parameter
 	if(!is.function(func))
 		stop("Argument 'func' is not a valid function.");
-
 	# Check if input is an instance of the Financial Series class
 	fs.flag = FALSE;
 	if(class(X) == "fs") {
@@ -1592,7 +1483,6 @@ ama = function(X, ar.ord = 1, ma.ord = 1, func = NULL, padding = 0, type = "AMA"
 		colnames(X) = attr(Y, "SName");
 	}
 		
-
 	# Data dimensions
 	N = NROW(X);
 	V = NCOL(X);
@@ -1619,14 +1509,12 @@ ama = function(X, ar.ord = 1, ma.ord = 1, func = NULL, padding = 0, type = "AMA"
 #			res[n, v] = func(y = res[max(n-ar.ord, 1):max(n-1, 1), v], x = X[max(n-ma.ord+1, 1):n, v], n  = n, v = v, ...);
 #		}
 	
-
 	class(res) = "Movav";
 	attr(res, "ar.ord") = ar.ord;
 	attr(res, "ma.ord") = ma.ord;
 	attr(res, "func") = func;
 	attr(res, "type") = type;
 	attr(res, "desc") = "Adaptive Moving Average";
-
 	# Plot Results if required
 	if(plot)
 		plot(res
@@ -1639,10 +1527,7 @@ ama = function(X, ar.ord = 1, ma.ord = 1, func = NULL, padding = 0, type = "AMA"
 	
 	# Return result
 	res
-
 }
-
-
 #######################################################################################################################
 # FUNCTION: kama
 #
@@ -1663,7 +1548,6 @@ ama = function(X, ar.ord = 1, ma.ord = 1, func = NULL, padding = 0, type = "AMA"
 #   
 #######################################################################################################################
 kama = function(X, fast.win = 2, slow.win = 30, lag = 5, keep.lambda = FALSE, keep.ER = FALSE, plot = FALSE, ...) {
-
 	if(length(fast.win) == 0)
 		stop("Argument 'fast.win' has zero length.");
 	
@@ -1672,7 +1556,6 @@ kama = function(X, fast.win = 2, slow.win = 30, lag = 5, keep.lambda = FALSE, ke
 	
 	if(!all(fast.win > 0))
 		stop("Argument 'fast.win' contains negative values.");
-
 	if(length(slow.win) == 0)
 		stop("Argument 'slow.win' has zero length.");
 	
@@ -1685,7 +1568,6 @@ kama = function(X, fast.win = 2, slow.win = 30, lag = 5, keep.lambda = FALSE, ke
 	if(length(fast.win) != length(slow.win)) {
 		warning("Arguments 'fast.win' and 'slow.win' have different lengths. Using the smallest set of values.")
 	}	
-
 	# Check if input is an instance of the Financial Series class
 	fs.flag = FALSE;
 	if(class(X) == "fs") {
@@ -1717,13 +1599,11 @@ kama = function(X, fast.win = 2, slow.win = 30, lag = 5, keep.lambda = FALSE, ke
 	
 	# Declare Lambda (Smoothing factor)
 	lambda = matrix(NA, nrow = N, ncol = V*W);
-
 	
 	# Define KAMA internal updating function
 	kfunc = function(y, x, n, v, lambda, ...) {
 		ifelse(n == 1, x, lambda[n, v]*x + (1-lambda[n, v])*y)
 	}
-
 	# Declare Output
 	res = matrix(NA, nrow = N, ncol = V*W);
 	colnames(res) = as.character(apply(as.matrix(paste("KAMA_F", fast.win[1:W], "_S", slow.win[1:W], "_L", lag, sep = ""))
@@ -1757,7 +1637,6 @@ kama = function(X, fast.win = 2, slow.win = 30, lag = 5, keep.lambda = FALSE, ke
 		attr(res, "lambda") = lambda;
 	if(keep.ER)
 		attr(res, "ER") = ER;
-
 	# Plot Results if required
 	if(plot)
 		plot(res
@@ -1771,14 +1650,8 @@ kama = function(X, fast.win = 2, slow.win = 30, lag = 5, keep.lambda = FALSE, ke
 	res;
 	
 }
-
-
-
-
 #######################################################################################################################
 # FUNCTION: frama
-#
-# AUTHOR: RCC
 #
 # SUMMARY:
 # Fractal Moving Average, computed on each column of the input data X and for each pair (fast.win[i], slow.win[i]).
@@ -1796,7 +1669,6 @@ kama = function(X, fast.win = 2, slow.win = 30, lag = 5, keep.lambda = FALSE, ke
 #   
 #######################################################################################################################
 frama = function(X, win.size = 10, tau = 4.6, keep.lambda = FALSE, keep.ER = FALSE, plot = FALSE, ...) {
-
 	if(length(win.size) == 0)
 		stop("Argument 'win.size' has zero length.");
 	
@@ -1805,7 +1677,6 @@ frama = function(X, win.size = 10, tau = 4.6, keep.lambda = FALSE, keep.ER = FAL
 	
 	if(!all(win.size > 0))
 		stop("Argument 'win.size' contains negative values.");
-
 	if(length(tau) == 0)
 		stop("Argument 'tau' has zero length.");
 		
@@ -1818,7 +1689,6 @@ frama = function(X, win.size = 10, tau = 4.6, keep.lambda = FALSE, keep.ER = FAL
 		warning("Argument 'tau' must be positive. Absolute value will be used instead.")
 		tau = abs(tau);
 	}
-
 	# Check if input is an instance of the Financial Series class
 	fs.flag = FALSE;
 	if(class(X) == "fs") {
@@ -1845,7 +1715,6 @@ frama = function(X, win.size = 10, tau = 4.6, keep.lambda = FALSE, keep.ER = FAL
 	
 	# Declare Lambda (Smoothing factor)
 	lambda = matrix(NA, nrow = N, ncol = V*W);
-
 	
 	# Define FRAMA internal updating function
 	kfunc = function(y, x, n, v, lambda, w, ...) {
@@ -1856,7 +1725,6 @@ frama = function(X, win.size = 10, tau = 4.6, keep.lambda = FALSE, keep.ER = FAL
 		
 		ifelse(n == 1, x, lambda[n, v]*x + (1-lambda[n, v])*y)
 	}
-
 	# Declare Output
 	res = matrix(NA, nrow = N, ncol = V*W);
 	colnames(res) = as.character(apply(as.matrix(paste("FRAMA", win.size, sep = "_"))
@@ -1906,7 +1774,6 @@ frama = function(X, win.size = 10, tau = 4.6, keep.lambda = FALSE, keep.ER = FAL
 		attr(res, "lambda") = lambda;
 	if(keep.ER)
 		attr(res, "ER") = ER;
-
 	# Plot Results if required
 	if(plot)
 		plot(res
@@ -1920,4 +1787,3 @@ frama = function(X, win.size = 10, tau = 4.6, keep.lambda = FALSE, keep.ER = FAL
 	res;
 	
 }
-

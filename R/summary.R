@@ -15,15 +15,12 @@ Zscore = function(X, means=NULL, sigma=NULL) {
 	V = NCOL(X);
 	if(is.null(dim(X)))
 		dim(X) = c(N, V);	
-
 	# Mean vector
 	if(is.null(means))
 		means = colMeans(X, na.rm=TRUE);
-
 	# Standard deviations
 	if(is.null(sigma))
 		sigma = sd(X, na.rm=TRUE);
-
 	# Declare output
 	res = matrix(NA, nrow = N, ncol = V);
 	colnames(res) = colnames(X);
@@ -37,8 +34,6 @@ Zscore = function(X, means=NULL, sigma=NULL) {
 	
 	res
 }
-
-
 #######################################################################################################################
 # FUNCTION: hmean
 #
@@ -73,7 +68,6 @@ hmean = function(X,...) {
 	# Return result
 	res
 }
-
 #######################################################################################################################
 # FUNCTION: gmean
 #
@@ -88,7 +82,6 @@ hmean = function(X,...) {
 #  Matrix of geometric means
 #######################################################################################################################
 gmean = function(X, ...) {
-
 	# Data dimensions
 	N = NROW(X);
 	V = NCOL(X);
@@ -110,7 +103,6 @@ gmean = function(X, ...) {
 	res
 	
 }
-
 #######################################################################################################################
 # FUNCTION: kurt
 #
@@ -125,7 +117,6 @@ gmean = function(X, ...) {
 #  Matrix of Excess Kurtosis and P-Value
 #######################################################################################################################
 kurt = function(X, pval = FALSE) {
-
 	# Data dimensions
 	N = NROW(X);
 	V = NCOL(X);
@@ -164,7 +155,6 @@ kurt = function(X, pval = FALSE) {
 	#Return result
 	res[1:ifelse(pval, 2, 1), , drop = FALSE]
 }
-
 #######################################################################################################################
 # FUNCTION: skew
 #
@@ -217,8 +207,6 @@ skew = function(X, pval = FALSE) {
 	#Return result
 	res[1:ifelse(pval, 2, 1), , drop = FALSE]
 }
-
-
 #######################################################################################################################
 # FUNCTION: jb_test
 #
@@ -249,7 +237,6 @@ JB.test = function(X, plot.hist=FALSE) {
 	ku = kurt(X);
 	# Jaques-Brera
 	jb = (sk^2 + (1/4)*ku^2) * (N/6);
-
 	# P-Value
 	pvalue = 1-pchisq(jb,2);
 	# Result
@@ -259,7 +246,6 @@ JB.test = function(X, plot.hist=FALSE) {
 		mm = paste("JB Test for Normality:", "JB_stat ->", round(res[1], 5), "; Pval->", round(res[2], 5))
 		chist(X, main=mm)
 	}
-
 	# Cleanup
 	cleanup(keep = c("res"));
 	
@@ -267,9 +253,7 @@ JB.test = function(X, plot.hist=FALSE) {
 	res
 	
 }
-
 ####################################################
-
 ## SUMMARY & DENSITY ##
 Sum.dens = function(x, ...) {
 	sry = summary(x)
@@ -277,9 +261,6 @@ Sum.dens = function(x, ...) {
 	abline(v=sry, col=heat.colors(6),lwd=1.5)
 	legend("topright", inset=.05, title="Legend", names(sry), fill=heat.colors(6), horiz=FALSE, cex = 0.6, pt.cex = 0.6, ...)
 }
-
-
-
 #######################################################################################################################
 # FUNCTION: moments
 #
@@ -307,4 +288,3 @@ moments = function(X) {
 		, jb = JB.test(Z, TRUE)
 		)
 }
-

@@ -2,13 +2,10 @@
 getProjectionMatrix = function(env = getOption("RAdamant")){
 	get("pmat", env);
 }
-
 # Save 3D Projection matrix
 setProjectionMatrix = function(pmat = NULL, env = getOption("RAdamant")){
 	assign("pmat", pmat, env);
 }
-
-
 # Compute numerical gradient of a function
 grad = function(func = NULL, x, scalar = TRUE, eps = sqrt(.Machine$double.neg.eps), ...) {
 	# Number of data points
@@ -56,9 +53,6 @@ grad = function(func = NULL, x, scalar = TRUE, eps = sqrt(.Machine$double.neg.ep
 	res
 	
 }
-
-
-
 # Draw a 4-Edge polyhedron on 3D space.  
 rect3d = function(xrange
 					, yrange
@@ -86,22 +80,18 @@ rect3d = function(xrange
 					)
 			, ...);
 }
-
 # Draw points/lines on 3D space
 points3d = function(x, y, z, pmat = getProjectionMatrix(), ...) {
 	points(trans3d(x, y, z, pmat = pmat), ...)
 }
-
 # Draw lines on 3D space
 lines3d = function(x, y, z, pmat = getProjectionMatrix(), ...) {
 	lines(trans3d(x, y, z, pmat = pmat), ...)
 }
-
 # Draw annotation on 3D space
 text3d = function(x, y, z, pmat = getProjectionMatrix(), ...) {
 	text(trans3d(x, y, z, pmat = pmat), ...)
 }
-
 set.bg3d = function (x
 					, y
 					, z
@@ -117,18 +107,15 @@ set.bg3d = function (x
 					, lty = 0
 					, ...
 					) {
-
 	# Make sure input coordinates are ranges
 	x = range(x, na.rm = TRUE);
 	y = range(y, na.rm = TRUE);
 	z = range(z, na.rm = TRUE);
-
 	alpha = recycle(alpha, 3);
 	
 	# Compute transition
 	y.regions = transition(from = y[1], to = y[2], transition = transition, npoints = stripes);
 	z.regions = transition(from = z[1], to = z[2], transition = transition, npoints = stripes);
-
 	# Compute color gradients
 	if(length(xy.cols) == 1)
 		xy.cols = rep(xy.cols, 2);
@@ -177,15 +164,11 @@ set.bg3d = function (x
 	}
 					
 }
-
-
 box3d = function (x, y, z, pmat = getProjectionMatrix(), half = FALSE, ...) {
-
 	# Make sure input coordinates are ranges
 	x = range(x, na.rm = TRUE);
 	y = range(y, na.rm = TRUE);
 	z = range(z, na.rm = TRUE);
-
 	# Draw base box
 	lines3d(x, rep(y[1], 2), rep(z[1], 2), pmat = pmat, ...);
 	lines3d(x, rep(y[2], 2), rep(z[1], 2), pmat = pmat, ...);
@@ -198,16 +181,12 @@ box3d = function (x, y, z, pmat = getProjectionMatrix(), half = FALSE, ...) {
 	lines3d(rep(x[1], 2), rep(y[1], 2), z, pmat = pmat, ...);
 	lines3d(rep(x[1], 2), rep(y[2], 2), z, pmat = pmat, ...);
 	lines3d(rep(x[2], 2), rep(y[2], 2), z, pmat = pmat, ...);
-
 	if(!half) {
 		lines3d(x, rep(y[1], 1), rep(z[2], 2), pmat = pmat, ...);
 		lines3d(rep(x[2], 2), y, rep(z[2], 2), pmat = pmat, ...);
 		lines3d(rep(x[2], 2), rep(y[1], 2), z, pmat = pmat, ...);
 	}
 }
-
-
-
 x.axis3d = function(xlim = NULL
 					, ylim = NULL
 					, zlim = NULL
@@ -219,19 +198,14 @@ x.axis3d = function(xlim = NULL
 					, grid = theme.params[["xgrid"]]
 					, ...
 					) {
-
 	# Make sure input coordinates are ranges
 	xlim = range(xlim, na.rm = TRUE);
 	ylim = range(ylim, na.rm = TRUE);
 	zlim = range(zlim, na.rm = TRUE);
-
-
     # Number of label points
     N = ifelse(is.null(at), as.numeric(theme.params[["x.ticks"]]), length(at));
-
     # Number of axis ticks
     N.ticks = ifelse(toupper(theme.params[["x.ticks"]]) == "ALL", N, min(N, as.numeric(theme.params[["x.ticks"]])));
-
     if(is.null(at)) {
         # Tick points
         at = seq(xlim[1], xlim[2], len = N.ticks);
@@ -246,12 +220,9 @@ x.axis3d = function(xlim = NULL
     }
 	if(nchar(theme.params[["xlab.suffix"]]) > 0)
 		labels = paste(labels, theme.params[["xlab.suffix"]], sep = "");
-
     # Padding labels
     if(length(labels) < length(at))
         labels = c(labels, 1:(length(at)-length(labels)));
-
-
     # Add axis line
 	lines3d(xlim, rep(ylim[1], 2), rep(zlim[1], 2), pmat = pmat, col = theme.params[["axis.col"]], ...);
 	# Add tick marks
@@ -265,7 +236,6 @@ x.axis3d = function(xlim = NULL
 			, col = theme.params[["axis.col"]]
 			, cex = 2
 			);
-
 	if(grid) {
 		# Draw grid lines
 		n = 0;
@@ -276,7 +246,6 @@ x.axis3d = function(xlim = NULL
 	}
 	
 	if(show.labels) {
-
 		# Add rotated text labels
 #		adj = 0.5;
 #		if(theme.params[['xlab3d.srt']] > 0)
@@ -293,12 +262,7 @@ x.axis3d = function(xlim = NULL
 				, cex = 0.8
 				);
 	}
-
 }
-
-
-
-
 y.axis3d = function(xlim = NULL
 					, ylim = NULL
 					, zlim = NULL
@@ -310,19 +274,14 @@ y.axis3d = function(xlim = NULL
 					, grid = theme.params[["ygrid"]]
 					, ...
 					) {
-
 	# Make sure input coordinates are ranges
 	xlim = range(xlim, na.rm = TRUE);
 	ylim = range(ylim, na.rm = TRUE);
 	zlim = range(zlim, na.rm = TRUE);
-
-
     # Number of label points
     N = ifelse(is.null(at), as.numeric(theme.params[["y.ticks"]]), length(at));
-
     # Number of axis ticks
     N.ticks = ifelse(toupper(theme.params[["y.ticks"]]) == "ALL", N, min(N, as.numeric(theme.params[["y.ticks"]])));
-
     if(is.null(at)) {
         # Tick points
         at = seq(ylim[1], ylim[2], len = N.ticks);
@@ -337,12 +296,9 @@ y.axis3d = function(xlim = NULL
     }
 	if(nchar(theme.params[["ylab.suffix"]]) > 0)
 		labels = paste(labels, theme.params[["ylab.suffix"]], sep = "");
-
     # Padding labels
     if(length(labels) < length(at))
         labels = c(labels, 1:(length(at)-length(labels)));
-
-
     # Add axis line
 	lines3d(rep(xlim[2], 2), ylim, rep(zlim[1], 2), pmat = pmat, col = theme.params[["axis.col"]], ...);
 	# Add tick marks
@@ -356,7 +312,6 @@ y.axis3d = function(xlim = NULL
 			, col = theme.params[["axis.col"]]
 			, cex = 2
 			);
-
 	if(grid) {
 		# Draw grid lines
 		n = 0;
@@ -367,7 +322,6 @@ y.axis3d = function(xlim = NULL
 	}
 	
 	if(show.labels) {
-
 		# Add rotated text labels
 #		adj = 0.5;
 #		if(theme.params[['ylab3d.srt']] != 0)
@@ -384,10 +338,7 @@ y.axis3d = function(xlim = NULL
 				, cex = 0.8
 				);
 	}
-
 }
-
-
 z.axis3d = function(xlim = NULL
 					, ylim = NULL
 					, zlim = NULL
@@ -399,19 +350,14 @@ z.axis3d = function(xlim = NULL
 					, grid = theme.params[["zgrid"]]
 					, ...
 					) {
-
 	# Make sure input coordinates are ranges
 	xlim = range(xlim, na.rm = TRUE);
 	ylim = range(ylim, na.rm = TRUE);
 	zlim = range(zlim, na.rm = TRUE);
-
-
     # Number of label points
     N = ifelse(is.null(at), as.numeric(theme.params[["z.ticks"]]), length(at));
-
     # Number of axis ticks
     N.ticks = ifelse(toupper(theme.params[["z.ticks"]]) == "ALL", N, min(N, as.numeric(theme.params[["z.ticks"]])));
-
     if(is.null(at)) {
         # Tick points
         at = seq(zlim[1], zlim[2], len = N.ticks);
@@ -426,12 +372,9 @@ z.axis3d = function(xlim = NULL
     }
 	if(nchar(theme.params[["zlab.suffix"]]) > 0)
 		labels = paste(labels, theme.params[["zlab.suffix"]], sep = "");
-
     # Padding labels
     if(length(labels) < length(at))
         labels = c(labels, 1:(length(at)-length(labels)));
-
-
     # Add axis line
 	lines3d(rep(xlim[1], 2), rep(ylim[1], 2), zlim, pmat = pmat, col = theme.params[["axis.col"]], ...);
 	# Add tick marks
@@ -445,7 +388,6 @@ z.axis3d = function(xlim = NULL
 			, col = theme.params[["axis.col"]]
 			, cex = 2
 			);
-
 	if(grid) {
 		# Draw grid lines
 		n = 0;
@@ -456,7 +398,6 @@ z.axis3d = function(xlim = NULL
 	}
 	
 	if(show.labels) {
-
 		# Add rotated text labels
 		#if(theme.params[['ylab3d.srt']] != 0)
 			adj = 1;
@@ -472,9 +413,7 @@ z.axis3d = function(xlim = NULL
 				, cex = 0.8
 				);
 	}
-
 }
-
 # Draw X axis title            
 x.title3d = function(xlim = NULL
 					, ylim = NULL
@@ -484,7 +423,6 @@ x.title3d = function(xlim = NULL
                     , theme.params = getCurrentTheme()
 					, ...
                     ) {
-
     if(any(nchar(title) > 0)) {
 		# Set Rotation
 		srt = theme.params[["xtitle3d.srt"]];
@@ -501,11 +439,8 @@ x.title3d = function(xlim = NULL
 				, xpd = TRUE
 				, ...
 				);
-
     }
-
 }
-
 # Draw Y axis title            
 y.title3d = function(xlim = NULL
 					, ylim = NULL
@@ -515,7 +450,6 @@ y.title3d = function(xlim = NULL
                     , theme.params = getCurrentTheme()
 					, ...
                     ) {
-
     if(any(nchar(title) > 0)) {
 		# Set Rotation
 		srt = theme.params[["ytitle3d.srt"]];
@@ -532,11 +466,8 @@ y.title3d = function(xlim = NULL
 				, xpd = TRUE
 				, ...
 				);
-
     }
-
 }
-
 # Draw Y axis title            
 z.title3d = function(xlim = NULL
 					, ylim = NULL
@@ -546,7 +477,6 @@ z.title3d = function(xlim = NULL
                     , theme.params = getCurrentTheme()
 					, ...
                     ) {
-
     if(any(nchar(title) > 0)) {
 		# Set Rotation
 		srt = theme.params[["ztitle3d.srt"]];
@@ -561,12 +491,8 @@ z.title3d = function(xlim = NULL
 				, xpd = TRUE
 				, ...
 				);
-
     }
-
 }
-
-
 cplot3d = function(x
 					, y
 					, z
@@ -595,7 +521,6 @@ cplot3d = function(x
 					, ...
 					) {
 					
-
 	# Override theme parameters (if necessary)
 	theme.params = override.list(what = theme.params, override = overrides);
 	
@@ -652,7 +577,6 @@ cplot3d = function(x
 			, half = theme.params[["box.half"]]
 			, lty = theme.params[["box.lty"]]
 			);
-
 		if(!append && axis) {
 			# Add axis and grid
 			x.axis3d(xlim, ylim, zlim, pmat = pmat
@@ -676,9 +600,7 @@ cplot3d = function(x
 		x.title3d(xlim, ylim, zlim, pmat = pmat, title = xtitle, theme.params = theme.params);
 		y.title3d(xlim, ylim, zlim, pmat = pmat, title = ytitle, theme.params = theme.params);
 		z.title3d(xlim, ylim, zlim, pmat = pmat, title = ztitle, theme.params = theme.params);
-
 	}
-
 	fill = match.arg(fill);
 	if(fill	== "simple") {
 		# Use color list 'As-Is', with recycling.
@@ -707,7 +629,6 @@ cplot3d = function(x
 		# Compute color matrix
 		colmat = cmap[cut(midPoints, col.lev, include.lowest = TRUE)];
 	}
-
 	if(!is.null(pre)) {
 		if(is.function(pre)) {
 			# Run user specified pre-surface plotting function

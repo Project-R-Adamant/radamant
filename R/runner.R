@@ -33,11 +33,7 @@ write.log = function( log = matrix(NA, nrow = 0, ncol = 0)
 	
 	# Write log to file
 	write.table(log, file = logfile, quote = TRUE, append = append, row.names = FALSE, col.names = col.names, sep=",");
-
 }
-
-
-
 #######################################################################
 # FUNCTION: error.handling
 #
@@ -68,9 +64,6 @@ error.handling = function(err) {
 	show(err$call);
 	cat("  => Reason:", err$message, "\n");
 }
-
-
-
 #######################################################################
 # FUNCTION: run
 #
@@ -106,7 +99,6 @@ run = function(func = NULL
 				, check.input = TRUE
 				, output = c("console", "sing.file")
 				) {
-
 	if(check.input) {
 		# Preliminary checks on input variables
 		stopifnot(is.character(func));
@@ -153,16 +145,10 @@ run = function(func = NULL
 						sink(file=NULL)
 						}
 	)
-
 	# Cleanup objects and release memory to the operating system
 	cleanup(keep = "res", gc = TRUE);
-
 	res;
 }
-
-
-
-
 #######################################################################
 # FUNCTION: multirun
 #
@@ -203,7 +189,6 @@ multirun = function(func.array = character(0)
 	
 	# Number of arguments (should be the same as the number of functions)
 	N.args = length(args.list);
-
 	# assign names to args.list
 	if( is.null(names(args.list)) | length(names(args.list)) != N.func | any(is.na(match(names(args.list), func.array)))) 
 		names(args.list) = func.array
@@ -214,7 +199,6 @@ multirun = function(func.array = character(0)
 	
 	# Declare output list
 	RES = vector("list", N.func);
-
 	# Loop through all functions
 	n = 0;
 	while (n < N.func) {
@@ -226,7 +210,6 @@ multirun = function(func.array = character(0)
 		
 		# Take timestamp before the call
 		t0 = proc.time();
-
 		# run function (with error handling)
 		
 		# match arguments with corresponding function
@@ -245,18 +228,15 @@ multirun = function(func.array = character(0)
 					, log.status
 					, log.message
 					);
-
 		# Write log if execution failed
 		if(writelog & (log.status == "Failed")) {
 			write.log(log, logfile);
 		}
 					
 	}
-
 	
 	# Name the results
 	names(RES) = func.array;
-
 	switch(match.arg(output),	
 		"console" = return(RES) 
 		,
@@ -275,6 +255,3 @@ multirun = function(func.array = character(0)
 						}
 		)
 }
-
-
-

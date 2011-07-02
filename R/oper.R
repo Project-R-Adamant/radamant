@@ -15,8 +15,6 @@
 recycle = function(X, V = length(X)) {
 	matrix(X, nrow = NROW(X)*ceiling(V/NROW(X)))[1:V, 1]
 }
-
-
 #######################################################################################################################
 # FUNCTION: SORT
 #
@@ -32,7 +30,6 @@ recycle = function(X, V = length(X)) {
 #
 #######################################################################################################################
 SORT = function(x, decreasing = FALSE, ...){
-
 	# Get Data dimension
 	N = NROW(X);
 	V = NCOL(X);
@@ -52,12 +49,9 @@ SORT = function(x, decreasing = FALSE, ...){
 		# Sort the v-th column
 		Xsort[, v] = X[order(X[, v], decreasing = decreasing[v]), v];
 	}
-
 	# Return result
 	Xsort
 }
-
-
 #######################################################################################################################
 # FUNCTION: get.col.names
 #
@@ -88,7 +82,6 @@ get.col.names = function(X, default = "X") {
 		
     X.names
 }
-
 #######################################################################################################################
 # FUNCTION: get.row.names
 #
@@ -104,7 +97,6 @@ get.col.names = function(X, default = "X") {
 #
 #######################################################################################################################
 get.row.names = function(X, default = "") {
-
     if(is.array(X) || is.data.frame(X)) {
         # Get row names
         X.names = rownames(X);
@@ -112,13 +104,11 @@ get.row.names = function(X, default = "") {
         # Get names
         X.names = names(X);
     }
-
     # Assign default names if null
     if(is.null(X.names)) {
         N = NROW(X);
         X.names = paste(default, 1:N, sep = "");
     }
-
 	# Check for rows with no name
 	noName.idx = which(nchar(X.names) == 0);
 	if(length(noName.idx) > 0)
@@ -127,8 +117,6 @@ get.row.names = function(X, default = "") {
 	
     X.names
 }
-
-
 #######################################################################################################################
 # FUNCTION: Lag
 #
@@ -146,7 +134,6 @@ get.row.names = function(X, default = "") {
 #
 #######################################################################################################################
 Lag = function(X, lag = 1, na.rm = FALSE, padding = NA) {
-
 	if(length(lag) > 1) {
 		warning("Argument 'lag' has length > 1 and only the first element will be used.");
 		lag = lag[1];
@@ -175,7 +162,6 @@ Lag = function(X, lag = 1, na.rm = FALSE, padding = NA) {
 		res[res.idx, ] = X[lag.idx, , drop = FALSE];
 	
 	}
-
 	if(lag == 0) {
 		colnames(res) = get.col.names(X);
 	} else {
@@ -184,7 +170,6 @@ Lag = function(X, lag = 1, na.rm = FALSE, padding = NA) {
 	
 	# clean memory
 	cleanup(keep = c("res", "na.rm", "V", "res.idx"));
-
 	# remove NAs
 	if(na.rm) {
 		return(res[res.idx, , drop = FALSE]);
@@ -192,9 +177,7 @@ Lag = function(X, lag = 1, na.rm = FALSE, padding = NA) {
 	
 	# Return result
 	res
-
 }
-
 #######################################################################################################################
 # FUNCTION: MLag
 #
@@ -246,7 +229,6 @@ MLag = function(X
 	# Matrix of lagged values
 	res = matrix(padding, nrow = N, ncol = V * Nlags);
 	res.names = rep("", Nlags * V);
-
 	# lag series
 	if(Nlags > 0) {
 		l = 0;
@@ -263,10 +245,8 @@ MLag = function(X
 	}
 	
 	colnames(res) = res.names;
-
 	# clean memory
 	cleanup(keep = c("res", "na.rm", "lvec", "Nlags", "N"));
-
 	if(na.rm) {
 		rm.idx = c(seq(1, lvec[Nlags], len = max(0, lvec[Nlags], na.rm = TRUE))
 					, seq(N-abs(lvec[1])+1, N, len = -min(0, lvec[1], na.rm = TRUE))
@@ -280,7 +260,6 @@ MLag = function(X
 	res
 	
 }
-
 #######################################################################################################################
 # FUNCTION: Diff
 #
@@ -298,7 +277,6 @@ MLag = function(X
 #
 #######################################################################################################################
 Diff = function(X, lag = 1, padding = NA, na.rm = FALSE) {
-
 	if(length(lag) > 1) {
 		warning("Argument 'lag' has length > 1 and only the first element will be used.");
 		lag = lag[1];
@@ -306,7 +284,6 @@ Diff = function(X, lag = 1, padding = NA, na.rm = FALSE) {
 	
 	# Number of columns	
 	V = NCOL(X);
-
 	lagged = MLag(X, lag = c(0, lag), mode = "selected", na.rm = na.rm, padding = padding);
 	# differenciate series
 	res = lagged[, 1:V, drop = FALSE] - lagged[, V + 1:V, drop = FALSE];
@@ -319,10 +296,6 @@ Diff = function(X, lag = 1, padding = NA, na.rm = FALSE) {
 	res
 	
 }
-
-
-
-
 #######################################################################################################################
 # FUNCTION: MDiff
 #
@@ -344,7 +317,6 @@ Diff = function(X, lag = 1, padding = NA, na.rm = FALSE) {
 #
 #######################################################################################################################
 MDiff = function(X, lag = 1, padding = NA, mode = c("auto", "range", "selected"), na.rm = FALSE) {
-
 	# Data length	
 	N = NROW(X);
 	V = NCOL(X);
@@ -391,10 +363,8 @@ MDiff = function(X, lag = 1, padding = NA, mode = c("auto", "range", "selected")
 	}
 	
 	colnames(res) = res.names;
-
 	# clean memory
 	cleanup(keep = c("res", "na.rm", "lvec", "Nlags", "N"));
-
 	if(na.rm) {
 		rm.idx = c(seq(1, lvec[Nlags], len = max(0, lvec[Nlags], na.rm = TRUE))
 					, seq(N-abs(lvec[1])+1, N, len = -min(0, lvec[1], na.rm = TRUE))
@@ -425,7 +395,6 @@ MDiff = function(X, lag = 1, padding = NA, mode = c("auto", "range", "selected")
 #
 #######################################################################################################################
 Ret = function(X, lag = 1, log = FALSE, na.rm = FALSE, plot = FALSE, ...) {
-
 	# Check if input is an instance of the Financial Series class
 	if(class(X) == "fs") {
 		# Take a copy
@@ -435,7 +404,6 @@ Ret = function(X, lag = 1, log = FALSE, na.rm = FALSE, plot = FALSE, ...) {
 		# Assign Column Name
 		colnames(X) = attr(Y, "SName");
 	}
-
 	N = NROW(X);
 	V = NCOL(X);
 	if(is.null(dim(X)))
@@ -467,7 +435,6 @@ Ret = function(X, lag = 1, log = FALSE, na.rm = FALSE, plot = FALSE, ...) {
 	# Return result
 	res
 }
-
 plot.ret = function(x
 					, style = c("line", "bar")
 					, xlabels = rownames(x)
@@ -481,7 +448,6 @@ plot.ret = function(x
 		cmap = theme.params[["ret.col"]];
 		# Get number of color levels
 		Ncols = length(cmap);
-
 		V = NCOL(x);
 		v = 0;
 		while(v < V) {
@@ -502,7 +468,6 @@ plot.ret = function(x
 					, ...
 				);
 		}
-
 	} else {
 		# Standard plot
 		cplot(x
@@ -512,9 +477,6 @@ plot.ret = function(x
 			);
 	}
 }
-
-
-
 #######################################################################################################################
 # FUNCTION: lew
 #
@@ -535,7 +497,6 @@ plot.ret = function(x
 #
 #######################################################################################################################
 lew = function(X, lag = 0, padding = NA, na.rm = FALSE, func = NULL, is.cumulative = TRUE, ...) {
-
 	stopifnot(is.function(func));
 	
 	if(length(lag) > 1) {
@@ -549,10 +510,8 @@ lew = function(X, lag = 0, padding = NA, na.rm = FALSE, func = NULL, is.cumulati
 	# Data length	
 	N = NROW(xlag);
 	V = NCOL(xlag);
-
 	# Declare output
 	res = matrix(padding, nrow = N, ncol = V);
-
 	# calculation window
 	if(lag >= 0) {
 		window.idx = ifelse(na.rm, (lag+1), 1) : N;
@@ -585,10 +544,7 @@ lew = function(X, lag = 0, padding = NA, na.rm = FALSE, func = NULL, is.cumulati
 	
 	# return result
 	res
-
 }
-
-
 #######################################################################################################################
 # FUNCTION: cumMax
 #
@@ -606,7 +562,6 @@ lew = function(X, lag = 0, padding = NA, na.rm = FALSE, func = NULL, is.cumulati
 #
 #######################################################################################################################
 cumMax = function(X, lag = 0, padding = NA, na.rm = FALSE) {
-
 	if(na.rm) {
 		# Replace NA with -Inf
 		X[which(is.na(X))] = -Inf;
@@ -615,7 +570,6 @@ cumMax = function(X, lag = 0, padding = NA, na.rm = FALSE) {
 	lew(X, lag = lag, padding = padding, na.rm = na.rm, func = cummax)
 	
 }	
-
 #######################################################################################################################
 # FUNCTION: cumMin
 #
@@ -633,7 +587,6 @@ cumMax = function(X, lag = 0, padding = NA, na.rm = FALSE) {
 #
 #######################################################################################################################
 cumMin = function(X, lag = 0, padding = NA, na.rm = FALSE) {
-
 	if(na.rm) {
 		# Replace NA with Inf
 		X[which(is.na(X))] = Inf;
@@ -642,7 +595,6 @@ cumMin = function(X, lag = 0, padding = NA, na.rm = FALSE) {
 	lew(X, lag = lag, padding = padding, na.rm = na.rm, func = cummin)
 	
 }	
-
 #######################################################################################################################
 # FUNCTION: cumSum
 #
@@ -668,8 +620,6 @@ cumSum = function(X, lag = 0, padding = NA, na.rm = FALSE) {
 	lew(X, lag = lag, padding = padding, na.rm = na.rm, func = cumsum)
 	
 }	
-
-
 #######################################################################################################################
 # FUNCTION: cumMean
 #
@@ -693,8 +643,6 @@ cumMean = function(X, lag = 0, padding = NA, na.rm = FALSE) {
 	
 	cumSum(X, lag = lag, padding = padding, na.rm = na.rm)/matrix(1:N, nrow = N, ncol = V)
 }	
-
-
 #######################################################################################################################
 # FUNCTION: cumVar
 #
@@ -723,7 +671,6 @@ cumVar = function(X, lag = 0, padding = NA, na.rm = FALSE) {
 		)
 	
 }	
-
 #######################################################################################################################
 # FUNCTION: cumSd
 #
@@ -752,7 +699,6 @@ cumSd = function(X, lag = 0, padding = NA, na.rm = FALSE) {
 		)
 	
 }	
-
 #######################################################################################################################
 # FUNCTION: scalApply
 #
@@ -772,7 +718,6 @@ cumSd = function(X, lag = 0, padding = NA, na.rm = FALSE) {
 #
 #######################################################################################################################
 scalApply = function(X, lag = 0, padding = NA, na.rm = FALSE, func = NULL, ...) {
-
 	stopifnot(func != NULL);
 	
 	if(length(lag) > 1) {
@@ -786,11 +731,9 @@ scalApply = function(X, lag = 0, padding = NA, na.rm = FALSE, func = NULL, ...) 
 	# Data length	
 	N = NROW(xlag);
 	V = NCOL(X);
-
 	# Declare output
 	res = matrix(padding, nrow = N, ncol = V);
 	colnames(res) = get.col.names(X);
-
 	# calculation window
 	if(lag >= 0) {
 		window.idx = ifelse(na.rm, (lag+1), 1) : N;
@@ -808,15 +751,12 @@ scalApply = function(X, lag = 0, padding = NA, na.rm = FALSE, func = NULL, ...) 
 			res[window.idx[n], v] = func(xlag[window.idx[n], c(v, v+V)], ...);
 		}
 	}
-
 	# clean memory
 	cleanup(keep = c("res"));
 	
 	# return result
 	res
-
 }
-
 #######################################################################################################################
 # FUNCTION: scalMax
 #
@@ -836,8 +776,6 @@ scalApply = function(X, lag = 0, padding = NA, na.rm = FALSE, func = NULL, ...) 
 scalMax = function(X, lag = 1, padding = -Inf, na.rm = FALSE, func = NULL) {
 	scalApply(X, lag = lag, padding = padding, na.rm = na.rm, func = function(x, y = na.rm) max(x, na.rm = y))
 }
-
-
 #######################################################################################################################
 # FUNCTION: scalMin
 #
@@ -857,10 +795,6 @@ scalMax = function(X, lag = 1, padding = -Inf, na.rm = FALSE, func = NULL) {
 scalMin = function(X, lag = 1, padding = Inf, na.rm = FALSE, func = NULL) {
 	scalApply(X, lag = lag, padding = padding, na.rm = na.rm, func = function(x, y = na.rm) min(x, na.rm = y))
 }
-
-
-
-
 #######################################################################################################################
 # FUNCTION: rowMax
 #
@@ -880,7 +814,6 @@ rowMax = function(X) {
 	res = as.matrix(do.call("pmax", X));
 	res
 }
-
 #######################################################################################################################
 # FUNCTION: rowMin
 #
@@ -900,4 +833,3 @@ rowMin = function(X) {
 	res = as.matrix(do.call("pmin", X));
 	res
 }
-

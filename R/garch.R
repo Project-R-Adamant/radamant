@@ -1,6 +1,4 @@
-##########################################################################
 # GARCH CLASS AND FUNCTIONS
-##########################################################################
 Garch = function(x,...) UseMethod("Garch")
 newsimp = function(x,...) UseMethod("newsimp")
 
@@ -25,7 +23,6 @@ vcov.Garch = function(object, ...){
 
 
 print.Garch = function(x, digits=5, ...){
-
 	cat(rep("=", 40), "\n",sep="")
 	cat("Model output:", "\n")
 	cat(" ", paste(paste(paste("(",round(x[[4]]$Estimates,5), ")", sep=""), rownames(x[[4]]), sep = "*"), collapse = " + "), "\n\n")
@@ -44,15 +41,10 @@ print.Garch = function(x, digits=5, ...){
 	cat("\n")
 	
 	xx = apply(x$Results, 2, round, digits)
-
 	cat(rep("=", 40), "\n",sep="")
 	cat("Estimation results:", "\n")
-
 	print(xx)
-
 }
-
-
 #######################################################################################################################
 # FUNCTION: Garch,
 #
@@ -73,13 +65,11 @@ print.Garch = function(x, digits=5, ...){
 #  List of results with summary table for estimated parameters and Volatility persistence;
 #######################################################################################################################	
 Garch.default = function(x, Y=NULL, order=c(alpha=1,beta=1), phi=0, delta=0, type=c("garch","mgarch","tgarch","egarch"), prob=c("norm","ged","t"), ...){ 
-
 	# coerce input data to matrix and check for NA values
 	if(!is.matrix(x))
 		x = as.matrix(x)
 	if(any(is.na(x)))
 			x = x[-is.na(x),]
-
 	# check names of order vector 	
 	if(is.null(names(order)))
 		names(order) = c("alpha","beta")
@@ -101,7 +91,6 @@ Garch.default = function(x, Y=NULL, order=c(alpha=1,beta=1), phi=0, delta=0, typ
 		Y = matrix(1, n, 1)
 	# number of regressors 
 	k = NCOL(Y)
-
 	# vector of initial innovations
 	ee = vector("numeric", n+max(order))
 	
@@ -125,32 +114,25 @@ Garch.default = function(x, Y=NULL, order=c(alpha=1,beta=1), phi=0, delta=0, typ
 	
 	# probability function and shape parameter
 	if(prob == "norm"){
-
 		r = 0
 		theta[(length(theta))-1] = r
 		upper = c(Inf, Inf, as.double(rep(1,sum(order))),Inf,Inf)
 		lower = c(-Inf, rep(1e-5,sum(order)+1), r, delta)
 		
 	} else  if(prob == "t"){
-
 		r = 3
 		theta[(length(theta))-1] = r
 		upper = c(Inf, Inf, as.double(rep(1,sum(order))), Inf, Inf, Inf)
 		lower = c(-Inf, rep(0L,sum(order)+1), -Inf, r, delta)
-
 	} else {
-
 		r = 1
 		theta[(length(theta))-1] = r
 		upper = c(Inf, Inf, as.double(rep(1,sum(order))), -Inf, 2, Inf)
 		lower = c(-Inf, rep(0L,sum(order)+1), -Inf, r, delta)
 	}	
-
-
 	if(type == "egarch"){
 	
 		opt = optim(par=theta, fn=like.egarch,  gr=NULL, ee=ee, x, Y, order=order, prob=prob, hessian=TRUE)
-
 	} else if(type == "tgarch") {
 	
 		opt = optim(par=theta, fn=like.tgarch,  gr=NULL, ee=ee, x, Y, order=order ,prob=prob, hessian=TRUE, lower=lower, upper=upper, method="L-BFGS-B")
@@ -164,12 +146,10 @@ Garch.default = function(x, Y=NULL, order=c(alpha=1,beta=1), phi=0, delta=0, typ
 		opt = optim(par=theta, fn=like.mgarch,  gr=NULL, x, Y, order=order, prob=prob, hessian=TRUE, lower=lower, upper=upper, method="L-BFGS-B")
 		
 	}
-
 	coef = opt$par[1:(sum(order)+1) + k] 
 	vcov = solve(opt$hessian[1:(sum(order)+1) + k, 1:(sum(order)+1) + k])
 	parSD = sqrt(diag(vcov))
 	tstat = coef / parSD
-
 	# mean equation
 	mc = opt$par[(1:k)] 
 	mse = sqrt(diag(solve(opt$hessian[(k),(1:k)])))
@@ -183,7 +163,6 @@ Garch.default = function(x, Y=NULL, order=c(alpha=1,beta=1), phi=0, delta=0, typ
 	} else {
 		pers = sum(coef[-1]) + coef[length(coef)]/2
 	}
-
 	# store epsilon and sigma in matrix
 	fitted = matrix(0, n, 5)
 	colnames(fitted) = c("Returns", "Fitted_ME", "Residuals", "Eps", "Sigma") 
@@ -196,7 +175,6 @@ Garch.default = function(x, Y=NULL, order=c(alpha=1,beta=1), phi=0, delta=0, typ
 	
 	# get fitted series with Epsilon and Sigma
 	fitted[, 4:5] = .Garch.proc(pars=opt$par[-(1:k)], order=order, res=ee, type=type, r=r, prob=prob)
-
 	# store original series
 	fitted[,1] = x
 	
@@ -223,17 +201,11 @@ Garch.default = function(x, Y=NULL, order=c(alpha=1,beta=1), phi=0, delta=0, typ
 		AIC = -2*opt$value + 2*(1+sum(order["alpha"]+order["beta"])),
 		Fitted = fitted
 	)
-
-#browser()
-
 	class(Results) = "Garch"
-
 	# clean memory
 	cleanup("Results")
-
 	Results
 }
-
 #######################################################################################################################
 # FUNCTION: like.garch
 #
@@ -256,7 +228,6 @@ like.garch = function(theta, ee, x, Y, order, prob=c("norm","ged","t"), r){
 	beta = theta[(order["alpha"]+3) : (order["alpha"]+order["beta"]+2)]
 	reg = as.matrix(theta[1])
 	r = theta[length(theta)-1]
-
 	n = length(x)		 
 	# vector of initial innovations
 	ee = vector("numeric", n+max(order))
@@ -271,16 +242,13 @@ like.garch = function(theta, ee, x, Y, order, prob=c("norm","ged","t"), r){
 	# compute ARCH part
 	fit = omega + filter(ee^2, c(0,alpha), method="c", sides=1)
 	fit[1] = sig0
-
 	# compute GARCH part
 	if(all(!is.na(beta))){
 		fit = filter(fit, beta, method="r", init = rep(0, order["beta"]))	}	
-
 	# log-likelihood calculation   
 	.garch.like(X=ee[-(1:length(alpha))], S=fit[-(1:max(order))], prob=prob, r=r)  
 	
 }
-
 #######################################################################################################################
 # FUNCTION: T-Garch likelihood
 #
@@ -330,13 +298,10 @@ like.tgarch = function(theta, ee, x, Y, order, prob=c("norm","ged","t")){
 	fit[1] = sig0
 	# garch component
 	fit = filter(fit, beta, method="r", init=rep(0, order["beta"]));
-	#browser()
-	
 	# log-likelihood calculation   
 	.garch.like(X=ee[-(1:length(alpha))], S=fit[-(1:max(order))], prob=prob, r=r)  
 	
 }
-
 #######################################################################################################################
 # FUNCTION: E-Garch likelihood
 #
@@ -383,7 +348,6 @@ like.egarch = function(theta, ee, x, Y, order=c(alpha=1,beta=1), prob=c("norm","
 			"ged" = (gamma(2/r)/sqrt(gamma(1/r)*gamma(3/r))),
 			"t" = (sqrt((r-2))*gamma((r-1)*0.5)/gamma(0.5)*gamma(r*0.5)) 
 			);   
-
 	i = 1 + max(order)
 	# calculate likelihood values
 	while(i <= n+max(order)){
@@ -396,7 +360,6 @@ like.egarch = function(theta, ee, x, Y, order=c(alpha=1,beta=1), prob=c("norm","
 		i = i + 1;
 		
 	};
-
 	# log-likelihood calculation   
 	.garch.like(X=ee[-(1:length(alpha))], S=exp(fit[-(1:max(order))]), prob=prob, r=r)  
 	
@@ -445,7 +408,6 @@ like.mgarch = function(theta, x, Y, order, prob=c("norm","ged","t")){
 	
 }
 
-
 #######################################################################################################################
 # FUNCTION: News Impact curve (NIC)
 #
@@ -460,18 +422,14 @@ like.mgarch = function(theta, x, Y, order, prob=c("norm","ged","t")){
 # RETURNS:
 #  Plot of the News Impact Curve
 #######################################################################################################################	
-
 newsimp.default = function(x, theta, order, type=c("garch","mgarch", "egarch","tgarch"), plot=FALSE, ...){
 	
-	#browser()
 	# coerce input data to matrix
 	if(!is.matrix(x) | any(is.na(x)))
 		x = as.matrix(x[!is.na(x)])
-
 	# check names of order vector 	
 	if(is.null(names(order)))
 		names(order) = c("alpha","beta")
-
 	mtype = match.arg(type);
 	
 	# estimated coefficients 
@@ -504,7 +462,6 @@ newsimp.default = function(x, theta, order, type=c("garch","mgarch", "egarch","t
 				b = a - 2*((as.numeric(x < 0) * phi) * x^2) 
 				exp(omega - alpha * sqrt(2/pi)) * sig^(2*beta) * exp(b/sig)
 			}
-
 	# NIC tgarch
 	} else {
 			
@@ -514,21 +471,16 @@ newsimp.default = function(x, theta, order, type=c("garch","mgarch", "egarch","t
 			b = a - ((as.numeric(x >= 0) * phi) * (x^2)) 
 			omega + sig * beta + b 
 		}
-
 	}
 	
 	# get values of news impact curve
 	vv = curve(nic, from=min(x), to=max(x), cex.axis=0.8, type="n")
 	dev.off()	
-
 	if(plot)
 		cplot( vv[[2]], vv[[1]], main=paste("NIC:",mtype), ... ) 
-
 	# return results
 	cbind(Sigma = vv[[2]], Innovations = vv[[1]]) 
-
 }
-
 #######################################################################################################################
 # FUNCTION: Test ARCH-LM
 #
@@ -542,7 +494,6 @@ newsimp.default = function(x, theta, order, type=c("garch","mgarch", "egarch","t
 # RETURNS:
 #  List of results with coefficient table and test statistics
 #######################################################################################################################
-
 Archlm = function(x, lags, std=FALSE, plot.acf=FALSE){
 	
 	if(class(x) == "Garch"){
@@ -578,7 +529,6 @@ Archlm = function(x, lags, std=FALSE, plot.acf=FALSE){
 	
 	# list of results
 	Results = list(Coefficients = round(Coef, 6), Results = round(Statistics,5));
-
 	# clean memory
 	cleanup("Results")
 	
@@ -620,8 +570,6 @@ LjungBox = function(x, lags, plot.acf=FALSE){
 }
 
 
-##################################################
-
 newsimp.Garch = function(x, plot=TRUE, ...){
 	
 	## get parameters from object of class "Garch"	# original series
@@ -636,8 +584,6 @@ newsimp.Garch = function(x, plot=TRUE, ...){
 	# call generic news impact curve function
 	newsimp.default(X, theta, order, type, plot, ...)
 }
-
-#################################################
 #### Statitc Prediction for Garch models ####
 predict.Garch = function(object, plot=TRUE, ...){
 	
@@ -658,6 +604,3 @@ predict.Garch = function(object, plot=TRUE, ...){
 	
 	res
 }
-
-
-

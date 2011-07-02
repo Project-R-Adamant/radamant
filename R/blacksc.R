@@ -1,8 +1,6 @@
 ###################################################################################
 # FUNCTION: Black & Scholes price
 #
-# AUTHOR: FM, RCC
-#
 # SUMMARY:
 # Perform Black & Scholes calculation to estimate option price (Call or Put) 
 #
@@ -56,8 +54,6 @@ BS.price.default=function(under, strike, rfr, sigma, maty, yield, calc.type=c("s
 }
 #######################################################################################################################
 # FUNCTION: Black & Scholes greeks
-#
-# AUTHOR: FM, RCC
 #
 # SUMMARY:
 # Perform Black & Scholes calculation and calculates the greeks 
@@ -130,8 +126,6 @@ BS.greeks = function(X=NULL, ...){
 }
 #######################################################################################################################
 # FUNCTION: Black & Scholes volatility
-#
-# AUTHOR: FM, RCC
 #
 # SUMMARY:
 # Perform Black & Scholes calculation to estimate B&S Volatility

@@ -1,8 +1,6 @@
 #######################################################################################################################
 # FUNCTION: hVaR
 #
-# AUTHOR: FM
-#
 # SUMMARY:
 # Compute historical VaR on each column of the input matrix
 #
@@ -16,7 +14,6 @@
 #
 #######################################################################################################################
 hVaR = function(X, p = 0.05, centered = FALSE){
-
 	Lp = length(p);
 	
 	N = NROW(X);
@@ -46,8 +43,6 @@ hVaR = function(X, p = 0.05, centered = FALSE){
 #######################################################################################################################
 # FUNCTION: whVaR
 #
-# AUTHOR: FM
-#
 # SUMMARY:
 # Compute weighted historical VaR on each column of the input matrix
 #
@@ -74,12 +69,10 @@ whVaR = function(X, p = 0.05, lambda = 0.9, centered = FALSE) {
 	res = matrix(NA, nrow = Lp, ncol = V);
 	rownames(res) = paste("WVaR: ", 100*p, "%", sep = "");
 	colnames(res) = get.col.names(X);
-
 	# Exponential window
 	win = lambda^((N-1):0);
 	# Normalised cumulative exponential window
 	ncwin = cumsum(win/sum(win));
-
 	# Sort each column ascending
 	if(centered) {
 		Xsort = SORT(Zscore(X));
@@ -105,8 +98,6 @@ VaR = function(X,...) UseMethod("VaR")
 #######################################################################################################################
 # FUNCTION: print.VaR
 #
-# AUTHOR: FM
-#
 # SUMMARY:
 # Print function for class 'VaR'
 #
@@ -119,7 +110,6 @@ VaR = function(X,...) UseMethod("VaR")
 #######################################################################################################################
 print.VaR = function(x, ...) {
 	show(x[, , drop = FALSE]);
-
 	method = switch(attr(x, "method")
 					, "norm"  = "Normal distribution"
 					, "t"     = "Student's T distribution"
@@ -132,10 +122,9 @@ print.VaR = function(x, ...) {
 		cat("Portfolio Components:\n\t", paste(attr(x, "components"), collapse = ", "), "\n");
 	cat("\n");
 }
+
 #######################################################################################################################
 # FUNCTION: mqt
-#
-# AUTHOR: FM
 #
 # SUMMARY:
 # Compute quantiles from Student's T distribution for multiple degrees of freedom values
@@ -151,7 +140,6 @@ print.VaR = function(x, ...) {
 #
 #######################################################################################################################
 mqt = function(p, df, ...) {
-
 	Lp = length(p);
 	Ldf = length(df);
 	
@@ -169,8 +157,6 @@ mqt = function(p, df, ...) {
 }	
 #######################################################################################################################
 # FUNCTION: VaR
-#
-# AUTHOR: FM
 #
 # SUMMARY:
 # General VaR, computed on each column of the input matrix
@@ -218,7 +204,6 @@ VaR.default = function(X, p = 0.05, probf = c("norm","t","cofi"), df = max(4, (k
 	res = matrix(NA, nrow = Lp, ncol = V);
 	colnames(res) = get.col.names(X);
 	rownames(res) = paste("GVaR: ", 100*p, "%", sep = "");
-
 	# Compute VaR
 	res[, ] = matrix(mean, nrow = Lp, ncol = V, byrow = TRUE) + matrix(sigma, nrow = Lp, ncol = V, byrow = TRUE) * phi;
 
@@ -231,8 +216,6 @@ VaR.default = function(X, p = 0.05, probf = c("norm","t","cofi"), df = max(4, (k
 }
 #######################################################################################################################
 # FUNCTION: VaR.ptf
-#
-# AUTHOR: FM
 #
 # SUMMARY:
 # General portfolio VaR.
@@ -252,7 +235,6 @@ VaR.default = function(X, p = 0.05, probf = c("norm","t","cofi"), df = max(4, (k
 #
 #######################################################################################################################
 VaRPtf = function(X, p = 0.05, weights = rep(1/NCOL(X), NCOL(X)), probf = c("norm","t"), df = 4, ...) {
-
 	Lp = length(p);
 	
 	N = NROW(X);
@@ -272,14 +254,11 @@ VaRPtf = function(X, p = 0.05, weights = rep(1/NCOL(X), NCOL(X)), probf = c("nor
 			"norm"  = (phi = qnorm(p)),
 			"t"		= (phi = sqrt((df-2)/df) * qt(p, df) ),
 			);
-
 	res = matrix(NA, nrow = Lp, ncol = 1);
 	colnames(res) = "Portfolio";
 	rownames(res) = paste("Ptf VaR: ", 100*p, "%", sep = "");
-
 	# Compute VaR
 	res[, ] = (t(weights) %*% mean)[1] + sqrt(t(weights) %*% sigma2 %*% weights)[1] * phi;
-
 	class(res) = "VaR";
 	attr(res,"method") = as.character(match.arg(probf))
 	attr(res, "weights") = weights;
@@ -291,8 +270,6 @@ VaRPtf = function(X, p = 0.05, weights = rep(1/NCOL(X), NCOL(X)), probf = c("nor
 }
 #######################################################################################################################
 # FUNCTION: cofit
-#
-# AUTHOR: FM
 #
 # SUMMARY:
 # Cornish Fisher Transform
@@ -308,7 +285,6 @@ VaRPtf = function(X, p = 0.05, weights = rep(1/NCOL(X), NCOL(X)), probf = c("nor
 #
 #######################################################################################################################
 cofit = function(X, p, k = NULL, s = NULL) {	
-
 	Lp = length(p);
 	V = NCOL(X);
 	
@@ -339,8 +315,6 @@ cofit = function(X, p, k = NULL, s = NULL) {
 #######################################################################################################################
 # FUNCTION: Hill
 #
-# AUTHOR: FM
-#
 # SUMMARY:
 # Hill function: Approximated gamma parameter of the Generalised Pareto distribution
 #
@@ -358,7 +332,6 @@ Hill = function(X, trsh) {
 	
 	# quantile of y with prob 1-u
 	qx = hVaR(X, 1-trsh);
-
 	# Declare output
 	res = matrix(NA, nrow = Lu, ncol = V);
 	colnames(res) = get.col.names(X);
@@ -378,9 +351,6 @@ Hill = function(X, trsh) {
 			res[lu, v] = sum(log(X[idx, v]/qx[lu])) / length(idx);
 		}
 	}
-
 	# Return results
 	res
 }
-
-

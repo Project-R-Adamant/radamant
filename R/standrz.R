@@ -1,5 +1,4 @@
 #### STANDARDIZATION ####
-
 # Decimal scale
 	# x series
 	# scale 
@@ -17,7 +16,6 @@ Decscal=function(x,scale=0.1){
 	# results
 	res
 }
-
 # Min-Max scale
 	# x
 	# tmin
@@ -49,7 +47,6 @@ Minmaxscal=function(x,tmin=0,tmax=1){
 	# results
 	res
 }
-
 # Z-Index
 	# x
 	# sigma
@@ -61,7 +58,6 @@ Zind=function(x,sigma=1,mi=2){
 		M = TRUE
 		x=as.matrix(x)
 		}
-
 	# get sigma
 	if (missing(sigma)){
 		if(M){
@@ -78,11 +74,9 @@ Zind=function(x,sigma=1,mi=2){
 		mi = mean(x,na.rm=TRUE)
 		}
 	}
-
 	# return originale series
 	if (mi == 0 & sigma ==1) 
 		return(res)
-
 	# calc z-index
 	if(M){
 		res = matrix(0,nrow(x),ncol(x))
@@ -92,18 +86,8 @@ Zind=function(x,sigma=1,mi=2){
 	} else {
 		res = (x - mi) / sigma
 	}
-
 	# clean memory
 	#cleanup(res)
 	# results
 	res
 }
-
-
-
-
-
-
-
-
-

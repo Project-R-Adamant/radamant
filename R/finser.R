@@ -11,7 +11,6 @@ get.fs = function(symbol = NULL, SName = NULL, from = as.Date("1950-01-01"), to 
 				, "&g=d&ignore=.csv"
 				, sep = ""
 				);
-
 	# Get symbol data
 	symbol.data = read.csv(file = URL, header = TRUE);
 	
@@ -26,11 +25,9 @@ get.fs = function(symbol = NULL, SName = NULL, from = as.Date("1950-01-01"), to 
 	# Return Financial Time Serie data
 	as.fs(symbol.data[sort.idx, , drop = FALSE], SName = SName, Symbol = symbol);
 }
-
 is.fs = function(X) {
 	class(X) == "fs"
 }
-
 # converts yahoo daily dataframe to object of class 'fs'
 as.fs = function(X, SName = "", Symbol = "") {
 	res = cbind(X$Open, X$High, X$Low, X$Close, X$Volume, X$Adj.Close);
@@ -43,7 +40,6 @@ as.fs = function(X, SName = "", Symbol = "") {
 	
 	res
 }
-
 # Print for class 'fs'
 print.fs = function(x, ...) {
 	
@@ -52,12 +48,10 @@ print.fs = function(x, ...) {
 	cat("Stock Symbol:", attr(x, "Symbol"), "\n");
 	cat("Time Period: from", rownames(x)[1], "to", rownames(x)[NROW(x)], "\n");
 }
-
 # Plot for class 'fs' (financial series)
 plot.fs = function(x, ...) {
 	fin.plot(x, ...)
 }
-
 combine.fs = function(..., which = "Close") {
 	# Get input data list
 	X = list(...);
@@ -79,7 +73,6 @@ combine.fs = function(..., which = "Close") {
 		SName = attr(X[[n]], "SName");
 		if(nchar(SName) == 0)
 			SName = paste("X", n, sep = "");
-
 		# Extract Series data
 		res[, n:(n+w-1) + (n-1)*(w-1)] = X[[n]][, which, drop = FALSE];
 		# Assign column name to output
@@ -92,7 +85,6 @@ combine.fs = function(..., which = "Close") {
 	res
 	
 }
-
 # Financial Plot
 fin.plot = function(X
 					, top.vars = c("Close", "High", "Low")
@@ -159,13 +151,7 @@ fin.plot = function(X
 				, xlabels = xlabels
 				, ...
 				);
-
 }
-
-
-
-
-
 # Historical Return on Investment
 hroi = function(X
 				, lag = 1
@@ -187,7 +173,6 @@ hroi = function(X
 		# Assign Column Name
 		colnames(X) = attr(Y, "SName");
 	}
-
 	mode = mode[1];
 	if(mode == "auto") {
 		# Vector of lags to be computed
@@ -199,14 +184,12 @@ hroi = function(X
 		# Vector of lags to be computed
 		lvec = sort(lag);
 	}
-
 	# Data length	
 	N = NROW(X);
 	V = NCOL(X);
 	
 	# Number of lags to be computed
 	Nlags = length(lvec);	
-
 	# Declare Output
 	res = vector("list", V);
 	names(res) = get.col.names(X);
@@ -230,7 +213,6 @@ hroi = function(X
 			res[[v]][n, 1] = mean(ret, na.rm = TRUE);
 			res[[v]][n, 2:3] = VaR(ret, probf = VaR.type, p = c(1-p, p), ...);
 		}
-
 	}
 	
 	class(res) = "roi";
@@ -238,7 +220,6 @@ hroi = function(X
 	# Return Result
 	res
 }
-
 plot.roi = function(x, main = "Historical Return on Investment", xtitle = "Lag", ...) {
 	for(n in 1:length(x)) {
 		cplot(100*x[[n]]
@@ -250,8 +231,6 @@ plot.roi = function(x, main = "Historical Return on Investment", xtitle = "Lag",
 				);
 	}
 }
-
-
 symbol.lookup = function(what = "") {
 	# Define URL (Yahoo! Finance)
 	URL = paste("http://d.yimg.com/aq/autoc?"

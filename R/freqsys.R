@@ -23,11 +23,8 @@ hann = function(N, normalized = TRUE) {
 		
 	res
 }
-
 #######################################################################################################################
 # FUNCTION: hamming
-#
-# AUTHOR: RCC
 #
 # SUMMARY:
 # Computes Hamming window
@@ -45,18 +42,13 @@ hamming = function(N, normalized = TRUE) {
 	res = 0.54 - 0.46*cos(2*pi*0:(N-1)/(N-1));
 	class(res) = "window";
 	attr(res, "type") = "Hamming";
-
 	if(normalized)
 		return(res/sum(res));
 		
 	res
-
 }
-
 #######################################################################################################################
 # FUNCTION: cosine
-#
-# AUTHOR: RCC
 #
 # SUMMARY:
 # Computes Cosine window
@@ -73,17 +65,13 @@ cosine = function(N, normalized = TRUE) {
 	res = sin(pi*0:(N-1)/(N-1));
 	class(res) = "window";
 	attr(res, "type") = "Cosine";
-
 	if(normalized)
 		return(res/sum(res));
 		
 	res
 }
-
 #######################################################################################################################
 # FUNCTION: lanczos
-#
-# AUTHOR: RCC
 #
 # SUMMARY:
 # Computes Lanczos window
@@ -102,17 +90,13 @@ lanczos = function(N, normalized = TRUE) {
 	res = sin(x)/x;
 	class(res) = "window";
 	attr(res, "type") = "lanczos";
-
 	if(normalized)
 		return(res/sum(res));
 		
 	res
 }
-
 #######################################################################################################################
 # FUNCTION: bartlet
-#
-# AUTHOR: RCC
 #
 # SUMMARY:
 # Computes Bartlet triangular window with zero-valued end-points
@@ -130,17 +114,13 @@ bartlet = function(N, normalized = TRUE) {
 	res = ((N-1)/2 - abs(0:(N-1) - (N-1)/2)) * 2/(N-1);
 	class(res) = "window";
 	attr(res, "type") = "Bartlet";
-
 	if(normalized)
 		return(res/sum(res));
 		
 	res
 }
-
 #######################################################################################################################
 # FUNCTION: triangle
-#
-# AUTHOR: RCC
 #
 # SUMMARY:
 # Computes Bartlet triangular window with non-zero-valued end-points
@@ -158,17 +138,13 @@ triangle = function(N, normalized = TRUE) {
 	res = (N/2 - abs(0:(N-1) - (N-1)/2)) * 2/N;
 	class(res) = "window";
 	attr(res, "type") = "Triangle";
-
 	if(normalized)
 		return(res/sum(res));
 		
 	res
 }
-
 #######################################################################################################################
 # FUNCTION: gauss
-#
-# AUTHOR: RCC
 #
 # SUMMARY:
 # Computes Gaussian window
@@ -186,17 +162,13 @@ gauss = function(N, normalized = TRUE, sigma = 0.5) {
 	res = exp(-0.5 * ((0:(N-1) - (N-1)/2)/(sigma * (N-1)/2))^2);
 	class(res) = "window";
 	attr(res, "type") = "Gauss";
-
 	if(normalized)
 		return(res/sum(res));
 		
 	res
 }
-
 #######################################################################################################################
 # FUNCTION: blackman
-#
-# AUTHOR: RCC
 #
 # SUMMARY:
 # Computes Blackman window
@@ -218,17 +190,13 @@ blackman = function(N, normalized = TRUE, alpha = 0.16) {
 	res = a0 - a1*cos(x) + a2*cos(4*pi*x);
 	class(res) = "window";
 	attr(res, "type") = "Blackman";
-
 	if(normalized)
 		return(res/sum(res));
 		
 	res
 }
-
 #######################################################################################################################
 # FUNCTION: barthann
-#
-# AUTHOR: RCC
 #
 # SUMMARY:
 # Computes Bartlet-Hann window
@@ -250,17 +218,13 @@ barthann = function(N, normalized = TRUE, alpha = 0.38) {
 	res = a0 - a1*abs(x-0.5) - a2*cos(2*pi*x);
 	class(res) = "window";
 	attr(res, "type") = "Bartlet-Hann";
-
 	if(normalized)
 		return(res/sum(res));
 		
 	res
 }
-
 #######################################################################################################################
 # FUNCTION: kaiser
-#
-# AUTHOR: RCC
 #
 # SUMMARY:
 # Computes Kaiser window (Discrete Prolate Spheroidal Sequence approximation)
@@ -280,18 +244,13 @@ kaiser = function(N, normalized = TRUE, alpha = 3) {
 	res = besselI(pi*alpha*sqrt(1-(2*x-1)^2), 0)/besselI(pi*alpha, 0);
 	class(res) = "window";
 	attr(res, "type") = "Kaiser";
-
 	if(normalized)
 		return(res/sum(res));
 		
 	res
 }
-
-
 #######################################################################################################################
 # FUNCTION: FFT
-#
-# AUTHOR: RCC
 #
 # SUMMARY:
 # Computes FFT on each column of X. For Financial series objects (class 'fs'), Close data is extracted. 
@@ -308,9 +267,7 @@ kaiser = function(N, normalized = TRUE, alpha = 3) {
 #
 #######################################################################################################################
 FFT = function(x, ...) UseMethod("FFT")
-
 FFT.default = function(x, Fs = 1, half = FALSE, window = NULL, plot = TRUE, optimised = TRUE, ...) {
-
 	# Check if input is an instance of the Financial Series class
 	if(class(x) == "fs") {
 		# Take a copy
@@ -320,7 +277,6 @@ FFT.default = function(x, Fs = 1, half = FALSE, window = NULL, plot = TRUE, opti
 		# Assign Column Name
 		colnames(x) = attr(Y, "SName");
 	}
-
 	# Frequency points
 	N = NROW(x);
 	# Number of time series
@@ -343,7 +299,6 @@ FFT.default = function(x, Fs = 1, half = FALSE, window = NULL, plot = TRUE, opti
 	} else if (!is.function(window)) {
 		window = NULL;
     }
-
 	
 	# Compute Unitary FFT
 	if(is.null(window)) {
@@ -363,14 +318,12 @@ FFT.default = function(x, Fs = 1, half = FALSE, window = NULL, plot = TRUE, opti
 		f = seq(0,(ceiling(N/2)-1) *fstep, by = fstep); 
 		# Select frequency points  
 		fpoints = 1:ceiling(N/2);
-
 	} else {
 		# Frequencies vector
 		f = seq(0,(N-1) *fstep, by = fstep) -floor(N/2)*fstep; 
 		# Select frequency points  
 		fpoints = c( (ceiling(N/2)+1):N, 1:ceiling(N/2) ) ;
 	}
-
 	class(Xf) = "FFT";
 	# Sampling frequency
 	attr(Xf, "Fs") = Fs;
@@ -396,11 +349,8 @@ FFT.default = function(x, Fs = 1, half = FALSE, window = NULL, plot = TRUE, opti
 	# Return output
 	Xf
 }
-
 #######################################################################################################################
 # FUNCTION: print.FFT
-#
-# AUTHOR: RCC
 #
 # SUMMARY:
 # Print function for class 'FFT'
@@ -418,11 +368,8 @@ print.FFT = function(x, ...) {
 	cat("\nSampling Frequency: ", attr(x, "Fs"), " Hz\n", sep="");
 	cat("Windowing function: ", attr(x, "window"), " \n", sep="");
 }
-
 #######################################################################################################################
 # FUNCTION: plot.fft
-#
-# AUTHOR: RCC
 #
 # SUMMARY:
 # Plot function for class 'FFT'. Plots Modulus and Phase for each column of the FFT object x
@@ -465,11 +412,9 @@ plot.FFT = function(x
                         );
     # Combine fft default parms with overrides, giving precedence to overrides
     overrides = override.list(what = default.parms, overrides = overrides, append = TRUE);
-
     # Override theme parameters if necessary
     theme.params = override.list(what = theme.params, override = overrides);
 	
-
 	# Number of frequency series to plot
 	V = NCOL(x);
 	
@@ -510,13 +455,11 @@ plot.FFT = function(x
 	v = 0;
 	while(v < V) {
 		v = v + 1;
-
         # Multiple plots on one window
 		if(v > 1 || new.device)
 			dev.new();
         # Set the number of plottable areas in the window
         par(mfrow = c(2, 1));
-
         # Plot |x|
 		if(semilog) {
 			# Plot in decibel scale
@@ -542,10 +485,8 @@ plot.FFT = function(x
 			, show.legend = show.legend
 			, ...
 			);
-
 		# Restore suffix on y-axis labels for Arg plot
 		overrides[["ylab.suffix"]] = theme.params[["ylab.suffix"]];
-
         # Plot Arg(x)
         cplot(Arg(x[fpoints, v, drop = FALSE])
 					, yrange = c(-pi, pi)
@@ -572,7 +513,6 @@ plot.FFT = function(x
     }
 	
 }
-
 specgram = function(X, win.size = max(1, NROW(X)/20), plot = TRUE, ...) {
 	# Check if input is an instance of the Financial Series class
 	if(class(X) == "fs") {
@@ -583,14 +523,12 @@ specgram = function(X, win.size = max(1, NROW(X)/20), plot = TRUE, ...) {
 		# Assign Column Name
 		colnames(X) = attr(Y, "SName");
 	}
-
 	# Frequency points
 	N = NROW(X);
 	# Number of time series
 	V = NCOL(X);
 	if(is.null(dim(X)))
 		dim(X) = c(N, V);
-
 	# Compute window indexes
 	X.rownames = get.row.names(X);
 	win.idx = splitWindow(N, win.size = win.size, labels = X.rownames, ...);
@@ -598,7 +536,6 @@ specgram = function(X, win.size = max(1, NROW(X)/20), plot = TRUE, ...) {
 	start.idx = win.idx[, 1];
 	end.idx = win.idx[, 2];
 	TotIterations = NROW(win.idx);
-
 	NFFT = 2^ceiling(log2(N));	
 	# Declare output
 	res = array(NA, dim = c(NFFT, TotIterations, V));

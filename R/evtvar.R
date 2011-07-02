@@ -20,9 +20,7 @@ statusbar = function(message = "Computing..", status = 0, n = 1, N = 1, step = 0
 	# Return status
 	status
 }
-
 norm.like = function(parms, X, ...){
-
 	# Extract parameters
 	if(NCOL(parms) == 1) {
 		parms = matrix(parms[1:2], nrow=1, ncol=2);
@@ -48,13 +46,8 @@ norm.like = function(parms, X, ...){
 	# Return Log Likelihood
 	LogL
 }
-
-
-
-
 # GPD Cumulative Distribution Function
 pgpd = function(Q, xi = 0.1, sigma = 1, trsh = 0) {
-
 	N = NROW(Q);
 	V = NCOL(Q);
 	if(is.null(dim(Q)))
@@ -92,7 +85,6 @@ pgpd = function(Q, xi = 0.1, sigma = 1, trsh = 0) {
 	res
 	
 }
-
 # Inverse GPD function
 qgpd = function(P, xi = 0.1, sigma = 1, trsh = 0) {
 	N = NROW(P);
@@ -104,7 +96,6 @@ qgpd = function(P, xi = 0.1, sigma = 1, trsh = 0) {
 	res = matrix(NA, nrow = N, ncol = V);
 	colnames(res) = get.col.names(P);
 	rownames(res) = get.row.names(P);
-
 	if (xi != 0) {
 		# Positive Shape parameter
 		v = 0;
@@ -120,22 +111,17 @@ qgpd = function(P, xi = 0.1, sigma = 1, trsh = 0) {
 			res[, v] = -trsh - sigma * log(1-P[, v]);
 		}
 	}
-
 	res
 }
-
 # GPD Probability Density Function
 dgpd = function(X, xi = 0.1, sigma = 1, trsh = 0) {
-
 	if (xi != 0) {
 		res = (1/sigma) * (1 + xi*(X - trsh)/sigma)^(-1/xi - 1);
 	} else {
 		res = exp(-(X - trsh)/sigma) / sigma;
 	}
-
 	res
 }
-
 # GPD Random number generator
 rgpd = function (n, xi = 0.1, sigma = 1, trsh = 0) {
 	if(xi == 0) {
@@ -147,11 +133,8 @@ rgpd = function (n, xi = 0.1, sigma = 1, trsh = 0) {
 	
 	res
 }
-
-
 # GEV Cumulative Probability Function
 pgev = function(X, mu = 0, xi = 0.1, sigma = 1) {
-
 	# Compute centered data
 	Z = (X-mu)/sigma;
 	
@@ -160,14 +143,10 @@ pgev = function(X, mu = 0, xi = 0.1, sigma = 1) {
 	} else {
 		res = exp(-exp(-Z));
 	}
-
 	res
 }
-
-
 # GEV Probability Density Function
 dgev = function(X, mu = 0, xi = 0.1, sigma = 1) {
-
 	# Compute centered data
 	Z = (X-mu)/sigma;
 	
@@ -177,28 +156,21 @@ dgev = function(X, mu = 0, xi = 0.1, sigma = 1) {
 		
 		res = exp(-Z) * exp(-exp(-Z)) / sigma;
 	}
-
 	res
 }
-
 # GEV Inverse Cumulative Probability Function
 qgev = function(P, mu = 0, xi = 0.1, sigma = 1) {
-
 	if (xi != 0) {
 		res = mu + sigma/xi * ((-log(P))^(-xi) - 1);
 	} else {
 		res = mu - sigma*log(-log(P));
 	}
-
 	res
 }
-
 # GEV Random number generator
 rgev = function(N, mu = 0, xi = 0.1, sigma = 1) {
 	qgev(runif(N), mu = mu, xi = xi, sigma = sigma)
 }
-
-
 # GEV likelihood function
 gev.like = function(parms, Xbmax, ...) {
 	# Extract Parameters
@@ -212,14 +184,11 @@ gev.like = function(parms, Xbmax, ...) {
 	# Return result
 	LogL
 }
-
-
 # Maximum Likelihood parameters estimation for GEV Distribution	
 gev.ml = function(Xbmax, init = c(0, 0.1, 1), ...) {
 	# Maximum Likelihood parameters estimation for Generalised Pareto Distribution
 	optim(par = init, fn = gev.like, Xbmax = Xbmax, control = list(fnscale = -1), ...)$par;
 }
-
 gev.VaR = function(Xbmax, mu = NULL, xi = NULL, sigma = NULL, prob = 0.01, ...) {
 	if(is.null(mu) || is.null(xi) || is.null(sigma)) {
 		# Assign default value to shape and scale parameters
@@ -245,8 +214,6 @@ gev.VaR = function(Xbmax, mu = NULL, xi = NULL, sigma = NULL, prob = 0.01, ...) 
 	res
 	
 }
-
-
 gev.VaR.like = function(parms, Xbmax, prob = 0.01, ...) {
 	# Extract parameters
 	VaR = parms[1];
@@ -266,15 +233,12 @@ gev.VaR.like = function(parms, Xbmax, prob = 0.01, ...) {
 	#gev.like(parms = c(mu, xi, sigma), Xbmax = Xbmax, trsh = trsh, ...)
 	LogL
 }
-
 gev.mu.constraint = function(parms, type = c("left", "right", "both"), Xbmax, ...) {
-
 	# Extract parameters
 	type = type[1];
 	mu = parms[1];
 	xi = parms[2];
 	sigma = parms[3];
-
 	# Compute interval range for mu
 	if(xi > 0) {
 		mu.max = (sigma/xi + min(Xbmax)) - 10^-10;
@@ -290,11 +254,8 @@ gev.mu.constraint = function(parms, type = c("left", "right", "both"), Xbmax, ..
 	# Return result
 	res = c(ifelse(type == "right", mu, mu.min), ifelse(type == "left", mu, mu.max));
 	res
-
 }
-
 gev.xi.constraint = function(parms, type = c("left", "right", "both"), Xbmax, parm.type = c("mu", "VaR", "ES"), prob = 0.01, ...) {
-
 	# Extract parameters
 	type = type[1];
 	xi = parms[2];
@@ -312,7 +273,6 @@ gev.xi.constraint = function(parms, type = c("left", "right", "both"), Xbmax, pa
 		# Get mu from input parameter
 		mu = parms[1];
 	}
-
 	# Compute interval range for xi
 	xi.min = ifelse(max(Xbmax-mu) > 0, -sigma/max(Xbmax-mu) + 10^-10, xi - 10*abs(xi));
 	xi.max = ifelse(min(Xbmax-mu) < 0, -sigma/min(Xbmax-mu) - 10^-10, xi + 10*abs(xi));
@@ -320,11 +280,8 @@ gev.xi.constraint = function(parms, type = c("left", "right", "both"), Xbmax, pa
 	# Return result
 	res = c(ifelse(type == "right", xi, xi.min), ifelse(type == "left", xi, xi.max));
 	res
-
 }
-
 gev.sigma.constraint = function(parms, type = c("left", "right", "both"), Xbmax, parm.type = c("mu", "VaR", "ES"), prob = 0.01, ...) {
-
 	# Extract parameters
 	type = type[1];
 	xi = parms[2];
@@ -342,7 +299,6 @@ gev.sigma.constraint = function(parms, type = c("left", "right", "both"), Xbmax,
 		# Get mu from input parameter
 		mu = parms[1];
 	}
-
 	cutoff =  min(xi*(Xbmax-mu))
 	
 	# Compute interval range for sigma
@@ -352,9 +308,7 @@ gev.sigma.constraint = function(parms, type = c("left", "right", "both"), Xbmax,
 	# Return result
 	res = c(ifelse(type == "right", sigma, sigma.min), ifelse(type == "left", sigma, sigma.max));
 	res
-
 }
-
 gev.VaR.constraint = function(parms, type = c("left", "right", "both"), Xbmax, prob = 0.01, ...) {
 	# Extract parameters
 	type = type[1];
@@ -368,7 +322,6 @@ gev.VaR.constraint = function(parms, type = c("left", "right", "both"), Xbmax, p
 	} else {
 		mu = VaR + sigma * log(-log(1-prob));
 	}
-
 	mu.interval = gev.mu.constraint(parms = c(mu, parms[-1]), type = type, Xbmax = Xbmax, ...);
 	
 	# Compute interval for VaR
@@ -389,7 +342,6 @@ gev.VaR.constraint = function(parms, type = c("left", "right", "both"), Xbmax, p
 	# Return result
 	interval
 }
-
 gev.ci = function(Xbmax, mu = 0, xi = 0.1, sigma = 1, alpha = 0.01, df = 3, ...) {
 	# Define list of range functions
 	frange = vector("list", 3);
@@ -420,7 +372,6 @@ gev.ci = function(Xbmax, mu = 0, xi = 0.1, sigma = 1, alpha = 0.01, df = 3, ...)
 	# Return result
 	res
 }
-
 gev.range = function(Xbmax, mu = 0, xi = 0.1, sigma = 1, alpha = 0.01, df = 3, ...) {
 	# Define list of range functions
 	frange = vector("list", 3);
@@ -439,14 +390,12 @@ gev.range = function(Xbmax, mu = 0, xi = 0.1, sigma = 1, alpha = 0.01, df = 3, .
 				, ...
 				)
 }
-
 gev.contour = function(Xbmax, mu = 0, xi = 0.1, sigma = 1, alpha = 0.01, df = 3, ...) {
 	# Define list of range functions
 	frange = vector("list", 3);
 	frange[[1]] = get("gev.mu.constraint", mode = "function");
 	frange[[2]] = get("gev.xi.constraint", mode = "function");
 	frange[[3]] = get("gev.sigma.constraint", mode = "function");
-
 	N = length(alpha);
 	# Declare output
 	res = vector("list", N);
@@ -471,7 +420,6 @@ gev.contour = function(Xbmax, mu = 0, xi = 0.1, sigma = 1, alpha = 0.01, df = 3,
 	# Return result
 	res
 }
-
 gev.VaR.ci = function(Xbmax
 						, VaR = sum(gev.VaR.constraint(parms = c(0, xi, sigma), type = "both", Xbmax = Xbmax, prob = prob))/2
 						, xi = 0.1
@@ -508,7 +456,6 @@ gev.VaR.ci = function(Xbmax
 	# Return result
 	res
 }
-
 gev.VaR.range = function(Xbmax
 						, VaR = sum(gev.VaR.constraint(parms = c(0, xi, sigma), type = "both", Xbmax = Xbmax, prob = prob))/2
 						, xi = 0.1
@@ -518,7 +465,6 @@ gev.VaR.range = function(Xbmax
 						, prob = alpha[1]
 						, ...
 						) {
-
 	# Define list of range functions
 	frange = vector("list", 3);
 	
@@ -534,7 +480,6 @@ gev.VaR.range = function(Xbmax
 				, ...
 				)
 }
-
 gev.VaR.contour = function(Xbmax
 							, VaR = sum(gev.VaR.constraint(parms = c(0, xi, sigma), type = "both", Xbmax = Xbmax, prob = prob))/2
 							, xi = 0.1
@@ -544,10 +489,8 @@ gev.VaR.contour = function(Xbmax
 							, prob = alpha[1]
 							, ...
 							) {
-
 	# Define list of range functions
 	frange = vector("list", 3);
-
 	Nalpha = length(alpha);
 	# Declare output
 	res = vector("list", Nalpha);
@@ -573,14 +516,8 @@ gev.VaR.contour = function(Xbmax
 	# Return result
 	res
 }
-
-
-
-
-
 # Sample Mean Excess function
 sme = function(X, plot = TRUE, ...) {
-
 	# Check if input is an instance of the Financial Series class
 	fs.flag = FALSE;
 	if(class(X) == "fs") {
@@ -592,7 +529,6 @@ sme = function(X, plot = TRUE, ...) {
 		# Assign Column Name
 		colnames(X) = attr(Y, "SName");
 	}
-
 	N = NROW(X);
 	V = NCOL(X);
 	if(is.null(dim(X)))
@@ -627,7 +563,6 @@ sme = function(X, plot = TRUE, ...) {
 		
 	res
 }
-
 print.sme = function(x, ...) {
 	print.default(x[, , drop = FALSE]);
 }
@@ -650,7 +585,6 @@ plot.sme = function(x
 			);
 	}
 }
-
 gpd.VaR = function(Xtail, trsh = 0, xi = NULL, sigma = NULL, N, prob = 0.01, ...) {
 	if(is.null(xi) || is.null(sigma)) {
 		# Assign default value to shape and scale parameters
@@ -668,7 +602,6 @@ gpd.VaR = function(Xtail, trsh = 0, xi = NULL, sigma = NULL, N, prob = 0.01, ...
 	# Return result
 	res
 }
-
 gpd.ES = function(Xtail, trsh = 0, xi = NULL, sigma = NULL, N, prob = 0.01, ...) {
 	if(is.null(xi) || is.null(sigma)) {
 		# Assign default value to shape and scale parameters
@@ -687,10 +620,8 @@ gpd.ES = function(Xtail, trsh = 0, xi = NULL, sigma = NULL, N, prob = 0.01, ...)
 	# Return result
 	res
 }
-
 # General Pareto Distribution - [Complete/Profile]-Likelihood Function
 gpd.like = function(parms, Xtail, trsh = 0, ...) {
-
 	# Expand dots
 	dots = list(...);
 	# Check if profile likelihood is required
@@ -759,7 +690,6 @@ gpd.like = function(parms, Xtail, trsh = 0, ...) {
     # Returns log-likelihood
     logL
 }
-
 gpd.VaR.like = function(parms, Xtail, trsh = 0, N, prob = 0.01, ...) {
 	# Extract parameters
 	if(NCOL(parms) == 2) {
@@ -776,7 +706,6 @@ gpd.VaR.like = function(parms, Xtail, trsh = 0, N, prob = 0.01, ...) {
 	# Return Log Likelihood
 	gpd.like(parms = cbind(xi, sigma), Xtail = Xtail, trsh = trsh, ...)
 }
-
 gpd.ES.like = function(parms, Xtail, trsh = 0, N, prob = 0.01, ...) {
 	# Extract parameters
 	if(NCOL(parms) == 2) {
@@ -786,14 +715,12 @@ gpd.ES.like = function(parms, Xtail, trsh = 0, N, prob = 0.01, ...) {
 		ES = parms[1];
 		xi = parms[2];
 	}
-
 	# Compute sigma
 	sigma = xi*(1-xi)*(ES - trsh)/(xi + (prob*N/length(Xtail))^-xi - 1);
 	
 	# Return Log Likelihood
 	gpd.like(parms = cbind(xi, sigma), Xtail = Xtail, trsh = trsh, ...)
 }
-
 # Maximum Likelihood parameters estimation for Generalised Pareto Distribution	
 gpd.ml = function(Xtail, trsh = 0, init = c(0.1, 1), ...) {
 	# Declare Output
@@ -803,7 +730,6 @@ gpd.ml = function(Xtail, trsh = 0, init = c(0.1, 1), ...) {
 	res[1, ] = optim(par = init, fn = gpd.like, Xtail = Xtail, trsh = trsh, control = list(fnscale = -1), ...)$par;
 	res;
 }
-
 # VaR Maximum Likelihood parameters estimation for Generalised Pareto Distribution	
 gpd.VaR.ml = function(Xtail, trsh = 0, N, init = c(1, 0.1), ...) {
 	# Declare Output
@@ -813,7 +739,6 @@ gpd.VaR.ml = function(Xtail, trsh = 0, N, init = c(1, 0.1), ...) {
 	res[1, ] = optim(par = init, fn = gpd.VaR.like, Xtail = Xtail, trsh = trsh, N = N, control = list(fnscale = -1), ...)$par;
 	res;
 }
-
 # ES Maximum Likelihood parameters estimation for Generalised Pareto Distribution	
 gpd.ES.ml = function(Xtail, trsh = 0, N, init = c(1, 0.1), ...) {
 	# Declare Output
@@ -823,9 +748,7 @@ gpd.ES.ml = function(Xtail, trsh = 0, N, init = c(1, 0.1), ...) {
 	res[1, ] = optim(par = init, fn = gpd.ES.like, Xtail = Xtail, trsh = trsh, N = N, control = list(fnscale = -1), ...)$par;
 	res;
 }
-
 boot = function(X, nboots = 100, func = NULL, init = NULL, message = "Bootstrapping...", ...) {
-
 	# Check input parameter
 	if(is.null(func)) {
 		stop("Parameter 'func' must be a valid function or funcion name!");
@@ -834,7 +757,6 @@ boot = function(X, nboots = 100, func = NULL, init = NULL, message = "Bootstrapp
 		# Get function from name
 		func = get(func, mode = "function");
 	}
-
 	if(is.null(init)) {
 		# Assign default value 
 		init = func(X, ...);
@@ -845,7 +767,6 @@ boot = function(X, nboots = 100, func = NULL, init = NULL, message = "Bootstrapp
 	# Declare output
 	res = matrix(NA, nrow = nboots, ncol = Npars);
 	colnames(res) = get.col.names(init);
-
 	# Init Status bar
 	status = 0;
 	n = 0;
@@ -862,9 +783,7 @@ boot = function(X, nboots = 100, func = NULL, init = NULL, message = "Bootstrapp
 	res
 	
 }
-
 gpdboot = function(Xtail, trsh = 0, xi = NULL, sigma = NULL, nboots = 100, ...) {
-
 	# Declare output
 	res = matrix(NA, nrow = nboots, ncol = 2);
 	colnames(res) = c("xi", "sigma");
@@ -890,10 +809,7 @@ gpdboot = function(Xtail, trsh = 0, xi = NULL, sigma = NULL, nboots = 100, ...) 
 	
 	# Return result
 	res
-
 }
-
-
 plike.ci = function(ML.init = c(), flike = NULL, alpha = 0.01, df = NULL, frange = list(), par.names = NULL, ...) {
 		
 	if(is.null(flike)) {
@@ -912,7 +828,6 @@ plike.ci = function(ML.init = c(), flike = NULL, alpha = 0.01, df = NULL, frange
 	
 	# Profile Likelihood Contour
 	PLC = maxLL$value - Chi2/2;
-
 	# Declare output
 	N = length(maxLL$par)
 	res = matrix(NA, nrow = N, ncol = 3);
@@ -925,10 +840,8 @@ plike.ci = function(ML.init = c(), flike = NULL, alpha = 0.01, df = NULL, frange
 	attr(res, "alpha") = alpha[1];
 	attr(res, "df") = df[1];
 	attr(res, "ContourLevel") = PLC;
-
 	# Estimated ML parameters
 	res[, 1] = maxLL$par;
-
 	# Define profile likelihood function
 	fplike = function(par, const.par, PLC, par.pos, ...) {
 		parms = rep(NA, length(const.par)+1);
@@ -956,12 +869,10 @@ plike.ci = function(ML.init = c(), flike = NULL, alpha = 0.01, df = NULL, frange
 		# Compute Right C.I.
 		res[n, 3] = uniroot(fplike, interval = c(maxLL$par[n], interval[2]), const.par = maxLL$par[-n], PLC = PLC, par.pos = n, ...)$root;
 	}
-
 	# Return output
 	res
 	
 }
-
 plike.range = function(ML.init = c(), flike = NULL, alpha = 0.01, df = NULL, frange = list(), par.names = NULL, grid.size = 100, max.iter=100, tol = 10^-5, ...) {
 		
 	if(is.null(flike)) {
@@ -980,7 +891,6 @@ plike.range = function(ML.init = c(), flike = NULL, alpha = 0.01, df = NULL, fra
 	
 	# Profile Likelihood Contour
 	PLC = maxLL$value - Chi2/2;
-
 	# Declare output
 	N = length(maxLL$par)
 	res = matrix(NA, nrow = grid.size, ncol = N);
@@ -993,8 +903,6 @@ plike.range = function(ML.init = c(), flike = NULL, alpha = 0.01, df = NULL, fra
 	attr(res, "alpha") = alpha[1];
 	attr(res, "df") = df[1];
 	attr(res, "ContourLevel") = PLC;
-
-
 	# Define profile likelihood function
 	fplike = function(par, const.par, PLC, par.pos, ...) {
 		parms = rep(NA, length(par)+length(const.par));
@@ -1007,7 +915,6 @@ plike.range = function(ML.init = c(), flike = NULL, alpha = 0.01, df = NULL, fra
 	ranges = matrix(NA, nrow = N, ncol = 2);
 	colnames(ranges) = c("Min", "Max");
 	rownames(ranges) = par.names;
-
 	# Define the directions of interval search
 	side.search = c("left", "right");
 	# Cycle through each parameter
@@ -1075,9 +982,7 @@ plike.range = function(ML.init = c(), flike = NULL, alpha = 0.01, df = NULL, fra
 	res
 	
 }
-
 plike.contour = function(ML.init = c(), flike = NULL, alpha = 0.01, df = NULL, frange = list(), par.names = NULL, grid.size = 100, ...) {
-
 	if(is.null(flike)) {
 		stop("Argument 'flike' is NULL!");
 	}
@@ -1094,7 +999,6 @@ plike.contour = function(ML.init = c(), flike = NULL, alpha = 0.01, df = NULL, f
 	
 	# Profile Likelihood Contour
 	PLC = maxLL$value - Chi2/2;
-
 	# Declare output
 	N = length(maxLL$par);
 	TotIter = grid.size^(N-1);
@@ -1108,8 +1012,6 @@ plike.contour = function(ML.init = c(), flike = NULL, alpha = 0.01, df = NULL, f
 	attr(res, "alpha") = alpha[1];
 	attr(res, "df") = df[1];
 	attr(res, "ContourLevel") = PLC;
-
-
 	# Define profile likelihood function
 	fplike = function(par, const.par, PLC, par.pos, ...) {
 		parms = rep(NA, length(par)+length(const.par));
@@ -1128,7 +1030,6 @@ plike.contour = function(ML.init = c(), flike = NULL, alpha = 0.01, df = NULL, f
 						, grid.size = grid.size
 						, ...
 						);
-
 	# Counter
 	counter = matrix(1, nrow=1, ncol = N-1);
 	offsets = seq(0, N-2, len = N-1)*grid.size;
@@ -1157,7 +1058,6 @@ plike.contour = function(ML.init = c(), flike = NULL, alpha = 0.01, df = NULL, f
 		
 		# Single parameter optimisation
 		plike.max = optim(par = maxLL$par[N], fn = fplike, method = "BFGS", control = list(fnscale = -1), const.par = parms, PLC = PLC, par.pos = N, ...);
-
 		if(is.finite(plike.max$value) && plike.max$value > -10^-4) {
 			n = n + 1;
 			if(plike.max$value < 0) {
@@ -1178,8 +1078,6 @@ plike.contour = function(ML.init = c(), flike = NULL, alpha = 0.01, df = NULL, f
 				res[n, ] = c(parms, lower.ci, upper.ci);
 			}
 		}
-
-
 		# Update status bar
 		iter = iter + 1;
 		status = statusbar(message = "Computing C.I contour...", status = status, n = iter, N = TotIter);
@@ -1195,14 +1093,10 @@ plike.contour = function(ML.init = c(), flike = NULL, alpha = 0.01, df = NULL, f
 			counter[N-1] = counter[N-1] + 1;
 		}
 	}
-
 	# Return result
 	res[1:n, , drop = FALSE]
 }
-
-
 gpd.xi.constraint = function(parms, type = c("left", "right", "both"), Xtail, trsh = 0, N, parm.type = c("sigma", "VaR", "ES"), prob = 0.01, ...) {
-
 	# Set working parameters
 	type = type[1];
 	
@@ -1233,9 +1127,7 @@ gpd.xi.constraint = function(parms, type = c("left", "right", "both"), Xtail, tr
 	res = c(ifelse(type == "right", xi, xi.min), ifelse(type == "left", xi, xi.max));
 	res
 }
-
 gpd.sigma.constraint = function(parms, type = c("left", "right", "both"), Xtail, trsh = 0, ...) {
-
 	# Set working parameters
 	type = type[1];
 	xi = parms[1];
@@ -1249,7 +1141,6 @@ gpd.sigma.constraint = function(parms, type = c("left", "right", "both"), Xtail,
 	res = c(ifelse(type == "right", sigma, sigma.min), ifelse(type == "left", sigma, sigma.max));
 	res
 }
-
 gpd.VaR.constraint = function(parms, type = c("left", "right", "both"), trsh = 0, ...) {
 	# Extract parameters
 	type = type[1];
@@ -1262,7 +1153,6 @@ gpd.VaR.constraint = function(parms, type = c("left", "right", "both"), trsh = 0
 	# Return result
 	interval
 }
-
 gpd.ES.constraint = function(parms, type = c("left", "right", "both"), trsh = 0, ...) {
 	# Extract parameters
 	type = type[1];
@@ -1275,8 +1165,6 @@ gpd.ES.constraint = function(parms, type = c("left", "right", "both"), trsh = 0,
 	# Return result
 	interval
 }
-
-
 gpd.ci = function(Xtail, trsh = 0, xi = 0.1, sigma = 1, alpha = 0.01, df = 2, ...) {
 	# Define list of range functions
 	frange = vector("list", 2);
@@ -1305,7 +1193,6 @@ gpd.ci = function(Xtail, trsh = 0, xi = 0.1, sigma = 1, alpha = 0.01, df = 2, ..
 	# Return result
 	res
 }
-
 gpd.range = function(Xtail, trsh = 0, xi = 0.1, sigma = 1, alpha = 0.01, df = 2, ...) {
 	# Define list of range functions
 	frange = vector("list", 2);
@@ -1322,11 +1209,9 @@ gpd.range = function(Xtail, trsh = 0, xi = 0.1, sigma = 1, alpha = 0.01, df = 2,
 			, ...
 			)
 }
-
 gpd.contour = function(Xtail, trsh = 0, xi = 0.1, sigma = 1, alpha = 0.01, df = 2, ...) {
 	# Define list of range functions
 	frange = vector("list", 2);
-
 	N = length(alpha);
 	# Declare output
 	res = vector("list", N);
@@ -1352,8 +1237,6 @@ gpd.contour = function(Xtail, trsh = 0, xi = 0.1, sigma = 1, alpha = 0.01, df = 
 	# Return result
 	res
 }
-
-
 gpd.VaR.ci = function(Xtail, trsh = 0, VaR = trsh+10^-5, xi = 0.1, alpha = 0.01, df = 2, N, prob = alpha[1], ...) {
 	# Define list of range functions
 	frange = vector("list", 2);
@@ -1384,7 +1267,6 @@ gpd.VaR.ci = function(Xtail, trsh = 0, VaR = trsh+10^-5, xi = 0.1, alpha = 0.01,
 	# Return result
 	res
 }
-
 gpd.VaR.range = function(Xtail, trsh = 0, VaR = trsh+10^-5, xi = 0.1, alpha = 0.01, df = 2, N, prob = alpha[1], ...) {
 	# Define list of range functions
 	frange = vector("list", 2);
@@ -1403,11 +1285,9 @@ gpd.VaR.range = function(Xtail, trsh = 0, VaR = trsh+10^-5, xi = 0.1, alpha = 0.
 				, ...
 				)
 }
-
 gpd.VaR.contour = function(Xtail, trsh = 0, VaR = trsh+10^-5, xi = 0.1, alpha = 0.01, df = 2, N, prob = alpha[1], ...) {
 	# Define list of range functions
 	frange = vector("list", 2);
-
 	Nalpha = length(alpha);
 	# Declare output
 	res = vector("list", Nalpha);
@@ -1435,8 +1315,6 @@ gpd.VaR.contour = function(Xtail, trsh = 0, VaR = trsh+10^-5, xi = 0.1, alpha = 
 	# Return result
 	res
 }
-
-
 gpd.ES.ci = function(Xtail, trsh = 0, ES = trsh+10^-5, xi = 0.1, alpha = 0.01, df = 2, N, prob = alpha[1], ...) {
 	# Define list of range functions
 	frange = vector("list", 2);
@@ -1467,7 +1345,6 @@ gpd.ES.ci = function(Xtail, trsh = 0, ES = trsh+10^-5, xi = 0.1, alpha = 0.01, d
 	# Return result
 	res
 }
-
 gpd.ES.range = function(Xtail, trsh = 0, ES = trsh+10^-5, xi = 0.1, alpha = 0.01, df = 2, N, prob = alpha[1], ...) {
 	# Define list of range functions
 	frange = vector("list", 2);
@@ -1486,11 +1363,9 @@ gpd.ES.range = function(Xtail, trsh = 0, ES = trsh+10^-5, xi = 0.1, alpha = 0.01
 				, ...
 				)
 }
-
 gpd.ES.contour = function(Xtail, trsh = 0, ES = trsh+10^-5, xi = 0.1, alpha = 0.01, df = 2, N, prob = alpha[1], ...) {
 	# Define list of range functions
 	frange = vector("list", 2);
-
 	Nalpha = length(alpha);
 	# Declare output
 	res = vector("list", Nalpha);
@@ -1518,9 +1393,7 @@ gpd.ES.contour = function(Xtail, trsh = 0, ES = trsh+10^-5, xi = 0.1, alpha = 0.
 	# Return result
 	res
 }
-
 gpd.surface =  function(xi = NULL, sigma = NULL, Xtail, trsh = 0, grid.size = 100, alpha = 0.01, ...) {
-
 	if(is.null(xi) || is.null(sigma)) {
 		# Get ranges for xi and sigma from profile likelihood
 		ranges = gpd.range(Xtail = Xtail, trsh = trsh, alpha = alpha, grid.size = grid.size, ...);
@@ -1530,24 +1403,18 @@ gpd.surface =  function(xi = NULL, sigma = NULL, Xtail, trsh = 0, grid.size = 10
 		xi.range = seq(min(xi), max(xi), len = grid.size);
 		sigma.range = seq(min(sigma), max(sigma), len = grid.size);
 	}
-
 	# Compute evaluation grid
 	xi.sigma.grid = as.matrix(expand.grid(xi.range, sigma.range));
 	
 	# Compute surface
 	surface = matrix(gpd.like(parms = xi.sigma.grid, Xtail = Xtail, trsh = trsh), nrow = grid.size, ncol = grid.size);
-
 	# Declare output
 	res = list(xi = xi.range, sigma = sigma.range, LogLike = surface);
-
 	# Return result
 	res
 	
 }
-
-
 gpd.VaR.surface = function(VaR = NULL, xi = NULL, Xtail, trsh = 0, N, prob = 0.01, grid.size = 100, alpha = 0.01, ...) {
-
 	if(is.null(VaR) || is.null(xi)) {
 		# Get ranges for VaR and xi from profile likelihood
 		ranges = gpd.VaR.range(Xtail = Xtail, trsh = trsh, alpha = alpha, grid.size = grid.size, prob = prob, N = N, ...);
@@ -1557,7 +1424,6 @@ gpd.VaR.surface = function(VaR = NULL, xi = NULL, Xtail, trsh = 0, N, prob = 0.0
 		VaR.range = seq(min(VaR), max(VaR), len = grid.size);
 		xi.range = seq(min(xi), max(xi), len = grid.size);
 	}
-
 	# Compute evaluation grid
 	VaR.sigma.grid = as.matrix(expand.grid(VaR.range, xi.range));
 	
@@ -1571,18 +1437,13 @@ gpd.VaR.surface = function(VaR = NULL, xi = NULL, Xtail, trsh = 0, N, prob = 0.0
 					, nrow = grid.size
 					, ncol = grid.size
 					);
-
 	# Declare output
 	res = list(VaR = VaR.range, xi = xi.range, LogLike = surface);
-
 	# Return result
 	res
 	
 }
-
-
 gpd.ES.surface = function(ES = NULL, xi = NULL, Xtail, trsh = 0, N, prob = 0.01, grid.size = 100, alpha = 0.01, ...) {
-
 	if(is.null(ES) || is.null(xi)) {
 		# Get ranges for VaR and xi from profile likelihood
 		ranges = gpd.ES.range(Xtail = Xtail, trsh = trsh, alpha = alpha, grid.size = grid.size, prob = prob, N = N, ...);
@@ -1606,24 +1467,18 @@ gpd.ES.surface = function(ES = NULL, xi = NULL, Xtail, trsh = 0, N, prob = 0.01,
 					, nrow = grid.size
 					, ncol = grid.size
 					);
-
 	# Declare output
 	res = list(ES = ES.range, xi = xi.range, LogLike = surface);
-
 	# Return result
 	res
 	
 }
-
-
 root.search.interval = function(from, func = NULL, type = c("left", "both", "right"), max.iter = 500, show.warnings = FALSE, debug = FALSE, ...) {
-
 	# Get search interval directions
 	type = type[1];
 	
 	# Declare output
 	res = rep(from, 2);
-
 	# Initial step sizes
 	steps = 0.1 * c(-1, 1);
 	

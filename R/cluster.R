@@ -1,6 +1,4 @@
-###
 TSClust = function(x, ...) UseMethod("TSClust")
-
 TSClust.default = function(x, y=NULL, n_clust=5, bk.type=c("quantile","volatility","uniform","custom"), pc_vol=0.1, win.size=10,  custom_breaks=NULL, lab.dig=0, ...){
 	
 	# check for NAs values
@@ -9,19 +7,15 @@ TSClust.default = function(x, y=NULL, n_clust=5, bk.type=c("quantile","volatilit
 	# convert input to matrix
 	if(!is.matrix(X))
 		X = as.matrix(X)
-
 	# base to split the time series
 	if (is.null(y)) 
 		y = (1:NROW(X))
-
 	n = length(y)
-
 	# select method for getting the breaks
 	bk.type = match.arg(bk.type)
 	
 	if(bk.type=="volatility")
 		warning("If cluster type is 'volatility', the 'n_clust' is ignored!")
-
 	switch(bk.type,
 	
 		# quantile method
@@ -49,18 +43,14 @@ TSClust.default = function(x, y=NULL, n_clust=5, bk.type=c("quantile","volatilit
 			{
 				# calculate moving standard deviation
 				msd <- movSd(X, win.size, na.rm=TRUE)
-
 				# calculate cumulative standard deviation
 				csd <- cumSd(X, 0, na.rm=TRUE)
-
 				# set limit above average volatility
 				avs <- mean(msd,na.rm=TRUE) + (mean(msd,na.rm=TRUE) * pc_vol)
-
 				# check volatility value above the limit
 				check = c(0, which(msd>=avs), 0)
 				if(any(is.na(check)))
 					check = check[!is.na(check)]
-
 				# get position of the extreme of the segments
 				pos = rep(FALSE, length(check))
 				i = 2
@@ -82,7 +72,6 @@ TSClust.default = function(x, y=NULL, n_clust=5, bk.type=c("quantile","volatilit
 	
 	# calculate cluster for time series
 	bb = as.vector(findInterval(y, bk+1, rightmost.close=TRUE, all.inside=TRUE))
-
 	# allocate list of clusters
 	clust = vector("list", length(bk)-1)
 	sep = unique(bb)
@@ -94,7 +83,6 @@ TSClust.default = function(x, y=NULL, n_clust=5, bk.type=c("quantile","volatilit
 		clust[[i]] = X[which(bb == sep[i]), ]
 		i = i + 1
 	}
-
 	# create and assign names to each element of the list
 	lab = rep(0, length(bk)-1)
 	for(i in 1:(length(bk)-1)){
@@ -115,8 +103,7 @@ TSClust.default = function(x, y=NULL, n_clust=5, bk.type=c("quantile","volatilit
 	class(clust) = "TSClust"
 	clust	
 }
-
-
+### summary TS custers ###
 summary.TSClust = function(object, funs = summary, ...){
 	
 	# check object class
@@ -124,7 +111,6 @@ summary.TSClust = function(object, funs = summary, ...){
 		cat("'~' Provide an object of class \"TSClust\" \n")
 		return(NULL)
 		}
-
 	# number of clusters
 	nc = length(object)
 	
@@ -138,11 +124,8 @@ summary.TSClust = function(object, funs = summary, ...){
 	# return results
 	res;
 }
-
-
 ### plot TS custers ###
 plot.TSClust = function(x, smooth=FALSE, ...){
-
 	# check object class
 	if(class(x) != "TSClust"){
 		cat("'~' Provide an object of class \"TSClust\" \n")
@@ -173,6 +156,3 @@ plot.TSClust = function(x, smooth=FALSE, ...){
 		abline(v = bk, col="red")
 	} 
 }
-
-
-

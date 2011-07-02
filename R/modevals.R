@@ -16,8 +16,6 @@ pred_error=function(actual, predicted, pc=FALSE)
 	# results
 	res
 }
-
-
 av_er=function(actual, predicted, pc=FALSE)
 {
 	# remove NAs 
@@ -33,15 +31,11 @@ av_er=function(actual, predicted, pc=FALSE)
 	
 	# results as percentages
 	if (pc) res = res *100
-
 	# return results
 	res
 }
-
-
 abs_avdi = function(actual, predicted, pc=FALSE)
 {
-
 	# remove NAs 
 	if(any(is.na(predicted))){
 			NAs=is.na(predicted)
@@ -54,13 +48,9 @@ abs_avdi = function(actual, predicted, pc=FALSE)
 	
 	# results as percentages
 	if (pc) res = res *100 
-
 	# return results
 	res
 }
-
-
-
 mse = function(actual, predicted)
 {
 	# trim NAs
@@ -72,12 +62,9 @@ mse = function(actual, predicted)
 	
 	# average squared discard
 	res = mean( (actual - predicted)^2 )
-
 	# results
 	res
 }
-
-
 sde = function(actual, predicted)
 {
 	# trim NAs
@@ -91,8 +78,6 @@ sde = function(actual, predicted)
 	res =  ( mean( (actual - predicted)^2 ) ) ^ 0.5
 	res
 }
-
-
 track_sign = function(actual, predicted)
 {
 	# trim NAs
@@ -107,8 +92,6 @@ track_sign = function(actual, predicted)
 	trsi = sum(e) / sum(abs(e))
 	trsi
 }
-
-
 track_sign_exp = function(actual, predicted, beta=0.1)
 {
 	# trim NAs

@@ -32,33 +32,22 @@ Arma.Spec = function(X, ar_ord = 1, ma_ord = 1, vfreq=NULL){
 	
 	# MA spectrum
 	if(ma_ord >= 1){
-
 		spec_ma = matrix(0, length(lambda), ma_ord) 
-
 		for(i in 1: ma_ord)
 			spec_ma[,i] = (1 + theta[i]^2 + 2*theta[i]*cos(1*lambda))
 			
 		spec_ma = apply(spec_ma,1,prod)
-
 		} else {
-
 		spec_ma = 1
-
 	}
-	
 	
 	# AR spectrum
 	if(ar_ord >= 1){
-
 		spec_ar = matrix(0, length(lambda), ar_ord) 
-
 		for(i in 1:ar_ord)
 			spec_ar[,i] = (1 + phi[i]^2 + 2*phi[i]*cos(1*lambda))
-
 		spec_ar = apply(spec_ar,1,prod)
-
 		} else {
-
 		spec_ar = 1	
 	}
 	
@@ -74,4 +63,3 @@ Arma.Spec = function(X, ar_ord = 1, ma_ord = 1, vfreq=NULL){
 	grid()
 	
 }
-

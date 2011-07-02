@@ -4,9 +4,7 @@
 ## 3. mi = target return for the portfolio
 ## 4. SIGMA = sample covariance matrix
 ## 5. volatility = LOGICAL. If TRUE volatility is returned, else the variance is computed.
-
 PtfOpt = function(ret = NULL, ptf = NULL, mi = NULL, SIGMA = NULL, volatility = TRUE, ...) {
-
 	# get returns
 	# if target returns are not specified, calculate them from the portfolio
 	if(is.null(ret)){
@@ -37,7 +35,6 @@ PtfOpt = function(ret = NULL, ptf = NULL, mi = NULL, SIGMA = NULL, volatility = 
 		asset.names = names(ptf);
 		
 	}
-
 	# if the sample is not specified, it will be calculated from the portfolio
 	if(is.null(SIGMA)){
 		if(!is.null(ptf)){
@@ -67,7 +64,6 @@ PtfOpt = function(ret = NULL, ptf = NULL, mi = NULL, SIGMA = NULL, volatility = 
 	
 	# calculate portfolio weights
 	if (!is.null(mi)) {
-
 		method = "Non Minimum variance";
 		
 		# portfolio with expected returns
@@ -83,7 +79,6 @@ PtfOpt = function(ret = NULL, ptf = NULL, mi = NULL, SIGMA = NULL, volatility = 
 	eor = PtfRet(M ,w);
 	# portfolio expected overall variance/volatility
 	eov = PtfVar(w, SIGMA, vol = volatility);
-
 	rownames(w) = asset.names;
 	# return results in list format
 	res = list(method = method
@@ -95,9 +90,7 @@ PtfOpt = function(ret = NULL, ptf = NULL, mi = NULL, SIGMA = NULL, volatility = 
 				);
 	class(res) = "PtfOpt";
 	res
-
 }
-
 print.PtfOpt = function(x, ...) {
 	cat("\nMinimum Variance Portfolio (weigths):\n");
 	print(x$weights);
@@ -106,15 +99,12 @@ print.PtfOpt = function(x, ...) {
 	colnames(y) = c("Ptf Return", paste("Ptf", x$type));
 	print(y);
 }
-
-
 ## PORTFOLIO FRONTIER SIMULATION ##
 ## ret = vector of average prices
 ## SIGMA = sample covariance matrixs
 ## n_sim = number of simulations
 ## perm = vector of weights to use for the frontier
 ## plot = print plot
-
 PtfFront = function(PTF=NULL
 						, ret=NULL
 						, SIGMA=NULL
@@ -141,7 +131,6 @@ PtfFront = function(PTF=NULL
 			return(NULL)
 		}
 	}
-
 	# if perm vector is not provided, a set of simulations is set by default with length of n_sim
 	if(is.null(mi)){
 		mi = seq(min(ret, na.rm = TRUE), max(ret, na.rm = TRUE), len = n_sim);
@@ -181,23 +170,18 @@ PtfFront = function(PTF=NULL
 	
 	ST
 }
-
-
 ##### PORTFOLIO UTILITY OPTIMISATION #####
 ## PTF = matrix of assets
 ## W = vector of weights
 ## R = vector of Ptf returns
 ## SIGMA = Ptf sample covariances
 ## af = adversion factor
-
-
 PtfUtility = function(PTF=NULL, W, R=NULL, SIGMA=NULL, af=3, plot=TRUE, plot.mv=FALSE, plot.mu=FALSE, ...){
 	
 	if(length(R)>2 | NCOL(PTF)>2){
 		cat("'_' Hum... for the moment this function works only for two assets... but a multivariate is coming soon! \n")
 		return(NULL)
 	}
-
 	if(is.null(PTF)){
 		
 		if(!is.null(R) & !is.null(SIGMA)){
@@ -269,7 +253,6 @@ PtfUtility = function(PTF=NULL, W, R=NULL, SIGMA=NULL, af=3, plot=TRUE, plot.mv=
 		i = i + 1
 	
 	}
-
 	ST[1,] = c(or_ret, or_var, or_uti)
 	
 	# Maximum utility weights
@@ -320,7 +303,6 @@ PtfUtility = function(PTF=NULL, W, R=NULL, SIGMA=NULL, af=3, plot=TRUE, plot.mv=
 			  , xlab.suffix = "%"
 			  , ...
 			  )
-
 		
 	}
 	

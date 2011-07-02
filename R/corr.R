@@ -10,8 +10,6 @@ cramv = function(x, y) {
 #######################################################################################################################
 # FUNCTION: cross.plot
 #
-# AUTHOR: RCC
-#
 # SUMMARY:
 # This function plots the input dependent variable Y versus each input independent variable X
 #
@@ -78,8 +76,6 @@ cross.plot = function(Y
 #######################################################################################################################
 # FUNCTION: get.acf.ci
 #
-# AUTHOR: RCC
-#
 # SUMMARY:
 # This function computes the Normal confidence intervals for correlation and partial autocorrelation data
 #
@@ -105,8 +101,6 @@ get.acf.ci = function (X, ci = 0.95) {
 }
 #######################################################################################################################
 # FUNCTION: cross.ccf
-#
-# AUTHOR: RCC
 #
 # SUMMARY:
 # This function computes the cross correlation function for each pairs of variables (Yi Xj)
@@ -173,8 +167,6 @@ cross.ccf.default = function(Y
 }
 #######################################################################################################################
 # FUNCTION: mcf
-#
-# AUTHOR: RCC
 #
 # SUMMARY:
 # This function computes auto-correlation and partial auto-correlation function on a matrix
@@ -301,8 +293,6 @@ plot.cool.acf = function(x
 #######################################################################################################################
 # FUNCTION: print.cool.acf
 #
-# AUTHOR: RCC
-#
 # SUMMARY:
 # Print function for class 'cool.acf'
 #
@@ -402,8 +392,6 @@ plot.cross.ccf = function(x
 #######################################################################################################################
 # FUNCTION: print.mcf
 #
-# AUTHOR: RCC
-#
 # SUMMARY:
 # Print function for class 'mcf'
 #
@@ -427,8 +415,6 @@ print.mcf = function(x, ...) {
 }
 #######################################################################################################################
 # FUNCTION: plot.mcf
-#
-# AUTHOR: RCC
 #
 # SUMMARY:
 # Plot function for class 'mcf'
@@ -477,8 +463,6 @@ plot.mcf = function(x
 }
 #######################################################################################################################
 # FUNCTION: univar
-#
-# AUTHOR: RCC
 #
 # SUMMARY:
 # This function performs univariate analisys of the dependent variable Y versus each independent variable X, plotting the results
@@ -597,8 +581,6 @@ univar = function(Y
 #######################################################################################################################
 # FUNCTION: print.univar
 #
-# AUTHOR: RCC
-#
 # SUMMARY:
 # Print function for class 'univar'
 #
@@ -625,8 +607,6 @@ summary.univar = function(object, ...) {
 }
 #######################################################################################################################
 # FUNCTION: plot.univar
-#
-# AUTHOR: RCC
 #
 # SUMMARY:
 # Plot function for class 'univar'
@@ -747,8 +727,6 @@ plot.univar = function(x, theme.params = getCurrentTheme(), overrides = NULL, ..
 #######################################################################################################################
 # FUNCTION: colin.pairs
 #
-# AUTHOR: RCC
-#
 # SUMMARY:
 # This function performs a Co-Linearity analysis between the columns of X: Correlation factors between columns are computed,
 # and pairs of columns with a correlation factor higher than a specified threshold are returned.
@@ -798,8 +776,6 @@ colin.pairs = function(X, trsh = 0.8) {
 }
 #######################################################################################################################
 # FUNCTION: cross.colin
-#
-# AUTHOR: RCC
 #
 # SUMMARY:
 # This function performs a cross Co-Linearity analysis between the columns of Y and X: Correlation factors between 
@@ -864,8 +840,6 @@ cross.colin = function(Y, X, max.lag = 8, trsh = 0.8) {
 }
 #######################################################################################################################
 # FUNCTION: colin.reduce
-#
-# AUTHOR: RCC
 #
 # SUMMARY:
 # This function performs a cross Co-Linearity analysis between the columns of Y and X, and for each Yi returns a reduced set of columns of X
@@ -979,8 +953,6 @@ colin.reduce = function(Y, X, max.iter=100, trsh = 0.85) {
 }
 #######################################################################################################################
 # FUNCTION: mcplot
-#
-# AUTHOR: RCC
 #
 # SUMMARY:
 # Multiple Correlation Plot

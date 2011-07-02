@@ -3,17 +3,14 @@
 ## PTF_M = vector containing returns of the benchmarl ptf
 ## rf = returns of risk free asset
 ## rfr = risk free rate
-
 ## Capm generic method
 Capm = function(PTF, ...) UseMethod("Capm")
-
 Capm.default = function(PTF, PTF_M, rf=NULL, rfr=NULL, ...){
 	
 	if(!is.matrix(PTF))
 		PTF = as.matrix(PTF)
 	if(!is.matrix(PTF_M))
 		PTF_M = as.matrix(PTF_M)
-
 	if(is.null(colnames(PTF))){
 		nn <- paste("Ser_", 1:NCOL(PTF), sep="")
 		colnames(PTF) = nn
@@ -24,7 +21,6 @@ Capm.default = function(PTF, PTF_M, rf=NULL, rfr=NULL, ...){
 	# check risk free assets
 	if(is.null(rf))
 		rf = rep(0, NROW(PTF))
-
 	if(any(is.na(PTF)) | any(is.na(PTF_M)) | any(is.na(rf))){
 		cat("'~' Ops! Data contains NAs, \n")
 		return(NULL)
@@ -112,17 +108,13 @@ Capm.default = function(PTF, PTF_M, rf=NULL, rfr=NULL, ...){
 	
 	res	
 }
-
-
 #### Portfolio expected returns ####
 ## ret = vector of returns
 ## w = vector of weights
 ## PTF = matrix containing price series
 PtfRet = function(PTF, w=NULL, glob=TRUE, calc.ret=FALSE, ...){
-
 	if(!is.matrix(PTF))
 		PTF = as.matrix(PTF)
-
 	if(calc.ret)
 		ret = colMeans(Ret(PTF, ...), na.rm=TRUE)	else
 		ret = colMeans(PTF, na.rm=TRUE)
@@ -135,7 +127,6 @@ PtfRet = function(PTF, w=NULL, glob=TRUE, calc.ret=FALSE, ...){
 		message("Vector of weights of wrong length");
 		return(NULL);
 		};
-
 	if(glob)
 		res = t(w) %*% ret
 	else
@@ -150,10 +141,8 @@ PtfRet = function(PTF, w=NULL, glob=TRUE, calc.ret=FALSE, ...){
 ## PTF = matrix containing price series
 ## vol = return volatility (standard deviation)
 PtfVar = function(PTF, w=NULL, glob=TRUE, vol=FALSE, calc.ret=FALSE, ...){
-
 	if(!is.matrix(PTF))
 		PTF = as.matrix(PTF)
-
 	# compute ptf covariance matrix
 	if(calc.ret)
 		SIGMA = cov(Ret(PTF, na.rm=TRUE, ...))
@@ -195,13 +184,10 @@ PtfBeta = function(beta, w=NULL, glob=TRUE){
 		warnings("Vector of weights of wrong length")
 		return(NULL)
 		}
-
 	res = w %*% beta;
 	
 	res;
 }
-
-
 #############################################
 #############################################
 #### 4Measures ####
@@ -210,8 +196,6 @@ Jensen = function(PTF, ...) UseMethod("Jensen")
 Treynor = function(PTF, ...) UseMethod("Treynor")
 Appraisal = function(PTF, ...) UseMethod("Appraisal")
 FourMeasures = function(PTF, ...) UseMethod("FourMeasures")
-
-
 #### Sharpe ratio ####
 ## PTF = matrix containing price series
 ## rfr = risk free rate
@@ -228,7 +212,6 @@ Sharpe.default = function(PTF, rfr=0, ...){
 	
 	res;
 }
-
 #####
 Sharpe.Capm = function(PTF, rfr=0, ...){
 	
@@ -252,7 +235,6 @@ Treynor.default = function(PTF, PTF_M, rfr=0, rf=NULL, ...){
 	# check risk free assets
 	if(is.null(rf))
 		rf = rep(0, NROW(PTF))
-
 	# ptf average values
 	ptf_mi = PtfRet(PTF, ...)
 		
@@ -263,7 +245,6 @@ Treynor.default = function(PTF, PTF_M, rfr=0, rf=NULL, ...){
 	
 	res;
 }
-
 #####
 Treynor.Capm = function(PTF, rfr=0, ...){
 	
@@ -273,9 +254,6 @@ Treynor.Capm = function(PTF, rfr=0, ...){
 	res = (ptf_mi - rfr) / beta ;
 	res;
 }
-
-
-
 #### Jensen's Alpha ####
 ## PTF = matrix containing price series
 ## PTF_M = market (or benchmark) portfolio
@@ -298,7 +276,6 @@ Jensen.default = function(PTF, PTF_M, rf=NULL, rfr=0, ...){
 	
 	res;
 }
-
 ####
 Jensen.Capm = function(PTF, rfr=0, ...){
 	
@@ -311,8 +288,6 @@ Jensen.Capm = function(PTF, rfr=0, ...){
 	
 	res;
 }
-
-
 #### Appraisal ratio ####
 ## PTF = matrix containing price series
 ## PTF_M = market (or benchmark) portfolio
@@ -334,22 +309,15 @@ Appraisal.default = function(PTF, PTF_M, rf=NULL, rfr=0, ...){
 	
 	res;
 }
-
-
 ####
 Appraisal.Capm = function(PTF, rfr=0, ...){
 	
 	alpha = PTF$Alpha ;
 	sprisk = PTF$Risk_Analysis[,2] ;	
-
 	#compute index
 	res = alpha / sprisk
 	res;
 }
-
-
-#####
-
 FourMeasures.default = function(PTF, PTF_M, rf=NULL, rfr=0, ...){
 	
 	RES = matrix(NA, 4, NCOL(PTF))
@@ -366,10 +334,7 @@ FourMeasures.default = function(PTF, PTF_M, rf=NULL, rfr=0, ...){
 	RES[4, ] = Appraisal(PTF, PTF_M, rf=rf, rfr=rfr, ...)
 	
 	RES;
-
 }
-
-#####
 FourMeasures.Capm = function(PTF, rfr=0, ...){
 	
 	RES = matrix(NA, 4, NCOL(PTF))
@@ -382,12 +347,8 @@ FourMeasures.Capm = function(PTF, rfr=0, ...){
 	RES[4, ] = Appraisal(PTF, rfr=rfr, ...)
 	
 	RES;
-
 }
-
-
-#############################################
-
+## Style ananalysis ##
 Styles = function(FUND, IND, W, lower=NULL, upper=NULL, ...){
 	
 	if(!identical(NROW(FUND), NROW(IND))){
@@ -399,12 +360,10 @@ Styles = function(FUND, IND, W, lower=NULL, upper=NULL, ...){
 		cat("'~' Ops! Vector of weights is of wrong length \n")
 		return(NULL)	
 	}
-
 	if(!is.matrix(FUND))
 		FUND = as.matrix(FUND)
 	if(!is.matrix(IND))
 		IND = as.matrix(IND)
-
 	if(is.null(colnames(IND))){
 		nn <- paste("Ser_", 1:NCOL(IND), sep="")
 		colnames(IND) = nn
@@ -424,7 +383,6 @@ Styles = function(FUND, IND, W, lower=NULL, upper=NULL, ...){
 	colnames(RV_F) = c("Returns", "Volatility")
 	RV_F[,1] = PtfRet(FUND, glob=FALSE, ...)
 	RV_F[,2] = PtfVar(FUND, glob=FALSE, vol=TRUE, ...)
-
 	# combine base fund and set of indexes
 	X = cbind(FUND, IND)
 	
@@ -434,7 +392,6 @@ Styles = function(FUND, IND, W, lower=NULL, upper=NULL, ...){
 		# Weights 
  		w = as.matrix(W[1:N]);
  		err <- (X[,1] - X[,-1] %*% w)
- 		#track <- var(err) + (sum(w) - 1)^2
  		track <- var(err)/var(X[, 1]) + ((sum(w) - 1)/sum(w))^2
  		track 
 	}
@@ -444,9 +401,7 @@ Styles = function(FUND, IND, W, lower=NULL, upper=NULL, ...){
 		lower = c(rep(0, NCOL(IND)))
 	if(is.null(upper)) 
 		upper = c(rep(1, NCOL(IND)))
-
 	opt = optim(W, EV, X=X, method="L-BFGS-B", lower=lower, upper=upper, ...)
-
 	# get optimal weights
 	optw = as.matrix(opt$par);
 	rownames(optw) = nn;
@@ -469,9 +424,6 @@ Styles = function(FUND, IND, W, lower=NULL, upper=NULL, ...){
 	Results;
 	
 }
-
-
-#######################################
 Multi.Styles = function(FUND, IND, W, n_clust=5, lower=NULL, upper=NULL, ...){
 	
 	if(!identical(NROW(FUND), NROW(IND))){
@@ -487,13 +439,11 @@ Multi.Styles = function(FUND, IND, W, n_clust=5, lower=NULL, upper=NULL, ...){
 		cat("'~' Ops! Vector of weights is of wrong length \n")
 		return(NULL)	
 	}
-
 	# check and convert FUND and IND to matrix
 	if(!is.matrix(FUND))
 		FUND = as.matrix(FUND)
 	if(!is.matrix(IND))
 		IND = as.matrix(IND)
-
 	# check and assign names to IND
 	if(is.null(colnames(IND))){
 		nn <- paste("Ser_", 1:nci, sep="")
@@ -501,7 +451,6 @@ Multi.Styles = function(FUND, IND, W, n_clust=5, lower=NULL, upper=NULL, ...){
 	} else {
 		nn = colnames(IND)	
 	}
-
 	# check and assign names to FUND	
 	if(is.null(colnames(FUND))){
 		nnf <- paste("Fund_", 1:ncf, sep="")
@@ -512,12 +461,10 @@ Multi.Styles = function(FUND, IND, W, n_clust=5, lower=NULL, upper=NULL, ...){
 	
 	# combine base fund and set of indexes
 	X = cbind(FUND, IND)
-
 	XX <- TSClust(X, n_clust=n_clust)
 	
 	a = summary(XX, PtfRet, glob=FALSE)
 	b = summary(XX, PtfVar, glob=FALSE, vol=TRUE)
-
 	# returns and volatility
 	RV <- array(NA, dim=c(nci, 2, n_clust))
 	for(i in 1:n_clust){
@@ -525,7 +472,6 @@ Multi.Styles = function(FUND, IND, W, n_clust=5, lower=NULL, upper=NULL, ...){
 		RV[1:nci, 2, i] = b[[i]][-ncf]
 	}
 	dimnames(RV) = list(nn, c("Returns", "Volatility"), names(XX))
-
 	# returns and volatility
 	RV_F = matrix(NA, n_clust, 2)
 	colnames(RV_F) = c("Returns", "Volatility")
@@ -534,7 +480,6 @@ Multi.Styles = function(FUND, IND, W, n_clust=5, lower=NULL, upper=NULL, ...){
 		RV_F[i, 1] = a[[i]][ncf]
 		RV_F[i, 2] = b[[i]][ncf]
 	}
-
 	EV <- function(W, X){
  		# Number of assets
 		N = NCOL(X)-1;
@@ -550,7 +495,6 @@ Multi.Styles = function(FUND, IND, W, n_clust=5, lower=NULL, upper=NULL, ...){
 		lower = c(rep(0, NCOL(IND)))
 	if(is.null(upper)) 
 		upper = c(rep(1, NCOL(IND)))
-
 	WW = matrix(NA, NCOL(IND), length(XX))
 	i = 1
 	while(i <= length(XX)){
@@ -558,7 +502,6 @@ Multi.Styles = function(FUND, IND, W, n_clust=5, lower=NULL, upper=NULL, ...){
 		cat("Finished___", i, "\n")
 		i = i + 1
 	}
-
 	rownames(WW) = nn;
 	
 	# optimum track
@@ -581,11 +524,3 @@ Multi.Styles = function(FUND, IND, W, n_clust=5, lower=NULL, upper=NULL, ...){
 	Results;
 	
 }
-
-
-
-
-
-
-
-
