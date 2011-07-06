@@ -300,7 +300,7 @@ extrBreak = function(var, Factors){
 	}
 	
 }
-Score.card = function(Y, X, nseg=2){
+Score.card = function(X, Y, nseg=2){
 	
 	# get ids of numerical variables
 	numid = which( sapply(X, is.numeric) )
