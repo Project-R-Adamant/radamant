@@ -9,7 +9,7 @@
 (DEFAULT = 1). }
 \item{padding}{ Padding value to fill transient of result (output data rows from 1 to win.size-1).
 (DEFAULT = NA)}
-\item{rm.transient}{ transient: LOGICAL. If TRUE, transient is removed, otherwise func is applied to
+\item{rm.transient}{ transient: LOGICAL. If TRUE, transient is removed, otherwise funct is applied to
 the transient. (DEFAULT
 = FALSE)}
 \item{func}{ Function to be run}
@@ -20,5 +20,5 @@ the transient. (DEFAULT
 SWi (given by
 win.size[i]) and each column of X.}
 \author{ RAdamant Development Team \email{team@r-adamant.org} }
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

@@ -6,5 +6,5 @@
 \arguments{\item{init}{ init}\item{n_step}{ n_step}\item{up}{ up}\item{down}{ down}}
 \author{RAdamant Development Team \email{team@r-adamant.org}}
 \note{TO BE COMPLETED}
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

@@ -48,7 +48,7 @@ If \code{output} = "sing.file", a text for each called function is saved in a te
 	The files will be named "Function Name_time_date.txt"
 }
 \value{The object returned depends on the function being called. \cr
-\code{multirun} returns a list of results, One entry for each function being
+\code{multirun} returns a list of results, one entry for each function being
 executed.}
 \author{RAdamant Development Team \email{team@r-adamant.org} }
 \seealso{\code{\link{write.log}}, \code{\link{error.handling}}}
@@ -70,5 +70,5 @@ multirun(func.array=c("ema","sma")
 		, output = "multi.file"
 		)		
 }
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

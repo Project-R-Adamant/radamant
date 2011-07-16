@@ -10,7 +10,7 @@
 
 \usage{
 \method{summary}{univar}(object, ...) 
-\method{plot}{univar}(x, theme.params = getCurrentTheme(), overrides = NULL, ...)
+\method{plot}{univar}(x, theme.params = getCurrentTheme(), overrides = list(...), ...)
 \method{print}{univar}(x, ...) 
 }
 
@@ -19,11 +19,11 @@
 \item{theme.params}{ params: Theme parameters (DEFAULT: getCurrentTheme())}
 \item{overrides}{ list of parameters to override the theme. Must match by name the parameters
 defined by the theme (DEFAULT: NULL)}
-\item{...}{ Further arguments to or fromother methods}
+\item{...}{ Further arguments to or from other methods}
 }
 
 
 \author{ RAdamant Development Team \email{team@r-adamant.org} }
 \seealso{ \code{\link{univar}}}
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

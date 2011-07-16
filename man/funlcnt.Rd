@@ -22,7 +22,7 @@ qtz.type = "NONE", qtz.nbins = 10, qtz.cutoff = 30) }
 }
 
 \details{
-Parameter "qtz.type" is Case Insensitive. It states the yype of quantizzation to be used to set bin
+Parameter "qtz.type" is Case Insensitive. It states the type of quantization to be used to set bin
 size for the barchart plotting the distribution of lines of code.
 Values:
 	\itemize{
@@ -47,5 +47,5 @@ Data frame containing the stats for each function in the input list/package:
 
 \author{RAdamant Development Team \email{team@r-adamant.org}}
 
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

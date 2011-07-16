@@ -18,5 +18,31 @@ corresponding input parameter:\cr
 }
 \author{RAdamant Development Team \email{team@r-adamant.org} }
 \seealso{\code{\link{ema}}}
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+\examples{
+
+## load a dataset provided by R 
+data(EuStockMarkets)
+# extract sample (log) time series 
+x = log(EuStockMarkets[500:800,2, drop=FALSE])
+# compute guppy moving averages
+gmma(x)
+
+\dontrun{
+# refine results of moving average
+setCurrentTheme(1)
+# single lag
+gmma(x, plot = TRUE)
+
+# calculate moving average for an object of class "fs"
+setCurrentTheme(2)
+data(ex_fs)
+# single lag
+gmma(ex_fs, plot=TRUE)
+}
+
+}
+
+
+
+

@@ -8,8 +8,8 @@
 
 \usage{Logger(message = "", from = deparse(sys.call(sys.parent())), 
 level = 1, line = NA, env = getOption("RAdamant"), 
-console = .getConsoleLogging(env = env), 
-logfile = .getLogFile(env = env)) }
+console = getConsoleLogging(env = env), 
+logfile = getLogFile(env = env)) }
 
 \arguments{ 
 \item{message}{ Message printed.}
@@ -23,5 +23,5 @@ logfile = .getLogFile(env = env)) }
 
 \author{RAdamant Development Team \email{team@r-adamant.org}}
 \note{TO BE COMPLETED}
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

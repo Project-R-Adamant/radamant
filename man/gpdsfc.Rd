@@ -8,5 +8,5 @@ trsh = 0, grid.size = 100, alpha = 0.01, ...) }
 grid.size}\item{alpha}{ alpha}\item{...}{ Further arguments to or from other methods.}}
 \author{RAdamant Development Team \email{team@r-adamant.org}}
 \note{TO BE COMPLETED}
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

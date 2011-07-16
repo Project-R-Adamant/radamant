@@ -12,5 +12,5 @@ JB.test(X, plot.hist=FALSE)
 \value{Matrix of Jaques-Brera scores and P-Value}
 \author{RAdamant Development Team \email{team@r-adamant.org} }
 \seealso{ \code{\link{kurt}}, \code{\link{skew}}}
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

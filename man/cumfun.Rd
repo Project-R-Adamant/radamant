@@ -25,5 +25,5 @@ replaced by -Inf (DEFAULT = FALSE)}
 of columns is NCOL(X)}
 \author{RAdamant Development Team \email{team@r-adamant.org} }
 \seealso{ \code{\link{lew}} }
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

@@ -16,5 +16,27 @@ column of X.
 }
 \author{RAdamant Development Team \email{team@r-adamant.org} }
 \seealso{\code{\link{sma}}}
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+
+\examples{
+	
+	## load a dataset provided by R 
+	data(EuStockMarkets)
+	# extract sample (log) time series 
+	x = log(EuStockMarkets[500:800,2, drop=FALSE])
+	# compute moving average
+	dma(x, fast.win=10, slow.win=35)
+	
+	\dontrun{
+	# refine results of moving average
+	setCurrentTheme(2)
+	dma(x, fast.win=10, slow.win=35, plot = TRUE)
+	}
+
+}
+
+
+
+
+
+

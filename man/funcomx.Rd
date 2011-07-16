@@ -59,5 +59,5 @@ func.comment.idx(tst, incode = incode, max.dgt=3)
 
 \author{RAdamant Development Team \email{team@r-adamant.org}}
 \note{TO BE COMPLETED}
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

@@ -6,5 +6,5 @@
 \arguments{\item{X}{ X}\item{xi}{ xi}\item{sigma}{ sigma}\item{trsh}{ trsh}}
 \author{RAdamant Development Team \email{team@r-adamant.org}}
 \note{TO BE COMPLETED}
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

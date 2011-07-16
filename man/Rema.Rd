@@ -21,5 +21,31 @@ Smoothing factors: lambda = 2/(win.size+1) and alpha.
 length win.size[i] of the corresponding column of X.}
 \author{ RAdamant Development Team \email{team@r-adamant.org} }
 \seealso{\code{\link{ema}}}
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+
+\examples{
+	
+## load a dataset provided by R 
+data(EuStockMarkets)
+# extract sample (log) time series 
+x = log(EuStockMarkets[500:800,2, drop=FALSE])
+# compute moving average with single lag
+rema(x, 10, alpha=0.5)
+# compute moving average with multiple lags
+rema(x, c(10,20), alpha=0.3)
+
+\dontrun{
+
+# calculate moving average for an object of class "fs"
+setCurrentTheme(2)
+data(ex_fs)
+# single lag
+rema(ex_fs, 30, plot=TRUE)
+# multiple lags
+rema(ex_fs, seq(5,50,10), plot=TRUE)
+}
+
+}
+
+
+

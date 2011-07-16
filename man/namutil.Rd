@@ -23,5 +23,5 @@ Default names are given if input has missing names.
 \value{A character sequence containing the column names of X, or a default set of names if X has no
 column names}
 \author{RAdamant Development Team \email{team@r-adamant.org} }
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

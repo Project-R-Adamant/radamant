@@ -9,5 +9,5 @@ plot = FALSE, ...) }
 padding}\item{type}{ type}\item{plot}{ LOGICAL. If TRUE plot is returned.}\item{...}{ Further
 arguments to or from other methods}}
 \author{RAdamant Development Team \email{team@r-adamant.org}}
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

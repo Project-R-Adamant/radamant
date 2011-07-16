@@ -9,5 +9,5 @@ df}\item{frange}{ frange}\item{par.names}{ par.names}\item{...}{ Further argumen
 methods.}}
 \author{RAdamant Development Team \email{team@r-adamant.org}}
 \note{TO BE COMPLETED}
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

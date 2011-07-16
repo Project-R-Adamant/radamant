@@ -33,5 +33,5 @@ input parameters: \cr
 input 'X' and initial condition 'init'.
 }
 \author{ RAdamant Development Team \email{team@r-adamant.org} }
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

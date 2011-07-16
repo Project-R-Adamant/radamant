@@ -1,16 +1,13 @@
 \name{croscf}
 
 \alias{cross.ccf}
-\alias{cross.ccf.default}
 
 \title{Cross correlation function}
-
 
 \description{Compute the cross correlation function for each pairs of variables (Yi Xj)}
 
 \usage{
-cross.ccf(Y, X, ...)
-\method{cross.ccf}{default}(Y, X, lag.max = 10, ci = 0.95, plot = TRUE, ...)
+cross.ccf(Y, X, lag.max = 10, ci = 0.95, plot = TRUE, ...)
 }
 
 
@@ -26,5 +23,5 @@ cross.ccf(Y, X, ...)
 
 \value{A list of Ny*Nx cross correlation objects of the class "cross.acf"}
 \author{ RAdamant Development Team \email{team@r-adamant.org} }
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

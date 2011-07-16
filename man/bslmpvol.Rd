@@ -15,5 +15,5 @@ sigma}\item{maty}{ maty}\item{yield}{ yield}\item{interval}{ interval}\item{calc
 calc.type}\item{opt.type}{ opt.type}}
 \author{RAdamant Development Team \email{team@r-adamant.org}}
 \note{TO BE COMPLETED}
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

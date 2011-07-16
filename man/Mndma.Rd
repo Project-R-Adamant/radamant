@@ -30,5 +30,36 @@ length win.size[i] of the corresponding column of X.
 \author{ RAdamant Development Team \email{team@r-adamant.org} }
 
 \seealso{\code{\link{sma}}}
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+\examples{
+## load a dataset provided by R 
+data(EuStockMarkets)
+# extract sample (log) time series 
+x = log(EuStockMarkets[500:800,2, drop=FALSE])
+# compute moving average with single lag
+mndma(x, 50)
+# compute moving average with multiple lags
+mndma(x, c(40,50,60))
+
+\dontrun{
+# refine results of moving average
+setCurrentTheme(2)
+# single lag
+mndma(x, 50, plot = TRUE)
+# multiple lags
+mndma(x, c(30,40,50), plot=TRUE)
+
+# calculate moving average for an object of class "fs"
+setCurrentTheme(2)
+data(ex_fs)
+# single lag
+mndma(ex_fs, 25, plot=TRUE)
+# multiple lags
+mndma(ex_fs, seq(5,25,5), plot=TRUE)
+}
+
+}
+
+
+
+

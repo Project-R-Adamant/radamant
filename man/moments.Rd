@@ -9,5 +9,5 @@
 \value{Matrix of moments}
 \author{RAdamant Development Team \email{team@r-adamant.org} }
 \seealso{\code{\link{JB.test}} , \code{\link{skew}} , \code{\link{kurt}} }
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

@@ -37,5 +37,31 @@ the corresponding column of X.
 
 \seealso{\code{\link{ama}}}
 
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+\examples{
+## load a dataset provided by R 
+data(EuStockMarkets)
+# extract sample (log) time series 
+x = log(EuStockMarkets[500:800,2, drop=FALSE])
+# compute moving average with single lag
+kama(x, fast.win=5, slow.win=20, lag=10:20)
+
+\dontrun{
+# refine results of moving average
+setCurrentTheme(1)
+# single lag
+# compute moving average with single lag
+kama(x, fast.win=5, slow.win=20, lag=10:20, plot=TRUE)
+
+# calculate moving average for an object of class "fs"
+setCurrentTheme(1)
+data(ex_fs)
+# single lag
+kama(ex_fs, fast.win=5, slow.win=20, lag=5, plot=TRUE)
+}
+
+}
+
+
+
+

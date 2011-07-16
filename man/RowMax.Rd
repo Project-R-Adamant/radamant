@@ -15,5 +15,5 @@ rowMin(X)
 }
 \value{A matrix NROW(X) by one, where each row is the max / min of the rows of X).}
 \author{RAdamant Development Team \email{team@r-adamant.org} }
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

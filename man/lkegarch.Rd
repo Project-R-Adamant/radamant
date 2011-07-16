@@ -8,5 +8,5 @@ order = c(alpha = 1, beta = 1), prob = c("norm", "ged", "t")) }
 order}\item{prob}{ prob}}
 \author{RAdamant Development Team \email{team@r-adamant.org}}
 \note{TO BE COMPLETED}
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

@@ -17,5 +17,5 @@ LjungBox(x, lags, plot.acf = FALSE)
 \item{plot.acf}{ LOGICAL. Plot ACF.}
 }
 
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

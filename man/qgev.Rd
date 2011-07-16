@@ -6,5 +6,5 @@
 \arguments{\item{P}{ P}\item{mu}{ mu}\item{xi}{ xi}\item{sigma}{ sigma}}
 \author{RAdamant Development Team \email{team@r-adamant.org}}
 \note{TO BE COMPLETED}
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

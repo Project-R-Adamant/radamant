@@ -29,10 +29,30 @@ panels:\cr
 \seealso{ \code{\link{cplot}} }
 
 \examples{
-# Compute Exponentioal Moving Average and plot results
-x = ema(rnorm(100), 10)
-plot(x)
+
+	# Compute Exponential Moving Average and plot results
+	x = ema(rnorm(100), 10)
+	
+	# Plot Multiple Moving Averages together using "" plotting class 
+	plot(x)
+	
+	## load a dataset provided by R 
+	data(EuStockMarkets)
+	# extract sample (log) time series 
+	x = log(EuStockMarkets[500:1000,2, drop=FALSE])
+	# set RAdamant theme (1 - Finance or 2 - Vanilla)
+	setCurrentTheme(1)
+	plot.Movav(cbind(kama(x),frama(x),ema(x, 10),gdema(x, 10),zlma(x, 10)) , x )
+	
+	# plot multiple moving average results from an object of class "fs"
+	data(ex_fs)
+	class(ex_fs)
+	x = ex_fs
+	# set RAdamant theme (1 - Finance or 2 - Vanilla)
+	setCurrentTheme(2)
+	plot.Movav(cbind(kama(x),frama(x),ema(x, 10),dema(x, 10),tema(x, 10)) , x )
+
 }
 
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

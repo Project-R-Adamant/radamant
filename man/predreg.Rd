@@ -8,11 +8,22 @@
 
 \usage{
 
-\method{predict}{reg}(object, newdata = NULL, ci = 0.95, mode = c("response", "link"),
-plot = FALSE, shaded = FALSE, xlabels = NULL, main = "Linear Model Prediction", col =
-getThemeAttr("col", exact = TRUE)[c(1, 2, 2)],
-shade.stripes = 1, shade.col = getThemeAttr("col", exact = TRUE)[2],
-shade.density = 40, shade.angle = 30, legend = NULL, ...) 
+\method{predict}{reg}(object
+	, newdata = NULL
+	, ci = 0.95
+	, mode = c("response", "link")
+	, plot = FALSE
+	, shaded = FALSE
+	, xlabels = NULL
+	, main = "Linear Model Prediction"
+	, col = getThemeAttr("col", exact = TRUE)[c(1, 2, 2)]
+	, shade.stripes = 1
+	, shade.col = getThemeAttr("col", exact = TRUE)[2]
+	, shade.density = 40
+	, shade.angle = 30
+	, legend = NULL
+	, ...
+	) 
 }
 
 \arguments{ \item{object}{ OBJECT of class "reg".}
@@ -33,5 +44,5 @@ shade.density = 40, shade.angle = 30, legend = NULL, ...)
 
 \author{RAdamant Development Team \email{team@r-adamant.org}}
 \note{TO BE COMPLETED}
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

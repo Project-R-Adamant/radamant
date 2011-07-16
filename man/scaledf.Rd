@@ -27,5 +27,5 @@ scalMin(X, lag = 1, padding = Inf, na.rm = FALSE, func = NULL)
 i]) for each column i of X. Number of rows depends on the na.rm parameter. Number of columns is
 NCOL(X)}
 \author{RAdamant Development Team \email{team@r-adamant.org} }
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

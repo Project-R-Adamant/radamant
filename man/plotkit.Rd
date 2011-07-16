@@ -21,12 +21,12 @@ type = getCurrentTheme()[["projection.type"]][1],
 lty = getCurrentTheme()[["projection.lty"]][1]) 
 
 draw.x.axis(X, base = NULL, xlabels = NULL, 
-theme.params = getCurrentTheme(), show.labels = TRUE) 
+theme.params = getCurrentTheme(), show.labels = TRUE, ...) 
 
 draw.x.title(xtitle = "", theme.params = getCurrentTheme()) 
 
 draw.y.axis(X, ylabels = NULL, theme.params = getCurrentTheme(), 
-side = 1, show.labels = TRUE) 
+side = 1, show.labels = TRUE, ...) 
 
 draw.y.title(ytitle = "", theme.params = getCurrentTheme(), side = 1) 
 }
@@ -51,6 +51,10 @@ draw.y.title(ytitle = "", theme.params = getCurrentTheme(), side = 1)
 \item{...}{ Further arguments to or from other methods.} 
 }
 
+\value{Void}
+
+\seealso{\code{\link{cplot}}}
+
 \author{ RAdamant Development Team \email{team@r-adamant.org} }
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

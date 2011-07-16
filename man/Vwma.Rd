@@ -23,5 +23,38 @@ length win.size[i] of the corresponding column of X.
 }
 \author{ RAdamant Development Team \email{team@r-adamant.org} }
 \seealso{\code{\link{sma}}}
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+\examples{
+	
+## load a dataset provided by RAdamant 
+data(ex_fs)
+# extract Close price and Volume
+x = ex_fs[,1]
+Vol = ex_fs[,5]
+# compute moving average with single lag
+vwma(x, Vol, 10)
+# compute moving average with multiple lags
+vwma(x, Vol, c(10,20))
+
+\dontrun{
+# refine results of moving average
+setCurrentTheme(2)
+# single lag
+vwma(x, Vol, 15, plot = TRUE)
+# multiple lags
+vwma(x, Vol, c(10,20), plot=TRUE)
+
+# calculate moving average for an object of class "fs"
+setCurrentTheme(1)
+data(ex_fs)
+# single lag
+vwma(ex_fs, Vol=NULL, 10, plot=TRUE, cex=0.7, rm.transient=FALSE)
+# multiple lags
+vwma(ex_fs, Vol=NULL, seq(5, 50, 10), plot=TRUE)
+
+}
+
+}
+
+
+

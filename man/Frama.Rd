@@ -34,6 +34,37 @@ the corresponding column of X.
 \author{ RAdamant Development Team \email{team@r-adamant.org} }
 	
 \seealso{\code{\link{ema}}}
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+
+\examples{
+## load a dataset provided by R 
+data(EuStockMarkets)
+# extract sample (log) time series 
+x = log(EuStockMarkets[500:800,2, drop=FALSE])
+# compute moving average with single lag
+frama(x, 20, tau=4.6)
+# compute moving average with multiple lags
+frama(x, c(40,50,60), tau=5.0)
+
+\dontrun{
+# refine results of moving average
+setCurrentTheme(2)
+# single lag
+frama(x, 20, tau=4.6, plot = TRUE)
+# multiple lags
+frama(x, c(10,15,30,50), tau = 4.0, plot=TRUE)
+
+# calculate moving average for an object of class "fs"
+setCurrentTheme(2)
+data(ex_fs)
+# single lag
+frama(ex_fs, 20, tau=4.6, plot = TRUE)
+# multiple lags
+frama(ex_fs, c(10,15,30,50), tau = 4.0, plot=TRUE)
+}
+
+}
+
+
+
 

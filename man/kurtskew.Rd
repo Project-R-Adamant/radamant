@@ -17,5 +17,5 @@ skew(X, pval = FALSE)
 \value{Matrix of Excess Kurtosis / Skewness and P-Value}
 \author{RAdamant Development Team \email{team@r-adamant.org} }
 \seealso{ \code{\link{JB.test}} }
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

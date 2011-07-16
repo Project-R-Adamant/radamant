@@ -37,5 +37,5 @@ exog = NULL, ...)
 \author{ RAdamant Development Team \email{team@r-adamant.org} }
 	
 \seealso{ \code{\link{Strvar.VecAr}}, \code{\link{fitted.VecAr}}  }
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

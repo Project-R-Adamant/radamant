@@ -25,5 +25,5 @@ It assigns three variables:\cr
 \value{VOID}
 \author{RAdamant Development Team \email{team@r-adamant.org} }
 \seealso{\code{\link{run}}, \code{\link{multirun}}}
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

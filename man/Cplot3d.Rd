@@ -12,14 +12,15 @@ main = "", xtitle = "", ytitle = "", ztitle = "",
 xlim = range(x) + 0.1*diff(range(x))*c(-1, 1),
 ylim = range(y) + 0.1*diff(range(y))*c(-1, 1), 
 zlim = range(z, na.rm = TRUE) + 0.1*diff(range(z, na.rm = TRUE))*c(-1, 1), 
-xlabels = NULL, ylabels = NULL,
-zlabels = NULL, pre = NULL, post = NULL, 
+pre = NULL, post = NULL, 
 theme.params = getCurrentTheme(),
 overrides = list(...), new.device = FALSE, 
 append = FALSE, axis = TRUE,
-show.labels = TRUE, show.xlabels = TRUE, 
-show.ylabels = TRUE, show.zlabels = TRUE
-, ...) 
+xlabels = NULL, ylabels = NULL,
+zlabels = NULL,
+show.xlabels = TRUE, show.ylabels = TRUE, 
+show.zlabels = TRUE, show.xticks = TRUE, show.yticks = TRUE,
+show.zticks = TRUE, ...) 
 }
 
 \arguments{ 
@@ -44,13 +45,15 @@ show.ylabels = TRUE, show.zlabels = TRUE
 \item{new.device}{ new.device}
 \item{append}{ append}
 \item{axis}{ axis}
-\item{show.labels}{ show.labels}
 \item{show.xlabels}{ show.xlabels}
 \item{show.ylabels}{ show.ylabels}
 \item{show.zlabels}{ show.zlabels}
+\item{show.xticks}{ show.xticks}
+\item{show.yticks}{ show.yticks}
+\item{show.zticks}{ show.zticks}
 \item{...}{ Further arguments to or from other methods}
 }
 
 \author{ RAdamant Development Team \email{team@r-adamant.org} }
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

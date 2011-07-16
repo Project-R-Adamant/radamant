@@ -14,7 +14,7 @@ type=c("garch","mgarch","tgarch","egarch"), prob=c("norm","ged","t"), ...)
 }
 
 \arguments{ 
-\item{x}{ Univariate time series, usaully returns}
+\item{x}{ Univariate time series, usually returns}
 \item{Y}{ Exogenous regressors for the Mean Equation}
 \item{order}{ Garch order}
 \item{type}{ Garch type.}
@@ -26,5 +26,5 @@ type=c("garch","mgarch","tgarch","egarch"), prob=c("norm","ged","t"), ...)
 
 \author{RAdamant Development Team \email{team@r-adamant.org}}
 \note{TO BE COMPLETED}
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

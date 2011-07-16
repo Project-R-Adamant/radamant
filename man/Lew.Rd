@@ -22,5 +22,5 @@ of rows depends on the na.rm parameter. Number of columns is NCOL(X)}
 \author{RAdamant Development Team \email{team@r-adamant.org} }
 \seealso{ \code{\link{cumSum}}, \code{\link{cumMin}}, 
 \code{\link{cumMax}}, \code{\link{cumSd}}, \code{\link{cumVar}}}
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

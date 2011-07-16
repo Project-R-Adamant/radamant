@@ -27,5 +27,5 @@ Appraisal}
 \author{ RAdamant Development Team \email{team@r-adamant.org} }
 \seealso{\code{\link{Sharpe}},  \code{\link{Treynor}}, \code{\link{Jensen}}, \code{\link{Appraisal}}
 }
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

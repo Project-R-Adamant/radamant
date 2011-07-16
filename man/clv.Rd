@@ -8,5 +8,5 @@ Low price.}\item{plot}{ LOGICAL. If TRUE plot is returned.}\item{...}{ Further a
 other methods.}}
 \author{RAdamant Development Team \email{team@r-adamant.org}}
 \note{TO BE COMPLETED}
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

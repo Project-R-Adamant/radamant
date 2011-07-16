@@ -13,9 +13,9 @@ VaRPtf(X, p = 0.05, weights = rep(1/NCOL(X), NCOL(X)), probf = c("norm","t"), df
 \arguments{
 \item{X}{ Input matrix/sequence. Sequences are treated as one column matrices.}
 \item{p}{ vector of probabilities (DEFAULT = 0.05)}
-\item{probf}{ probability dristribution, see Details}
+\item{probf}{ probability distribution, see Details}
 \item{weights}{ portfolio weigths (DEFAULT = rep(1/NCOL(X), NCOL(X)))}
-\item{df}{D egrees of freedom for the Student T distribution (DEFAULT = 4)}
+\item{df}{Degrees of freedom for the Student T distribution (DEFAULT = 4)}
 \item{...}{ Additional parameters for future development}
 }
 
@@ -30,5 +30,5 @@ VaRPtf(X, p = 0.05, weights = rep(1/NCOL(X), NCOL(X)), probf = c("norm","t"), df
 \author{RAdamant Development Team \email{team@r-adamant.org}}
 
 \note{TO BE COMPLETED}
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+

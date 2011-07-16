@@ -12,8 +12,8 @@ Management and Econometrics.}
 \tabular{ll}{
 Package: \tab RAdamant \cr
 Type: \tab Package \cr
-Version: \tab 0.7.1 \cr
-Date: \tab 2011-06-25 \cr
+Version: \tab 0.8.1 \cr
+Date: \tab 2011-07-11 \cr
 License: \tab GPL>=2 \cr
 LazyLoad: \tab yes \cr
 }
@@ -22,7 +22,5 @@ LazyLoad: \tab yes \cr
 RAdamant Development Team
 Maintainer: RAdamant Development Team <team@r-adamant.org>
 }
-\references{
-Farewell friend, I was a thousand times more evil than thou...
-}
+
 \keyword{package}
