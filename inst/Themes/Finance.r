@@ -95,6 +95,11 @@ col.main = "white"
 , axis.col = "#41547F"
 # x-Axis - Tick labels color.
 , xlab.col = "white"
+
+## x-axis cex
+, xlab.cex = 0.7
+
+
 # x-Axis - Number of tickmarks and labels.
 , x.ticks = 6
 # x-Axis - Tick labels text rotation (degrees).
@@ -168,6 +173,10 @@ col.main = "white"
 
 # y-Axis - Tick labels color.
 , ylab.col = "white"
+
+## y-axis cex
+, ylab.cex = 0.7
+
 # y-Axis - Number of tickmarks and labels.
 , y.ticks = 6
 # y-Axis - Tick labels text rotation (degrees).
