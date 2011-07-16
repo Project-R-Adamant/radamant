@@ -1,11 +1,11 @@
 Package: RAdamant
 Type: Package
 Title: Financial Technical Analysis and Risk Management
-Version: 0.7.1
-Date: 2011-07-02
+Version: 0.8.1
+Date: 2011-07-11
 Author: RAdamant Development Team
 Maintainer: RAdamant Development Team <team@r-adamant.org>
-Depends: R (>= 2.10.0), utils, grDevices
+Depends: R (>= 2.11.1), utils, grDevices
 Description: R-Adamant is a collection of functions and algorithms for processing of Financial Time Series, Risk Management and Econometrics.
 License: GPL>=2
 LazyLoad: yes
