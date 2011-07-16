@@ -104,7 +104,7 @@ cplot(X
 cplot(X
 	, main = "Four Random Time Series"
 	, xlabels = parse(text = Xlab)
-	, shaded = c(FALSE, TRUE)
+	, shaded = c(F, T)
 	# Theme overrides
 	, shade.angle = 45
 	)

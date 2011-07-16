@@ -12,13 +12,12 @@ lanczos(N, normalized = TRUE)
 
 \arguments{ 
 \item{N}{Window length.}
-\item{normalized}{LOGICAL. If TRUE (default), window is normalised to have unitary norm.}
+\item{normalised}{LOGICAL. If TRUE (default), window is normalised to have unitary norm.}
 }
 
 \value{An object of the class 'Window'. It is a simple sequence of N samples of the Lanczos window.}
 
 \examples{
-\dontrun{
 # Generate a Normalised Lanczos window of size 100
 x = lanczos(100)
 # Plot the window
@@ -35,7 +34,7 @@ cplot(cbind(x, y)
 	, type = c("l", "o") 
 	, xlab.srt = 0 
 	)
-}
+
 }
 
 \author{RAdamant Development Team \email{team@r-adamant.org}}

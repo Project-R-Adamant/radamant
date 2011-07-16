@@ -7,7 +7,7 @@ gauss(N, normalized = TRUE, sigma = 0.5)
 }
 \arguments{ 
 \item{N}{Window length.}
-\item{normalized}{LOGICAL. If TRUE (default), window is normalised to have unitary norm.}
+\item{normalised}{LOGICAL. If TRUE (default), window is normalised to have unitary norm.}
 \item{sigma}{Standard Deviation - Expansion factor. sigma <= 0.5.}
 }
 \value{An object of the class 'Window'. It is a simple sequence of N samples of the Gauss window.}

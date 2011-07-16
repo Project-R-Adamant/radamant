@@ -12,7 +12,7 @@ bartlet(N, normalized = TRUE)
 
 \arguments{ 
 \item{N}{Window length.}
-\item{normalized}{LOGICAL. If TRUE (default), window is normalised to have unitary norm.}
+\item{normalised}{LOGICAL. If TRUE (default), window is normalised to have unitary norm.}
 }
 
 \value{An object of the class 'Window'. It is a simple sequence of N samples of the Bartlet window.}

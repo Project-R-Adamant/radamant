@@ -14,7 +14,6 @@
 	, ytitle = ifelse(show.periodicity, "Periodicity", "Frequency") 
 	, plot3d = FALSE 
 	, overrides = list(...) 
-	, ...
 	)
 }
 
