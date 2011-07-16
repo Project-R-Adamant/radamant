@@ -274,16 +274,3 @@
 	# return likelihood value
 	sum(l, na.rm=TRUE)	
 }
-######### transform factorise data to weight of evidence #######
-".factor2woe" <- function(segm, woe){
-	RES = matrix(0, NROW(segm), NCOL(segm))
-	colnames(RES) = colnames(segm)
-	var = 1
-	while(var <= NCOL(segm)){
-		idx = which(!is.na(match(woe[ ,1], colnames(segm)[var])))
-		for(i in (idx))
-			RES[segm[ ,var] == woe[i ,2], var] = as.numeric(woe[i, 10])
-		var = var + 1
-	}
-	invisible(RES);
-}

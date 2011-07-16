@@ -733,7 +733,7 @@ plot.specgram = function(x
 					, col = theme.params[["colmap"]]
 					, xlab = ""
 					, ylab = ""
-					, axes = FALSE
+					, axes = F
 					, main = paste("Spectrogram of", x.names[n])
 					, col.main = theme.params[["col.main"]]
 					);
