@@ -29,8 +29,9 @@ recycle = function(X, V = length(X)) {
 #  A matrix V by 1 containing recycled entries of X
 #
 #######################################################################################################################
-SORT = function(x, decreasing = FALSE, ...){
+SORT = function(X, decreasing = FALSE, ...){
 	# Get Data dimension
+	Logger(message = "Get Data dimension", from = "SORT", line = 2, level = 1);
 	N = NROW(X);
 	V = NCOL(X);
 	if(is.null(dim(X)))
@@ -40,6 +41,7 @@ SORT = function(x, decreasing = FALSE, ...){
 		decreasing = recycle(decreasing, V);
 		
 	# Sort X
+	Logger(message = "Sort X", from = "SORT", line = 9, level = 1);
 	Xsort = matrix(NA, nrow = N, ncol = V);
 	colnames(Xsort) = get.col.names(X);
 		
@@ -47,9 +49,11 @@ SORT = function(x, decreasing = FALSE, ...){
 	while(v < V) {
 		v = v + 1;
 		# Sort the v-th column
+		Logger(message = "Sort the v-th column", from = "SORT", line = 15, level = 2);
 		Xsort[, v] = X[order(X[, v], decreasing = decreasing[v]), v];
 	}
 	# Return result
+	Logger(message = "Return result", from = "SORT", line = 18, level = 1);
 	Xsort
 }
 #######################################################################################################################
@@ -68,14 +72,17 @@ SORT = function(x, decreasing = FALSE, ...){
 #######################################################################################################################
 get.col.names = function(X, default = "X") {
     # Get column names
+    Logger(message = "Get column names", from = "get.col.names", line = 2, level = 1);
     X.names = colnames(X);
     # Assign default names if null
+    Logger(message = "Assign default names if null", from = "get.col.names", line = 4, level = 1);
     if(is.null(X.names)) {
         V = NCOL(X);
         X.names = paste(default, 1:V, sep = "");
     }
 	
 	# Check for columns with no name
+	Logger(message = "Check for columns with no name", from = "get.col.names", line = 9, level = 1);
 	noName.idx = which(nchar(X.names) == 0);
 	if(length(noName.idx) > 0)
 		X.names[noName.idx] = paste(default, 1:length(noName.idx), sep = "");
@@ -99,17 +106,21 @@ get.col.names = function(X, default = "X") {
 get.row.names = function(X, default = "") {
     if(is.array(X) || is.data.frame(X)) {
         # Get row names
+        Logger(message = "Get row names", from = "get.row.names", line = 3, level = 1);
         X.names = rownames(X);
     } else {
         # Get names
+        Logger(message = "Get names", from = "get.row.names", line = 6, level = 1);
         X.names = names(X);
     }
     # Assign default names if null
+    Logger(message = "Assign default names if null", from = "get.row.names", line = 9, level = 1);
     if(is.null(X.names)) {
         N = NROW(X);
         X.names = paste(default, 1:N, sep = "");
     }
 	# Check for rows with no name
+	Logger(message = "Check for rows with no name", from = "get.row.names", line = 14, level = 1);
 	noName.idx = which(nchar(X.names) == 0);
 	if(length(noName.idx) > 0)
 		X.names[noName.idx] = paste(default, 1:length(noName.idx), sep = "");
@@ -139,22 +150,27 @@ Lag = function(X, lag = 1, na.rm = FALSE, padding = NA) {
 		lag = lag[1];
 	}
 	# Data length	
+	Logger(message = "Data length	", from = "Lag", line = 6, level = 1);
 	N = NROW(X);
 	V = NCOL(X);
 	if(is.null(dim(X)))
 		dim(X) = c(N, V);
 	
 	# Matrix of lagged values
+	Logger(message = "Matrix of lagged values", from = "Lag", line = 11, level = 1);
 	res = matrix(padding, nrow = N, ncol = V);
 	
 	if(abs(lag) < N) {
 		# Compute indexes to select data
+		Logger(message = "Compute indexes to select data", from = "Lag", line = 14, level = 1);
 		if(lag >= 0) {
 			# Shift right
+			Logger(message = "Shift right", from = "Lag", line = 16, level = 1);
 			res.idx = (lag+1):N;
 			lag.idx = 1:(N-lag);
 		} else {
 			# Shift left
+			Logger(message = "Shift left", from = "Lag", line = 20, level = 1);
 			res.idx = 1:(N+lag);
 			lag.idx = (-lag+1):N;
 		}
@@ -169,13 +185,16 @@ Lag = function(X, lag = 1, na.rm = FALSE, padding = NA) {
 	}
 	
 	# clean memory
+	Logger(message = "clean memory", from = "Lag", line = 31, level = 1);
 	cleanup(keep = c("res", "na.rm", "V", "res.idx"));
 	# remove NAs
+	Logger(message = "remove NAs", from = "Lag", line = 33, level = 1);
 	if(na.rm) {
 		return(res[res.idx, , drop = FALSE]);
 	}
 	
 	# Return result
+	Logger(message = "Return result", from = "Lag", line = 37, level = 1);
 	res
 }
 #######################################################################################################################
@@ -208,28 +227,35 @@ MLag = function(X
 				) {
 	
 	# Data length	
+	Logger(message = "Data length	", from = "MLag", line = 2, level = 1);
 	N = NROW(X);
 	V = NCOL(X);
 	
 	mode = mode[1];
 	if(mode == "auto") {
 		# Vector of lags to be computed
+		Logger(message = "Vector of lags to be computed", from = "MLag", line = 7, level = 1);
 		lvec = sort(sign(lag) * min(autolag.start, abs(lag), na.rm = TRUE):abs(lag));
 	} else if(mode == "range") {
 		# Vector of lags to be computed
+		Logger(message = "Vector of lags to be computed", from = "MLag", line = 10, level = 1);
 		lvec = min(lag, na.rm = TRUE):max(lag, na.rm = TRUE);
 	} else {
 		# Vector of lags to be computed
+		Logger(message = "Vector of lags to be computed", from = "MLag", line = 13, level = 1);
 		lvec = sort(lag);
 	}
 		
 	# Number of lags to be computed
+	Logger(message = "Number of lags to be computed", from = "MLag", line = 16, level = 1);
 	Nlags = length(lvec);	
 	
 	# Matrix of lagged values
+	Logger(message = "Matrix of lagged values", from = "MLag", line = 18, level = 1);
 	res = matrix(padding, nrow = N, ncol = V * Nlags);
 	res.names = rep("", Nlags * V);
 	# lag series
+	Logger(message = "lag series", from = "MLag", line = 21, level = 1);
 	if(Nlags > 0) {
 		l = 0;
 		while (l < Nlags) {
@@ -246,6 +272,7 @@ MLag = function(X
 	
 	colnames(res) = res.names;
 	# clean memory
+	Logger(message = "clean memory", from = "MLag", line = 36, level = 1);
 	cleanup(keep = c("res", "na.rm", "lvec", "Nlags", "N"));
 	if(na.rm) {
 		rm.idx = c(seq(1, lvec[Nlags], len = max(0, lvec[Nlags], na.rm = TRUE))
@@ -257,6 +284,7 @@ MLag = function(X
 	}
 	
 	# Return result
+	Logger(message = "Return result", from = "MLag", line = 46, level = 1);
 	res
 	
 }
@@ -283,16 +311,20 @@ Diff = function(X, lag = 1, padding = NA, na.rm = FALSE) {
 	}
 	
 	# Number of columns	
+	Logger(message = "Number of columns	", from = "Diff", line = 6, level = 1);
 	V = NCOL(X);
 	lagged = MLag(X, lag = c(0, lag), mode = "selected", na.rm = na.rm, padding = padding);
 	# differenciate series
+	Logger(message = "differenciate series", from = "Diff", line = 9, level = 1);
 	res = lagged[, 1:V, drop = FALSE] - lagged[, V + 1:V, drop = FALSE];
 	colnames(res) = colnames(lagged)[V + 1:V];
 			
 	# clean memory
+	Logger(message = "clean memory", from = "Diff", line = 12, level = 1);
 	cleanup(keep = "res");
 		
 	# return results
+	Logger(message = "return results", from = "Diff", line = 14, level = 1);
 	res
 	
 }
@@ -318,33 +350,40 @@ Diff = function(X, lag = 1, padding = NA, na.rm = FALSE) {
 #######################################################################################################################
 MDiff = function(X, lag = 1, padding = NA, mode = c("auto", "range", "selected"), na.rm = FALSE) {
 	# Data length	
+	Logger(message = "Data length	", from = "MDiff", line = 2, level = 1);
 	N = NROW(X);
 	V = NCOL(X);
 	
 	mode = mode[1];
 	if(mode == "auto") {
 		# Vector of lags to be computed
+		Logger(message = "Vector of lags to be computed", from = "MDiff", line = 7, level = 1);
 		lvec = sort(sign(lag) * min(1, abs(lag), na.rm = TRUE):abs(lag));
 		zero.idx = c();
 	} else if(mode == "range") {
 		# Vector of lags to be computed
+		Logger(message = "Vector of lags to be computed", from = "MDiff", line = 11, level = 1);
 		lvec = min(lag, na.rm = TRUE):max(lag, na.rm = TRUE);
 		zero.idx = which(lvec == 0);
 	} else {
 		# Vector of lags to be computed
+		Logger(message = "Vector of lags to be computed", from = "MDiff", line = 15, level = 1);
 		lvec = sort(lag);
 		zero.idx = which(lvec == 0);
 	}
 	
 	# Remove lag zero
+	Logger(message = "Remove lag zero", from = "MDiff", line = 19, level = 1);
 	if(length(zero.idx) > 0)
 		lvec = lvec[-zero.idx];
 	
 		
 	# Number of lags to be computed
+	Logger(message = "Number of lags to be computed", from = "MDiff", line = 22, level = 1);
 	Nlags = length(lvec);	
 	
 	# Matrix of lagged values
+	Logger(message = "Matrix of lagged values", from = "MDiff", line = 24, level = 1);
 	res = matrix(padding, nrow = N, ncol = V * Nlags);
 	res.names = rep("", V * Nlags);
 	
@@ -364,6 +403,7 @@ MDiff = function(X, lag = 1, padding = NA, mode = c("auto", "range", "selected")
 	
 	colnames(res) = res.names;
 	# clean memory
+	Logger(message = "clean memory", from = "MDiff", line = 41, level = 1);
 	cleanup(keep = c("res", "na.rm", "lvec", "Nlags", "N"));
 	if(na.rm) {
 		rm.idx = c(seq(1, lvec[Nlags], len = max(0, lvec[Nlags], na.rm = TRUE))
@@ -375,6 +415,7 @@ MDiff = function(X, lag = 1, padding = NA, mode = c("auto", "range", "selected")
 	} 
 		
 	# return results
+	Logger(message = "return results", from = "MDiff", line = 51, level = 1);
 	res
 	
 }
@@ -394,14 +435,18 @@ MDiff = function(X, lag = 1, padding = NA, mode = c("auto", "range", "selected")
 #  A matrix of N-points returns of X. Number of rows depends on the na.rm parameter. Number of columns is NCOL(X)
 #
 #######################################################################################################################
-Ret = function(X, lag = 1, log = FALSE, na.rm = FALSE, plot = FALSE, ...) {
+Ret = function(X, lag = 1, log = FALSE, mode = "selected", na.rm = FALSE, plot = FALSE, ...) {
 	# Check if input is an instance of the Financial Series class
-	if(class(X) == "fs") {
+	Logger(message = "Check if input is an instance of the Financial Series class", from = "Ret", line = 2, level = 1);
+	if(any(class(X) == "fs")) {
 		# Take a copy
+		Logger(message = "Take a copy", from = "Ret", line = 4, level = 1);
 		Y = X;
 		# Process Close data
+		Logger(message = "Process Close data", from = "Ret", line = 6, level = 1);
 		X = Y[, "Close", drop = FALSE];
 		# Assign Column Name
+		Logger(message = "Assign Column Name", from = "Ret", line = 8, level = 1);
 		colnames(X) = attr(Y, "SName");
 	}
 	N = NROW(X);
@@ -411,18 +456,16 @@ Ret = function(X, lag = 1, log = FALSE, na.rm = FALSE, plot = FALSE, ...) {
 	
 	if (log) {
 		# log returns
-		res = Diff(X = log(X), lag = lag, na.rm = na.rm);
+		Logger(message = "log returns", from = "Ret", line = 16, level = 1);
+		res = MDiff(X = log(X), lag = lag, mode = mode, na.rm = na.rm);
 	} else {
-		if(na.rm) {
-			data.idx = ifelse(lag >= 0, lag+1, 1) : ifelse(lag >= 0, N, N+lag);
-		} else {
-			data.idx = 1:N;
-		}
 		# standard returns
-		res = X[data.idx, , drop = FALSE] / Lag(X, lag = lag, na.rm = na.rm) - 1;
+		Logger(message = "standard returns", from = "Ret", line = 19, level = 1);
+		res = MDiff(X, lag=lag , mode=mode, na.rm=na.rm) / MLag(X, lag = lag, mode = mode, na.rm=na.rm);
 	}
 	colnames(res) = paste(ifelse(log, "LogRet", "Ret"), colnames(res), sep = ".");
 	# Assign Class and Attributes
+	Logger(message = "Assign Class and Attributes", from = "Ret", line = 23, level = 1);
 	class(res) = "ret";
 	attr(res, "lag") = lag;
 	attr(res, "log") = log;
@@ -430,11 +473,14 @@ Ret = function(X, lag = 1, log = FALSE, na.rm = FALSE, plot = FALSE, ...) {
 	if(plot)
 		plot(res, ...)
 	# clean memory
+	Logger(message = "clean memory", from = "Ret", line = 29, level = 1);
 	cleanup(keep = "res");
 		
 	# Return result
+	Logger(message = "Return result", from = "Ret", line = 31, level = 1);
 	res
 }
+
 plot.ret = function(x
 					, style = c("line", "bar")
 					, xlabels = rownames(x)
@@ -445,31 +491,38 @@ plot.ret = function(x
 	
 	if(style == "bar") {
 		# Get colormap
+		Logger(message = "Get colormap", from = "plot.ret", line = 4, level = 1);
 		cmap = theme.params[["ret.col"]];
 		# Get number of color levels
+		Logger(message = "Get number of color levels", from = "plot.ret", line = 6, level = 1);
 		Ncols = length(cmap);
 		V = NCOL(x);
 		v = 0;
+		
 		while(v < V) {
 			v = v + 1;
 			# Quantize levels
+			Logger(message = "Quantize levels", from = "plot.ret", line = 12, level = 2);
 			col.lev = unique(quantile(x[, v], seq(0, 1, len = Ncols+1), na.rm = TRUE));
 			cols = cmap[cut(x[, v], col.lev, include.lowest = TRUE)];
 			# Bar plot
+			Logger(message = "Bar plot", from = "plot.ret", line = 15, level = 2);
 			if(v > 1)
-				dev.new();
+			if(dev.cur() == 1)
+				dev.new()
 			cplot(x[, v, drop = FALSE]
 					, theme.params = theme.params
 					, xlabels = xlabels
-					, col = cols
 					, multicolor = TRUE
-					, type = "h"
 					, legend.col = theme.params[["col"]]
+					, col = cols
+					, type = "h"
 					, ...
 				);
 		}
 	} else {
 		# Standard plot
+		Logger(message = "Standard plot", from = "plot.ret", line = 30, level = 1);
 		cplot(x
 				, theme.params = theme.params
 				, xlabels = xlabels
@@ -505,14 +558,18 @@ lew = function(X, lag = 0, padding = NA, na.rm = FALSE, func = NULL, is.cumulati
 	}
 		
 	# Lagged time series
+	Logger(message = "Lagged time series", from = "lew", line = 7, level = 1);
 	xlag = Lag(X, lag = lag, padding = padding, na.rm = na.rm);
 	
 	# Data length	
+	Logger(message = "Data length	", from = "lew", line = 9, level = 1);
 	N = NROW(xlag);
 	V = NCOL(xlag);
 	# Declare output
+	Logger(message = "Declare output", from = "lew", line = 12, level = 1);
 	res = matrix(padding, nrow = N, ncol = V);
 	# calculation window
+	Logger(message = "calculation window", from = "lew", line = 14, level = 1);
 	if(lag >= 0) {
 		window.idx = ifelse(na.rm, (lag+1), 1) : N;
 	} else {
@@ -522,6 +579,7 @@ lew = function(X, lag = 0, padding = NA, na.rm = FALSE, func = NULL, is.cumulati
 	
 	if(is.cumulative) {
 		# func is already cumulative (returns the same number of observations as its input)
+		Logger(message = "func is already cumulative (returns the same number of observations as its input)", from = "lew", line = 22, level = 1);
 		v = 0;
 		while(v < V) {
 			v = v + 1;
@@ -529,6 +587,7 @@ lew = function(X, lag = 0, padding = NA, na.rm = FALSE, func = NULL, is.cumulati
 		}
 	} else {
 		# func is not cumulative (returns only one observation)
+		Logger(message = "func is not cumulative (returns only one observation)", from = "lew", line = 29, level = 1);
 		v = 0;
 		while(v < V) {
 			v = v + 1;
@@ -540,9 +599,11 @@ lew = function(X, lag = 0, padding = NA, na.rm = FALSE, func = NULL, is.cumulati
 		}
 	}
 	# clean memory
+	Logger(message = "clean memory", from = "lew", line = 40, level = 1);
 	cleanup(keep = c("res"));
 	
 	# return result
+	Logger(message = "return result", from = "lew", line = 42, level = 1);
 	res
 }
 #######################################################################################################################
@@ -564,6 +625,7 @@ lew = function(X, lag = 0, padding = NA, na.rm = FALSE, func = NULL, is.cumulati
 cumMax = function(X, lag = 0, padding = NA, na.rm = FALSE) {
 	if(na.rm) {
 		# Replace NA with -Inf
+		Logger(message = "Replace NA with -Inf", from = "cumMax", line = 3, level = 1);
 		X[which(is.na(X))] = -Inf;
 	}
 	
@@ -589,6 +651,7 @@ cumMax = function(X, lag = 0, padding = NA, na.rm = FALSE) {
 cumMin = function(X, lag = 0, padding = NA, na.rm = FALSE) {
 	if(na.rm) {
 		# Replace NA with Inf
+		Logger(message = "Replace NA with Inf", from = "cumMin", line = 3, level = 1);
 		X[which(is.na(X))] = Inf;
 	}
 	
@@ -614,6 +677,7 @@ cumMin = function(X, lag = 0, padding = NA, na.rm = FALSE) {
 cumSum = function(X, lag = 0, padding = NA, na.rm = FALSE) {
 	if(na.rm) {
 		# Replace NA with 0
+		Logger(message = "Replace NA with 0", from = "cumSum", line = 3, level = 1);
 		X[which(is.na(X))] = 0;
 	}
 	
@@ -726,15 +790,19 @@ scalApply = function(X, lag = 0, padding = NA, na.rm = FALSE, func = NULL, ...) 
 	}
 		
 	# Lagged time series
+	Logger(message = "Lagged time series", from = "scalApply", line = 7, level = 1);
 	xlag = MLag(X, lag = c(0, lag), padding = padding, na.rm = na.rm, mode = "selected");
 	
 	# Data length	
+	Logger(message = "Data length	", from = "scalApply", line = 9, level = 1);
 	N = NROW(xlag);
 	V = NCOL(X);
 	# Declare output
+	Logger(message = "Declare output", from = "scalApply", line = 12, level = 1);
 	res = matrix(padding, nrow = N, ncol = V);
 	colnames(res) = get.col.names(X);
 	# calculation window
+	Logger(message = "calculation window", from = "scalApply", line = 15, level = 1);
 	if(lag >= 0) {
 		window.idx = ifelse(na.rm, (lag+1), 1) : N;
 	} else {
@@ -752,9 +820,11 @@ scalApply = function(X, lag = 0, padding = NA, na.rm = FALSE, func = NULL, ...) 
 		}
 	}
 	# clean memory
+	Logger(message = "clean memory", from = "scalApply", line = 31, level = 1);
 	cleanup(keep = c("res"));
 	
 	# return result
+	Logger(message = "return result", from = "scalApply", line = 33, level = 1);
 	res
 }
 #######################################################################################################################
@@ -832,4 +902,47 @@ rowMin = function(X) {
 		X = data.frame(X);
 	res = as.matrix(do.call("pmin", X));
 	res
+}
+# Recode variables with defined values
+recode = function(x, old, new){
+
+	# check if length of input old and new matches
+	Logger(message = "check if length of input old and new matches", from = "recode", line = 2, level = 1);
+	if(length(old) != length(new))
+		stop("The vectors of new and old values must be of equal lenght!")
+
+	l = length(x)
+	# create a temporary copy of the vector
+	Logger(message = "create a temporary copy of the vector", from = "recode", line = 6, level = 1);
+	temp = x
+	# loop through all the value of the variable and replace them with corresponding value
+	Logger(message = "loop through all the value of the variable and replace them with corresponding value", from = "recode", line = 8, level = 1);
+	for(i in 1:l){
+		if(old[i] %in% temp)
+			x[which(old[i] == temp)] = new[i] 
+	}
+	# clean memory
+	Logger(message = "clean memory", from = "recode", line = 13, level = 1);
+	cleanup("x")
+	# return recoded variable
+	Logger(message = "return recoded variable", from = "recode", line = 15, level = 1);
+	invisible(x)
+
+}
+# change the format of a data matrix or data frame
+reformat = function(X, classes){
+	
+	if(!is.data.frame(X))
+		X = as.data.frame(X, stringsAsFactors=FALSE)
+	nn = names(X)	
+	names(X) = NULL
+	
+	for(i in 1:NCOL(X)){
+		if(class(X[ ,i]) != classes[i]){
+			a = paste("as.", classes[i], sep="")
+			X[i] = do.call(a,(X[i]))
+		}
+	}
+	names(X) = nn
+	invisible(X)
 }

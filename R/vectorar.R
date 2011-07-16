@@ -1,41 +1,45 @@
 #############################################
 VecAr = function(X, ...) UseMethod("VecAr")
 
-VecAr.default = function(X, ar.lags = 1:2, type=c("const", "trend",
-"constrend", "none"), exog=NULL, ...){
+VecAr.default = function(X, ar.lags = 1:2, type=c("const", "trend", "constrend", "none"), exog=NULL, ...){
 	
 	#browser()
+	Logger(message = "browser()", from = "VecAr.default", line = 2, level = 1);
 	N = NROW(X)
 	C = NCOL(X)
 	
 	# VAR type
+	Logger(message = "VAR type", from = "VecAr.default", line = 5, level = 1);
 	type = match.arg(type)
-	# include constant term
 	if(type == "const"){
+		# include constant term
+		Logger(message = "include constant term", from = "VecAr.default", line = 8, level = 1);
 		Z = cbind(Const = rep(1, N), MLag(X, ar.lags, mode="selected"))
 	} 
-	# include trend
 	else if(type == "trend"){
+		# include trend
+		Logger(message = "include trend", from = "VecAr.default", line = 12, level = 1);
 		Z = cbind(Trend = seq(1,N), MLag(X, ar.lags, mode="selected"))
 	}
-	# include trend AND constant term
 	else if(type == "constrend"){
-		Z = cbind(Const = rep(1, N), Trend = seq(1,N), MLag(X, ar.lags,
-mode="selected"))
+		# include trend AND constant term
+		Logger(message = "include trend AND constant term", from = "VecAr.default", line = 16, level = 1);
+		Z = cbind(Const = rep(1, N), Trend = seq(1,N), MLag(X, ar.lags, mode="selected"))
 	}
-	# neither trend nor constant term
 	else if(type == "none"){
+		# neither trend nor constant term
+		Logger(message = "neither trend nor constant term", from = "VecAr.default", line = 20, level = 1);
 		Z = MLag(X, ar.lags, mode="selected")
 	}	
 	# include exogenous variables
+	Logger(message = "include exogenous variables", from = "VecAr.default", line = 23, level = 1);
 	if(!is.null(exog)){
 	
 		if(!is.matrix(exog))
 			exog = as.matrix(exog)
 		
 		if(NROW(exog) != N){
-			message("Variables have different number of rows! \n No computation
-performed.")
+			message("Variables have different number of rows! \n No computation performed.")
 			return(NULL)	
 		} else {
 		
@@ -47,6 +51,7 @@ performed.")
 	
 	
 	# allocate and store data matrix
+	Logger(message = "allocate and store data matrix", from = "VecAr.default", line = 35, level = 1);
 	
 	temp =  matrix(NA, N, K+C)
 	if(type == "const" || type == "trend"){
@@ -66,11 +71,13 @@ performed.")
 		temp[ ,(C+1):NCOL(temp)] = Z
 	}
 	# estimate parameters
+	Logger(message = "estimate parameters", from = "VecAr.default", line = 51, level = 1);
 	est = lm(X ~ -1 + ., data = as.data.frame(Z))
 	Results = vector("list", 2)
 	names(Results) = c("Results", "Info_Criteria")
 	Results[[1]] = est
 	# Information statistics
+	Logger(message = "Information statistics", from = "VecAr.default", line = 56, level = 1);
 	ee = resid(est)
 	p = max(ar.lags)
 	res2 = matrix(NA, 6, 1)
@@ -82,6 +89,7 @@ performed.")
 	res2[5, ] = log(det(crossprod(ee) / N)) + (2*p/N)
 	res2[6, ] = log(det(crossprod(ee) / N)) + (2*p/N) + (p/N) * (log(N) - 2)
 	#res2[4, ] = det( crossprod(resid(est)) / (N-K) )
+	Logger(message = "res2[4, ] = det( crossprod(resid(est)) / (N-K) )", from = "VecAr.default", line = 67, level = 1);
 	Results[[2]] = res2
 	
 	class(Results) = "VecAr"
@@ -103,13 +111,14 @@ print.VecAr = function(x, ...){
 	K = attr(x, "nser")
 	
 	# Model output in formula
+	Logger(message = "Model output in formula", from = "print.VecAr", line = 4, level = 1);
 	row = matrix("", NCOL(cc), 1)
 	rownames(row) = colnames(cc)
 	for(i in 1:NCOL(cc)){
-		row[i, ] = paste(paste(paste("(",round(cc[,i],5), ")", sep=""),
-rownames(cc), sep = "*"), collapse = " + ")
+		row[i, ] = paste(paste(paste("(",round(cc[,i],5), ")", sep=""), rownames(cc), sep = "*"), collapse = " + ")
 	}
 	## Fitting statistics
+	Logger(message = "Fitting statistics", from = "print.VecAr", line = 10, level = 1);
 	stats = matrix(NA, 3, K)
 	rownames(stats) = c("Sigma", "R.Sqr", "Adj.R.Sqr")
 	colnames(stats) = colnames(cc)
@@ -118,6 +127,7 @@ rownames(cc), sep = "*"), collapse = " + ")
 		stats[ ,k] = c(temp$sigma, temp$r.squared, temp$adj.r.squared)
 	}
 	# F-Statistics
+	Logger(message = "F-Statistics", from = "print.VecAr", line = 18, level = 1);
 	ff = matrix(NA, 4, K)
 	rownames(ff) = c("F-Stat", "DF_num", "DF_den","p-value")
 	colnames(ff) = colnames(cc)
@@ -132,6 +142,7 @@ rownames(cc), sep = "*"), collapse = " + ")
 	print(x[[2]])
 	cat(rep("=", 20), "\n", sep="")
 	## print results
+	Logger(message = "print results", from = "print.VecAr", line = 31, level = 1);
 	for(i in 1:NCOL(cc)){
 	
 		cat(rep("=", 40), "\n",sep="")
@@ -139,8 +150,7 @@ rownames(cc), sep = "*"), collapse = " + ")
 		cat(rep("=", 40), "\n\n", sep="")
 		cat("  ", paste(rownames(row)[i], row[i,], sep=" = "), "\n\n")
 		cat("Fitting statistics: \n")
-		cat(" ",paste(rownames(stats), "=", round(stats[,i], 5), collapse="; "),
-"\n")
+		cat(" ",paste(rownames(stats), "=", round(stats[,i], 5), collapse="; "), "\n")
 		cat(rep(" ", 20), "\n", sep="")
 		cat("F-Statistics: \n")
 		cat(paste(rownames(ff), "=", round(ff[,i], 5), collapse="; "), "\n\n\n")
@@ -152,19 +162,23 @@ rownames(cc), sep = "*"), collapse = " + ")
 
 Strvar.VecAr = function(X, A=NULL, B=NULL, inter=FALSE, ...){
 	if(class(X) != "VecAr"){
-		cat(" \'~\' Ops! Argument X must be an objekt of class \"VecAr\" ",
-"\n")
+		cat(" \'~\' Ops! Argument X must be an objekt of class \"VecAr\" ", "\n")
 		return(NULL)
 	}
 	# series names
+	Logger(message = "series names", from = "Strvar.VecAr", line = 6, level = 1);
 	nn = colnames(X[[1]][[1]])
 	# get number of series
+	Logger(message = "get number of series", from = "Strvar.VecAr", line = 8, level = 1);
 	K = attr(X, "nreg") 
 	# get number of observations
+	Logger(message = "get number of observations", from = "Strvar.VecAr", line = 10, level = 1);
 	N = attr(X, "nobs")
 	# get number of parameters
+	Logger(message = "get number of parameters", from = "Strvar.VecAr", line = 12, level = 1);
 	P = attr(X, "npar")
 	# get denominator df
+	Logger(message = "get denominator df", from = "Strvar.VecAr", line = 14, level = 1);
 	df = N - P 
 	if(inter){
 		A = B = matrix(0, K, K)
@@ -172,6 +186,7 @@ Strvar.VecAr = function(X, A=NULL, B=NULL, inter=FALSE, ...){
 		B = edit(B)
 	}
 	# check input matrixes A and B
+	Logger(message = "check input matrixes A and B", from = "Strvar.VecAr", line = 21, level = 1);
 	if(is.null(A))
 		A = diag(1, K)
 	if(is.null(B))
@@ -188,10 +203,13 @@ Strvar.VecAr = function(X, A=NULL, B=NULL, inter=FALSE, ...){
 		return(NULL)
 	}
 	# get residual series
+	Logger(message = "get residual series", from = "Strvar.VecAr", line = 37, level = 1);
 	ee = resid(X[[1]])
 	# calculate RSS
+	Logger(message = "calculate RSS", from = "Strvar.VecAr", line = 39, level = 1);
 	rss = crossprod(ee) / (df)
 	# number of pars to estimate
+	Logger(message = "number of pars to estimate", from = "Strvar.VecAr", line = 41, level = 1);
 	npars = sapply(M, function(x) length(which(is.na(x))))
 	if(sum(npars) == 0){
 		cat("\'~\' I have nothing to optimise!", "\n")
@@ -201,31 +219,38 @@ Strvar.VecAr = function(X, A=NULL, B=NULL, inter=FALSE, ...){
 	pB = npars[2]
 	ctyp = any(npars == 0) 
 	# check identification condition
+	Logger(message = "check identification condition", from = "Strvar.VecAr", line = 50, level = 1);
 	(ctyp*2+1) * K^2 - sum(npars) < (ctyp*K^2) + K * (K-1) / 2
 	# set starting values
+	Logger(message = "set starting values", from = "Strvar.VecAr", line = 52, level = 1);
 	start = rep(0.1, sum(npars))
 	
 	# get pars position in A
+	Logger(message = "get pars position in A", from = "Strvar.VecAr", line = 54, level = 1);
 	idp = lapply(M, function(x) which(is.na(x), TRUE))
 	# log likelihood
+	Logger(message = "log likelihood", from = "Strvar.VecAr", line = 56, level = 1);
 	ll = function(start){
 	
 		# put starting values in matrix A
+		Logger(message = "put starting values in matrix A", from = "Strvar.VecAr", line = 58, level = 1);
 		M[[1]][idp$A] = head(start, pA)
 		M[[2]][idp$B] = tail(start, pB)
 		BI = solve(M[[2]])
 		A = M[[1]]
 		B = M[[2]]
-		(K*N/2) * log(2*pi) - (N/2) * (log(det(A)^2) - log(det(B)^2) -
-sum(diag(t(A) %*% crossprod(BI) %*% A %*% rss)))
+		(K*N/2) * log(2*pi) - (N/2) * (log(det(A)^2) - log(det(B)^2) - sum(diag(t(A) %*% crossprod(BI) %*% A %*% rss)))
 	}
 	# optmise parameters
+	Logger(message = "optmise parameters", from = "Strvar.VecAr", line = 66, level = 1);
 	optpar = optim(start, ll, hessian=TRUE)
 	Par = list(head(optpar$par, pA), tail(optpar$par, pB))
 	# put estimated parameters in M
+	Logger(message = "put estimated parameters in M", from = "Strvar.VecAr", line = 69, level = 1);
 	M[[1]][idp[[1]]] = Par[[1]]
 	M[[2]][idp[[2]]] = Par[[2]]
 	# get SIGMA A
+	Logger(message = "get SIGMA A", from = "Strvar.VecAr", line = 72, level = 1);
 	SigmaA = SigmaB = matrix(0, K, K)
 	
 	if (!(is.null(optpar$hessian))){
@@ -234,6 +259,7 @@ sum(diag(t(A) %*% crossprod(BI) %*% A %*% rss)))
 		SigmaB[idp$B] = tail(ss, pB)
 	}	
 	# get SIGMA U
+	Logger(message = "get SIGMA U", from = "Strvar.VecAr", line = 79, level = 1);
 	AI = solve(M$A)
 	SigmaU = AI %*% crossprod(M$B) %*% t(AI)
 	dimnames(A) = dimnames(SigmaA) = dimnames(SigmaU) = list(nn,nn)
@@ -249,6 +275,7 @@ fitted.VecAr = function(object, Coefs, ar.lags, ...){
 	resid = xx - fitt
 	
 	# list of results
+	Logger(message = "list of results", from = "fitted.VecAr", line = 5, level = 1);
 	res = vector("list", 2)
 	names(res) = c("Fitted", "Residuals")
 	res[[1]] = fitt 
@@ -259,14 +286,15 @@ fitted.VecAr = function(object, Coefs, ar.lags, ...){
 ## GRANGER CAUSALITY TEST ##
 GrangCas.VecAr = function(X, cause=NULL, ...){
 	if(class(X) != "VecAr"){
-		cat(" \'~\' Ops! Argument X must be an objekt of class \"VecAr\" ",
-"\n")
+		cat(" \'~\' Ops! Argument X must be an objekt of class \"VecAr\" ", "\n")
 		return(NULL)
 	}
 	# series names
+	Logger(message = "series names", from = "GrangCas.VecAr", line = 6, level = 1);
 	nn = colnames(coef(X[[1]]))
 	
 	# check cause
+	Logger(message = "check cause", from = "GrangCas.VecAr", line = 8, level = 1);
 	if(is.null(cause)){
 		cat(" \'~\' Ops! The Cause variable is not specified!", "\n")
 		return(NULL)
@@ -283,6 +311,7 @@ GrangCas.VecAr = function(X, cause=NULL, ...){
 	cvar = vcov((X[[1]]),  use="na.or.complete")
 	
 	# results matrix
+	Logger(message = "results matrix", from = "GrangCas.VecAr", line = 21, level = 1);
 	res = matrix(NA, lc, 3)
 	colnames(res) = c("Wald_Stat", "DF", "P-value")
 	rownames(res) = paste(cause, "-> .", sep=" ")
@@ -293,25 +322,23 @@ GrangCas.VecAr = function(X, cause=NULL, ...){
 		mr = which(gsub("_[[:digit:]]", "", rownames(coefs)) %in% cause[i])
 		
 		# create restrictions matrix
+		Logger(message = "create restrictions matrix", from = "GrangCas.VecAr", line = 28, level = 2);
 		R <- diag(length(coefs))[mr, ]
 		
 		# quadratic form
+		Logger(message = "quadratic form", from = "GrangCas.VecAr", line = 30, level = 2);
 		qf <- R %*% cvar %*% t(R)
 		# Wald statistic
-		wald = t(R %*% as.vector(coefs)) %*% solve(qf) %*% (R %*%
-as.vector(coefs))
-		
+		Logger(message = "Wald statistic", from = "GrangCas.VecAr", line = 32, level = 2);
+		wald = t(R %*% as.vector(coefs)) %*% solve(qf) %*% (R %*% as.vector(coefs))
 		# results
+		Logger(message = "results", from = "GrangCas.VecAr", line = 34, level = 2);
 		res[i ,1] = wald 
 		res[i ,2] = NROW(R)
 		res[i ,3] = 1 - pchisq(wald, NROW(R))
-		
 		i = i + 1
-	 
 	}
-	
 	class(res) = "GrangCas"
-	
 	res
 }
 print.GrangCas = function(x, ...){
@@ -322,35 +349,38 @@ print.GrangCas = function(x, ...){
 PHI.VecAr = function(X, steps, ortho=FALSE, ...){
 	Lag = attr(X, "Lag")
 	type = attr(X, "Type")
-	
 	# get dimensions
+	Logger(message = "get dimensions", from = "PHI.VecAr", line = 4, level = 1);
 	i = steps + 1
-	K =
-attr(X, "nser")
-
+	K = attr(X, "nser")
 	# index to consider constant and/or trend 
+	Logger(message = "index to consider constant and/or trend ", from = "PHI.VecAr", line = 7, level = 1);
 	if(type == "const" || type == "trend"){
 		# get array of estimated coefficients
+		Logger(message = "get array of estimated coefficients", from = "PHI.VecAr", line = 9, level = 1);
 		A = array(t(coef(X[[1]])[-1,]), dim=c(K, K, steps))
 	}
-	
 	else if(type == "constrend"){
 		# get array of estimated coefficients
+		Logger(message = "get array of estimated coefficients", from = "PHI.VecAr", line = 13, level = 1);
 		A = array(t(coef(X[[1]])[-(1:2),]), dim=c(K, K, steps))
 	}
-	
 	else if(type == "none"){	
 		# get array of estimated coefficients
+		Logger(message = "get array of estimated coefficients", from = "PHI.VecAr", line = 17, level = 1);
 		A = array(t(coef(X[[1]])), dim=c(K, K, steps))
 	}
 	# adjust array A for number of steps
+	Logger(message = "adjust array A for number of steps", from = "PHI.VecAr", line = 20, level = 1);
 	if(steps > Lag)
 		A[, , steps:(steps-Lag+2)] = 0
 	# array of PHI coefficients
+	Logger(message = "array of PHI coefficients", from = "PHI.VecAr", line = 23, level = 1);
 	PHI = array(0, dim=c(K, K, i+i-1))
 	PHI[,,i] = diag(K)
 	s = i+1
 	# calculate PHI recursively
+	Logger(message = "calculate PHI recursively", from = "PHI.VecAr", line = 27, level = 1);
 	while(s <= dim(PHI)[3]){
  		temp = matrix(0,K,K)
 		for(m in 1:dim(A)[3])
@@ -358,41 +388,34 @@ attr(X, "nser")
 		PHI[,,s] = temp
 		s = s+1
 	}
-	
 	phi = PHI[,,-(1:(i-1))]
-	
 	if(ortho){
-			
 		# get number of observations
+		Logger(message = "get number of observations", from = "PHI.VecAr", line = 37, level = 1);
 		N = attr(X, "nobs")
 		# get number of parameters
+		Logger(message = "get number of parameters", from = "PHI.VecAr", line = 39, level = 1);
 		P = attr(X, "npar")
 		# get denominator df
-		df = N -
-P - K + 1
-
+		Logger(message = "get denominator df", from = "PHI.VecAr", line = 41, level = 1);
+		df = N - P - K + 1
 		SE = array(NA, dim=c(K, K, steps))
 		se =crossprod(resid(X[[1]])) / df
-	
 		chse = t(chol(se))
-	
 		PHI2 =array(NA, dim=dim(phi))
-
 		j = 1
 		while(j <=dim(phi)[3]){
 			PHI2[,,j] = phi[,,j] %*% chse 	
-			j = j +
-1
+			j = j + 1
 		}
-	
 		# return array with calculated PHI orthogonal coefficients
+		Logger(message = "return array with calculated PHI orthogonal coefficients", from = "PHI.VecAr", line = 52, level = 1);
 		return(PHI2)	
-	
 	} else {
 		# return array withcalculated PHI coefficients
+		Logger(message = "return array withcalculated PHI coefficients", from = "PHI.VecAr", line = 55, level = 1);
 		return(phi)
 	}	
-
 }
 
 ## FORECAST STANDARD ERROR ##
@@ -400,10 +423,13 @@ P - K + 1
 FSE.VecAr = function(X, steps, ...){
 	K = attr(X, "nser")
 	# get number of observations
+	Logger(message = "get number of observations", from = "FSE.VecAr", line = 3, level = 1);
 	N = attr(X, "nobs")
 	# get number of parameters
+	Logger(message = "get number of parameters", from = "FSE.VecAr", line = 5, level = 1);
 	P = attr(X, "npar")
 	# get denominator df
+	Logger(message = "get denominator df", from = "FSE.VecAr", line = 7, level = 1);
 	df = N - P - K + 1
 	SE = array(NA, dim=c(K, K, steps))
 	P = PHI.VecAr(X, steps)
@@ -411,6 +437,7 @@ FSE.VecAr = function(X, steps, ...){
 	SE[,,1] = se
 	s = 2
 	# calculate forecast standard error recursively
+	Logger(message = "calculate forecast standard error recursively", from = "FSE.VecAr", line = 14, level = 1);
 	while(s <= steps){
  		temp = matrix(0,K,K)
 		for(m in 1:(s-1))
@@ -437,8 +464,8 @@ predict.VecAr = function(object, steps=5, CI=0.95, viewby=c("vars","step"), ...)
 	N = attr(object, "nobs")
 	Lag = attr(object, "Lag") 
 	type = attr(object, "Type")
-	# index to consider constant and/or trend and get the last row of data
-matrix
+	# index to consider constant and/or trend and get the last row of data matrix
+	Logger(message = "index to consider constant and/or trend and get the last row of data matrix", from = "predict.VecAr", line = 8, level = 1);
 	if(type == "const" || type == "trend"){
 		pred = dm[N, -1]
 		ct = dm[N, 1]
@@ -454,6 +481,7 @@ matrix
 		ct = NULL
 	}
 	# iteration to calculate steps
+	Logger(message = "iteration to calculate steps", from = "predict.VecAr", line = 21, level = 1);
 	if(steps == 1){
 		
 		res = c(ct, pred[-( length(pred):(length(pred)-K+1))]) %*% cc
@@ -474,20 +502,19 @@ matrix
 	viewby = match.arg(viewby)
 	
 	# display list of results either by variable or step
+	Logger(message = "display list of results either by variable or step", from = "predict.VecAr", line = 37, level = 1);
 	if(viewby == "vars"){
 		RES = vector("list", K)
 		names(RES) = colnames(res)
 		for(i in 1:K){
-			RES[[i]] = cbind( res[,i] , res[,i] - LV[,i] , res[,i] + LV[,i],
-LV[,i] )
+			RES[[i]] = cbind( res[,i] , res[,i] - LV[,i] , res[,i] + LV[,i], LV[,i] )
 			colnames(RES[[i]]) = c("Var_Fst", "Lower", "Upper", "Conf")
 		}
 	} else {
 		RES = vector("list", steps)
 		names(RES) = rownames(res)
 		for(i in 1:steps){
-			RES[[i]] = cbind( res[i,] , res[i,] - LV[i,] , res[i,] + LV[i,],
-LV[i,]  )
+			RES[[i]] = cbind( res[i,] , res[i,] - LV[i,] , res[i,] + LV[i,], LV[i,]  )
 			colnames(RES[[i]]) = c("Var_Fst", "Lower", "Upper", "Conf")
 		}
 	}
@@ -496,65 +523,48 @@ LV[i,]  )
 
 ## IMPULSE RESPONSE FUNCTION ##
 IRS.VecAr = function(X, imp, resp=NULL, steps=5, cum=TRUE, ortho=FALSE, ...){
-	
 	if(class(X) != "VecAr"){
-		cat(" \'~\' Ops! Argument
-X must be an objekt of class \"VecAr\" ", "\n")
+		cat(" \'~\' Ops! Argument X must be an objekt of class \"VecAr\" ", "\n")
 		return(NULL)
 	}
-
 	#get series name
+	Logger(message = "get series name", from = "IRS.VecAr", line = 6, level = 1);
 	yn = colnames(coef(X[[1]]))	
-	
 	# check cause
+	Logger(message = "check cause", from = "IRS.VecAr", line = 8, level = 1);
 	if(is.null(imp)){
-		cat(" \'~\' Ops! The Impulse variable(s) is
-not specified!", "\n")
+		cat(" \'~\' Ops! The Impulse variable(s) is not specified!", "\n")
 		return(NULL)
 	} else if(!all(imp %in% yn)) {
-		cat(" \'~\' Ops! The Impulse variable does not esist",
-"\n")
-		cat("What abbout chosing one of these? \'_\'",
-"\n")
+		cat(" \'~\' Ops! The Impulse variable does not esist", "\n")
+		cat("What abbout chosing one of these? \'_\'", "\n")
 		print(yn)
 		return(NULL)
 	} 
-
 	# assign default Response variables
+	Logger(message = "assign default Response variables", from = "IRS.VecAr", line = 18, level = 1);
 	if(is.null(resp)){
 		resp = yn[-match(imp,yn)]	
 	} 
-
 	# get coefficient PHI
+	Logger(message = "get coefficient PHI", from = "IRS.VecAr", line = 22, level = 1);
 	P = PHI.VecAr(X, steps, ortho)
-
 	dimnames(P) = list(yn, yn, NULL)
-
 	li = length(imp)
 	IRS = vector("list", li)
-
 	i = 1
 	while(i <= li){
-		
 		if(cum){
-			
 			if(length(resp) == 1){
-				
 				IRS[[i]] = cumsum(t(P[resp, imp[i], ]))
 			} else {
-				
 				IRS[[i]] = apply(t(P[resp, imp[i], ]), 2, cumsum)
 			}
-		
 		} else {
-	
-			IRS[[i]] = t(P[resp, imp[i], ])
-		}
-	
+			IRS[[i]] = t(P[resp, imp[i],])
+		}	
 		i = i + 1		
 	}
-	
 	IRS
-
 }
 

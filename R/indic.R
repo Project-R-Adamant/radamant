@@ -65,9 +65,11 @@ pfe = function(X, lag=9, corr_fact=200, plot=FALSE, ...){
 		colnames(Close) = attr(X, "SName");
 	}
 	# series name
+	Logger(message = "series name", from = "pfe", line = 7, level = 1);
 	name = deparse(substitute(X))
 	
 	# convert to matrix and apply names
+	Logger(message = "convert to matrix and apply names", from = "pfe", line = 9, level = 1);
 	if(!is.matrix(X)){
 		X = as.matrix(X)
 		colnames(X) =  name
@@ -143,9 +145,11 @@ absrs = function(X, lag=14, na.rm=FALSE, plot=FALSE, ...){
 		colnames(Close) = attr(X, "SName");
 	}
 	# series name
+	Logger(message = "series name", from = "absrs", line = 7, level = 1);
 	name = deparse(substitute(X))
 	
 	# convert to matrix and apply names
+	Logger(message = "convert to matrix and apply names", from = "absrs", line = 9, level = 1);
 	if(!is.matrix(X)){
 		X = as.matrix(X)
 		colnames(X) =  name
@@ -153,12 +157,15 @@ absrs = function(X, lag=14, na.rm=FALSE, plot=FALSE, ...){
 		colnames(X) =  name
 	}	
 	# get vector of performances
+	Logger(message = "get vector of performances", from = "absrs", line = 16, level = 1);
 	ret = Perf(X, 1, FALSE)
 	
 	# calculate moving averages on two conditional vectors
+	Logger(message = "calculate moving averages on two conditional vectors", from = "absrs", line = 18, level = 1);
 	greater = ema(ret[ret>=0], lag)
 	lower = ema(ret[ret<0], lag)
 	# fill the gap length between vectors with NAs
+	Logger(message = "fill the gap length between vectors with NAs", from = "absrs", line = 21, level = 1);
 	cle = length(greater) - length(lower)
 	if(cle<0){
 		greater = c( rep(NA,abs(cle)), greater)
@@ -197,9 +204,11 @@ rsi = function(X, lag = 5, plot=FALSE, ...){
 		colnames(Close) = attr(X, "SName");
 	}
 	# series name
+	Logger(message = "series name", from = "rsi", line = 7, level = 1);
 	name = deparse(substitute(X))
 	
 	# convert to matrix and apply names
+	Logger(message = "convert to matrix and apply names", from = "rsi", line = 9, level = 1);
 	if(!is.matrix(X)){
 		X = as.matrix(X)
 		colnames(X) =  name
@@ -207,6 +216,7 @@ rsi = function(X, lag = 5, plot=FALSE, ...){
 		colnames(X) =  name
 	}	
 	# calculate index based on absolute relative strenght
+	Logger(message = "calculate index based on absolute relative strenght", from = "rsi", line = 16, level = 1);
 	res = 100 * ( 1 / (1 + absrs(X, lag)) )
 	class(res) = "oscil";
 	attr(res, "type") = "ABSRS";
@@ -383,8 +393,10 @@ kelt = function(Close, High, Low, mult=2, plot=FALSE, ...){
 	res = matrix(0, length(Close), 3);
 	colnames(res) = c("Lower", "EMA_20 Close_Price", "Upper");
 	# compute average true range
+	Logger(message = "compute average true range", from = "kelt", line = 11, level = 1);
 	av_tr = trf(Close, Low, High, 10)
 	# compute expoential moving average
+	Logger(message = "compute expoential moving average", from = "kelt", line = 13, level = 1);
 	smooth = ema(Close, 20)	
 	res[,1] = smooth - (mult * av_tr) 
 	res[,2] = smooth
@@ -429,10 +441,13 @@ erf = function(Close, High=NULL, Low=NULL, lag=13, plot=FALSE, ...){
 	res = matrix(0,length(Close),3);
 	colnames(res)=c("Bear_Power", "Close_Price", "Bull_Power");
 	# Bull Power
+	Logger(message = "Bull Power", from = "erf", line = 11, level = 1);
 	res[,3] = High - ema(Close, lag)
 	# Bear_Power
+	Logger(message = "Bear_Power", from = "erf", line = 13, level = 1);
 	res[,1] = Low - ema(Close, lag)
 	# Closing price
+	Logger(message = "Closing price", from = "erf", line = 15, level = 1);
 	res[,2] = Close
 	class(res) = "oscil";
 	attr(res, "type") = "kelt";
@@ -467,6 +482,7 @@ erfi = function(X, Volume, lag=13, plot=FALSE, ...){
 		colnames(Close) = attr(Y, "SName");
 	}
 	# force index
+	Logger(message = "force index", from = "erfi", line = 8, level = 1);
 	res = Volume * Diff(X, lag);
 	class(res) = "oscil";
 	attr(res, "type") = "erfv";
@@ -539,8 +555,10 @@ Ch.vol=function(High, Low, Close, lag=5, plot=FALSE, ...){
 		colnames(High) = colnames(Low) = attr(X, "SName");
 	}
 	# differnce High Low
+	Logger(message = "differnce High Low", from = "Ch.vol", line = 9, level = 1);
 	dhl = High - Low
 	# average rate of change
+	Logger(message = "average rate of change", from = "Ch.vol", line = 11, level = 1);
 	aroc = dhl - Perf(dhl, 10,cut=FALSE)
 	
 	res = 100*( (ema(dhl, lag)/aroc)-1 );
@@ -582,10 +600,13 @@ cci=function(High, Low, Close, lag=5, plot=FALSE, ...){
 	};
 	
 	# typical price
+	Logger(message = "typical price", from = "cci", line = 9, level = 1);
 	tp = tyP(High, Low, Close);
 	# difference
+	Logger(message = "difference", from = "cci", line = 11, level = 1);
 	dif = (tp - sma(tp, lag));
 	# average difference
+	Logger(message = "average difference", from = "cci", line = 13, level = 1);
 	avdif = sma(abs(dif), lag);
 	
 	res = (dif / avdif) * 0.67;
@@ -624,10 +645,12 @@ cci.v2 = function(High, Low, Close, lag=5, plot=FALSE, ...){
 		colnames(Close) = attr(X, "SName")
 	};
 	# typical price
+	Logger(message = "typical price", from = "cci.v2", line = 9, level = 1);
 	tp = tyP(High, Low, Close);
 	m = sma(tp,lag);
 	m2 = sum(abs(tp - sma(tp,lag))) / lag;
 	# calculate index
+	Logger(message = "calculate index", from = "cci.v2", line = 13, level = 1);
 	res = ((tp - m) / (0.015 * m2))[-(1:lag)]
 	class(res) = "oscil";
 	attr(res, "type") = "CCI2";
@@ -662,9 +685,11 @@ cmof = function (X, lag=5, plot=FALSE, ...){
 		colnames(Close) = attr(Y, "SName");
 	}
 	# series name
+	Logger(message = "series name", from = "cmof", line = 7, level = 1);
 	name = deparse(substitute(X))
 	
 	# convert to matrix and apply names
+	Logger(message = "convert to matrix and apply names", from = "cmof", line = 9, level = 1);
 	if(!is.matrix(X)){
 		X = as.matrix(X)
 		colnames(X) =  name
@@ -672,16 +697,20 @@ cmof = function (X, lag=5, plot=FALSE, ...){
 		colnames(X) =  name
 	}	
 	# lagged difference
+	Logger(message = "lagged difference", from = "cmof", line = 16, level = 1);
 	d = Diff(X, lag ,na.rm=TRUE)
 	
 	cmo1 = as.numeric(d >= 0);  #ifelse(d>=0,d,0)
 	cmo2 = as.numeric(d < 0);	 #ifelse(d>=0,0,-d)	
 	
 	# up movement
+	Logger(message = "up movement", from = "cmof", line = 20, level = 1);
 	up = cumsum(d * cmo1);
 	# down movement
+	Logger(message = "down movement", from = "cmof", line = 22, level = 1);
 	down = cumsum(-d * cmo2);
 	# calculate index
+	Logger(message = "calculate index", from = "cmof", line = 24, level = 1);
 	res = ((up - down) / (up + down)) * 100
 	
 	class(res) = "oscil";
@@ -692,6 +721,7 @@ cmof = function (X, lag=5, plot=FALSE, ...){
 		plot.oscil(res, X, main = main, ...)
 	};
 	# return results
+	Logger(message = "return results", from = "cmof", line = 32, level = 1);
 	res;
 }
 #######################################################################################################################
@@ -714,9 +744,11 @@ vcmof = function(X, lag=5, plot=FALSE, ...){
 		colnames(Close) = attr(Y, "SName");
 	}
 	# series name
+	Logger(message = "series name", from = "vcmof", line = 7, level = 1);
 	name = deparse(substitute(X))
 	
 	# convert to matrix and apply names
+	Logger(message = "convert to matrix and apply names", from = "vcmof", line = 9, level = 1);
 	if(!is.matrix(X)){
 		X = as.matrix(X)
 		colnames(X) =  name
@@ -739,6 +771,7 @@ vcmof = function(X, lag=5, plot=FALSE, ...){
 		plot.oscil(res, X, main = main, ...)
 	};
 	# return results
+	Logger(message = "return results", from = "vcmof", line = 27, level = 1);
 	res;
 }
 #######################################################################################################################
@@ -761,9 +794,11 @@ vidyaf = function (X, lag=5, plot=FALSE, ...){
 		colnames(Close) = attr(Y, "SName");
 	};
 	# series name
+	Logger(message = "series name", from = "vidyaf", line = 7, level = 1);
 	name = deparse(substitute(X));
 	
 	# convert to matrix and apply names
+	Logger(message = "convert to matrix and apply names", from = "vidyaf", line = 9, level = 1);
 	if(!is.matrix(X)){
 		X = as.matrix(X)
 		colnames(X) =  name
@@ -773,14 +808,17 @@ vidyaf = function (X, lag=5, plot=FALSE, ...){
 	
 	l = length(X);
 	# vector of results
+	Logger(message = "vector of results", from = "vidyaf", line = 17, level = 1);
 	res = rep(0, l-lag);
 	sm.fac = 2/(lag+1);
 	cmo = abs(cmof(X, lag));
 	
 	# starting value
+	Logger(message = "starting value", from = "vidyaf", line = 21, level = 1);
 	res[1] = X[1]
 	
 	# calculate index
+	Logger(message = "calculate index", from = "vidyaf", line = 23, level = 1);
 	i = 2
 	while(i <= l-lag)
 	{		
@@ -796,6 +834,7 @@ vidyaf = function (X, lag=5, plot=FALSE, ...){
 		plot.oscil(res, X, main = main, ...)
 	};
 	# return results
+	Logger(message = "return results", from = "vidyaf", line = 36, level = 1);
 	res;
 }
 #######################################################################################################################
@@ -818,9 +857,11 @@ vhff = function (X, lag=9, plot=FALSE, ...){
 		colnames(Close) = attr(Y, "SName");
 	};
 	# series name
+	Logger(message = "series name", from = "vhff", line = 7, level = 1);
 	name = deparse(substitute(X));
 	
 	# convert to matrix and apply names
+	Logger(message = "convert to matrix and apply names", from = "vhff", line = 9, level = 1);
 	if(!is.matrix(X)){
 		X = as.matrix(X)
 		colnames(X) =  name
@@ -830,9 +871,11 @@ vhff = function (X, lag=9, plot=FALSE, ...){
 	dab = abs(Diff(X, 1)) 
 	
 	# scaled Max/Min
+	Logger(message = "scaled Max/Min", from = "vhff", line = 17, level = 1);
 	hh = scalMax(X, lag)
 	ll = scalMin(X, lag)
 	# rate of change
+	Logger(message = "rate of change", from = "vhff", line = 20, level = 1);
 	den = roc(X, lag, plot=FALSE)	
 		 
 	res = (hh-ll)/den;
@@ -844,6 +887,7 @@ vhff = function (X, lag=9, plot=FALSE, ...){
 		plot.oscil(res, X, main = main, ...)
 	};
 	# return results
+	Logger(message = "return results", from = "vhff", line = 29, level = 1);
 	res;
 }
 #######################################################################################################################
@@ -905,6 +949,7 @@ tirLev = function(High, Low, Close, lag=5, plot=FALSE, ...){
 	};
 	
 	# declare output matrix
+	Logger(message = "declare output matrix", from = "tirLev", line = 8, level = 1);
 	res = matrix(0, length(High), 3)	
 	colnames(res)=c("Lower","Center","Upper")
 	res[,2] = (movMax(High, lag) - movMin(Low, lag)) / 2;
@@ -947,6 +992,7 @@ prbsar = function(Close, High, Low, accel=c(0.02,0.2), plot=FALSE, ...){
 	}
 	
 	# convert to matrix and apply names
+	Logger(message = "convert to matrix and apply names", from = "prbsar", line = 9, level = 1);
 	if(!is.matrix(X)){
 		X = as.matrix(X)
 		colnames(X) =  name
@@ -954,23 +1000,31 @@ prbsar = function(Close, High, Low, accel=c(0.02,0.2), plot=FALSE, ...){
 		colnames(X) =  name
 	}
 	## initialize variables
+	Logger(message = "initialize variables", from = "prbsar", line = 16, level = 1);
 	# stop-and-reverse (sar) vector
+	Logger(message = "stop-and-reverse (sar) vector", from = "prbsar", line = 17, level = 1);
 	sar = rep(0, length(High))
 	
 	# signals
+	Logger(message = "signals", from = "prbsar", line = 19, level = 1);
 	signal1 = 0
 	signal0 =1
 	# extreme prices
+	Logger(message = "extreme prices", from = "prbsar", line = 22, level = 1);
 	extP0 = High[1]
 	extP1 = 0
 	# first value for sar
+	Logger(message = "first value for sar", from = "prbsar", line = 25, level = 1);
 	sar[1] = Low[1]-0.01
 	# acceleration factors
+	Logger(message = "acceleration factors", from = "prbsar", line = 27, level = 1);
 	acc_fact0 = accel[1]
 	acc_fact1 = 0
 	# step minimum
+	Logger(message = "step minimum", from = "prbsar", line = 30, level = 1);
 	lmin = ifelse(Low < Lag(Low), Lag(Low), Low)
 	# step maximum
+	Logger(message = "step maximum", from = "prbsar", line = 32, level = 1);
 	lmax = ifelse(High < Lag(High), Lag(High), High)
 	i = 2
 	while(i <= length(High)){
@@ -1062,6 +1116,7 @@ mass.cum = function(High, Low, Close=NULL, lag=9, plot=FALSE, ...){
 	
 	i = length(High)
 	# calculated sum
+	Logger(message = "calculated sum", from = "mass.cum", line = 12, level = 1);
 	while(i>(lag-1)){
 		res[i]=sum(emr[i:(i-lag)])
 		i=i-1
@@ -1090,13 +1145,16 @@ mass.cum = function(High, Low, Close=NULL, lag=9, plot=FALSE, ...){
 #######################################################################################################################	
 mcsi = function(matr, nr, nc, lag1, lag2, plot=FALSE, ...){
 	# declare output
+	Logger(message = "declare output", from = "mcsi", line = 2, level = 1);
 	mc_si = rep(NA, l);
 	
 	# compute McClellan oscillator
+	Logger(message = "compute McClellan oscillator", from = "mcsi", line = 4, level = 1);
 	mc_osc = mcosc(matr,nr,nc,lag1,lag2);
 	l = length(mcosc);
 	
 	# initial value 	
+	Logger(message = "initial value 	", from = "mcsi", line = 7, level = 1);
 	mcsi[1] = mcosc[1];
 	i=2
 	while(i<l){
@@ -1115,9 +1173,11 @@ mcgind = function(X, lag=12, plot=FALSE, ...){
 		colnames(X) = attr(Y, "SName");
 	};
 	# series name
+	Logger(message = "series name", from = "mcgind", line = 7, level = 1);
 	name = deparse(substitute(X))
 	
 	# convert to matrix and apply names
+	Logger(message = "convert to matrix and apply names", from = "mcgind", line = 9, level = 1);
 	if(!is.matrix(X)){
 		X = as.matrix(X)
 		colnames(X) =  name
@@ -1125,12 +1185,15 @@ mcgind = function(X, lag=12, plot=FALSE, ...){
 		colnames(X) =  name
 	}
 	# lagged Close
+	Logger(message = "lagged Close", from = "mcgind", line = 16, level = 1);
 	lc = Lag(X, 1)
 	
 	# average lagged Close
+	Logger(message = "average lagged Close", from = "mcgind", line = 18, level = 1);
 	em = ema(lc, lag);
 	  
 	# compute indicator
+	Logger(message = "compute indicator", from = "mcgind", line = 20, level = 1);
 	res = em + ((lc - em) / (lc / em) * 125);
 	
 	class(res) = "oscil";
@@ -1202,12 +1265,16 @@ Mflow.ratio = function(Close, High, Low, Volume, plot=FALSE, ...){
 		colnames(Close) = attr(X, "SName");
 	}
 	# compute money flow
+	Logger(message = "compute money flow", from = "Mflow.ratio", line = 10, level = 1);
 	mf = Mflow(High, Low, Close, Volume);
 	# first difference of typical price
+	Logger(message = "first difference of typical price", from = "Mflow.ratio", line = 12, level = 1);
 	d_typ = Diff( tyP(High, Low, Close), 1, na.rm=TRUE );
 	# calculate increase of typical price
+	Logger(message = "calculate increase of typical price", from = "Mflow.ratio", line = 14, level = 1);
 	cond_up = ifelse(d_typ>0, d_typ, 0);
 	# calculate decrease of typical price
+	Logger(message = "calculate decrease of typical price", from = "Mflow.ratio", line = 16, level = 1);
 	cond_do = ifelse(d_typ<0, -d_typ, 0);  
 	up = down = rep(0, length(d_typ));
 	i = 1
@@ -1254,9 +1321,11 @@ Mflow.ind = function(Close, High, Low, Volume, plot=FALSE, ...){
 		colnames(Close) = attr(X, "SName");
 	}
 	# get money ratio
+	Logger(message = "get money ratio", from = "Mflow.ind", line = 10, level = 1);
 	mr = Mflow.ratio(High,Low,Close,Volume);
 	
 	# get money flow index
+	Logger(message = "get money flow index", from = "Mflow.ind", line = 12, level = 1);
 	res = 100 - (100 / (1+mr));
 	
 	class(res) = "oscil";
@@ -1293,9 +1362,11 @@ kri = function(X, lag1=10, lag2=20, plot=FALSE, ...){
 		colnames(X) = attr(Y, "SName");
 	};
 	# series name
+	Logger(message = "series name", from = "kri", line = 7, level = 1);
 	name = deparse(substitute(X))
 	
 	# convert to matrix and apply names
+	Logger(message = "convert to matrix and apply names", from = "kri", line = 9, level = 1);
 	if(!is.matrix(X)){
 		X = as.matrix(X)
 		colnames(X) =  name
@@ -1303,6 +1374,7 @@ kri = function(X, lag1=10, lag2=20, plot=FALSE, ...){
 		colnames(X) =  name
 	}
 	# calculate index
+	Logger(message = "calculate index", from = "kri", line = 16, level = 1);
 	res = ( (X - sma(X, min(lag1, lag2))) / sma(X, max(lag1, lag2)) )[-(1:min(lag1, lag2))] * 100;
 	class(res) = "oscil";
 	attr(res, "type") = "KRI";
@@ -1338,6 +1410,7 @@ Swing = function(Close, High, Low, Open, ret_cum=FALSE, plot=FALSE, ...){
 		colnames(Close) = attr(X, "SName");
 	};
 	# calculate differences needed to calculate the index
+	Logger(message = "calculate differences needed to calculate the index", from = "Swing", line = 10, level = 1);
 	c_lc = Diff(Close);
 	h_c = High - Close;
 	h_lc = High - Lag(Close);
@@ -1345,23 +1418,28 @@ Swing = function(Close, High, Low, Open, ret_cum=FALSE, plot=FALSE, ...){
 	lc_lo = Lag(Close) + Lag(Open);
 	
 	# numerator
+	Logger(message = "numerator", from = "Swing", line = 16, level = 1);
 	num =  (abs(cbind(c_lc, Close - Open, lc_lo ))) %*% c(1, 0.5, 0.25);
 	
 	# get different maximum values per row
+	Logger(message = "get different maximum values per row", from = "Swing", line = 18, level = 1);
 	mm2 = abs(cbind(h_lc, l_lc, h_c));
 	rr = cbind(h_lc + 0.5*l_lc + 0.25*lc_lo, 
 				l_lc + 0.5*h_lc + 0.25*lc_lo, 
 				(High - Low) + 0.25*lc_lo);
 	dis = t(apply(mm2, 1, function(x) (x == max(x))));
 	# denominator
+	Logger(message = "denominator", from = "Swing", line = 24, level = 1);
 	den = apply(rr * dis, 1, sum, na.rm=TRUE);
 	
 	fact = rowMax(cbind(h_lc, l_lc)) / max(c_lc);
 	
 	# calculate swing index
+	Logger(message = "calculate swing index", from = "Swing", line = 27, level = 1);
 	res = 50 * (num / den) * fact;
 	
 	# return index and cumulative index
+	Logger(message = "return index and cumulative index", from = "Swing", line = 29, level = 1);
 	if(ret_cum)
 		res = cumSum(res, na.rm=TRUE)
 	class(res) = "oscil";
@@ -1386,9 +1464,11 @@ AdvDec = function(X, lag=5, ret.idx=TRUE, plot=FALSE, ...){
 		colnames(X) = attr(Y, "SName");
 	}
 	# series name
+	Logger(message = "series name", from = "AdvDec", line = 7, level = 1);
 	name = deparse(substitute(X))
 	
 	# convert to matrix and apply names
+	Logger(message = "convert to matrix and apply names", from = "AdvDec", line = 9, level = 1);
 	if(!is.matrix(X)){
 		X = as.matrix(X)
 		colnames(X) =  name
@@ -1396,18 +1476,24 @@ AdvDec = function(X, lag=5, ret.idx=TRUE, plot=FALSE, ...){
 		colnames(X) =  name
 	}
 	# number of assets	
+	Logger(message = "number of assets	", from = "AdvDec", line = 16, level = 1);
 	N = NCOL(X);
 	R = NROW(X) - lag;
 	# lagged difference
+	Logger(message = "lagged difference", from = "AdvDec", line = 19, level = 1);
 	dp = Diff(X, lag, na.rm=TRUE);
 	# matrix of resulst
+	Logger(message = "matrix of resulst", from = "AdvDec", line = 21, level = 1);
 	res = matrix(0, R, 3);
 	colnames(res) = c("Advance", "Decline", "Difference");
 	# number of advancing issues
+	Logger(message = "number of advancing issues", from = "AdvDec", line = 24, level = 1);
 	res[, 1] = apply(dp, 1, function(x) length(which(x>0)));
 	# number of declining issues
+	Logger(message = "number of declining issues", from = "AdvDec", line = 26, level = 1);
 	res[, 2] = N - res[,1];
 	# difference
+	Logger(message = "difference", from = "AdvDec", line = 28, level = 1);
 	res[, 3] = res[,1] - res[,2]
 	if(ret.idx){
 		res2 = cumsum(res[,3])
@@ -1419,9 +1505,11 @@ AdvDec = function(X, lag=5, ret.idx=TRUE, plot=FALSE, ...){
 			plot(res2, X=X, ...)
 		}
 		# return index
+		Logger(message = "return index", from = "AdvDec", line = 38, level = 1);
 		return(res2);
 	}
 	# return table
+	Logger(message = "return table", from = "AdvDec", line = 41, level = 1);
 	res;
 }
 # Absolute breadth index
@@ -1433,9 +1521,11 @@ Abi = function(X, lag=5, plot=FALSE, ...){
 		colnames(X) = attr(Y, "SName");
 	}
 	# series name
+	Logger(message = "series name", from = "Abi", line = 7, level = 1);
 	name = deparse(substitute(X))
 	
 	# convert to matrix and apply names
+	Logger(message = "convert to matrix and apply names", from = "Abi", line = 9, level = 1);
 	if(!is.matrix(X)){
 		X = as.matrix(X)
 		colnames(X) =  name
@@ -1443,9 +1533,11 @@ Abi = function(X, lag=5, plot=FALSE, ...){
 		colnames(X) =  name
 	}
 	# calculate advance / decline
+	Logger(message = "calculate advance / decline", from = "Abi", line = 16, level = 1);
 	ad = AdvDec(X, lag, FALSE, FALSE);
 	
 	# calculate abi index
+	Logger(message = "calculate abi index", from = "Abi", line = 18, level = 1);
 	res = abs(ad[,1] - ad[,2]);
 	class(res) = "oscil";
 	attr(res, "type") = "ABI";
@@ -1464,9 +1556,11 @@ Breadth = function(X, lag=5, plot=FALSE, ...){
 		colnames(X) = attr(Y, "SName");
 	}
 	# series name
+	Logger(message = "series name", from = "Breadth", line = 7, level = 1);
 	name = deparse(substitute(X))
 	
 	# convert to matrix and apply names
+	Logger(message = "convert to matrix and apply names", from = "Breadth", line = 9, level = 1);
 	if(!is.matrix(X)){
 		X = as.matrix(X)
 		colnames(X) =  name
@@ -1474,8 +1568,10 @@ Breadth = function(X, lag=5, plot=FALSE, ...){
 		colnames(X) =  name
 	}
 	# calculate advance / decline
+	Logger(message = "calculate advance / decline", from = "Breadth", line = 16, level = 1);
 	ad = AdvDec(X, lag, FALSE, FALSE);
 	# calculate index
+	Logger(message = "calculate index", from = "Breadth", line = 18, level = 1);
 	res = sma(ad[,1]/(ad[,1]+ad[,2]), lag);
 	class(res) = "oscil";
 	attr(res, "type") = "BRETR";
@@ -1496,9 +1592,11 @@ ADratio = function(X, lag=5, plot=FALSE, ...){
 		colnames(X) = attr(Y, "SName");
 	}
 	# series name
+	Logger(message = "series name", from = "ADratio", line = 7, level = 1);
 	name = deparse(substitute(X))
 	
 	# convert to matrix and apply names
+	Logger(message = "convert to matrix and apply names", from = "ADratio", line = 9, level = 1);
 	if(!is.matrix(X)){
 		X = as.matrix(X)
 		colnames(X) =  name
@@ -1506,6 +1604,7 @@ ADratio = function(X, lag=5, plot=FALSE, ...){
 		colnames(X) =  name
 	}
 	# calculate advance / decline
+	Logger(message = "calculate advance / decline", from = "ADratio", line = 16, level = 1);
 	ad = AdvDec(X, lag, FALSE, FALSE);
 	res = ad[,1] / ad[,2];
 	class(res) = "oscil";
@@ -1527,9 +1626,11 @@ Arms = function(X, Volume, lag, plot=FALSE, ...){
 		colnames(X) 	 = attr(Y, "SName");
 	}
 	# series name
+	Logger(message = "series name", from = "Arms", line = 8, level = 1);
 	name = deparse(substitute(X))
 	
 	# convert to matrix and apply names
+	Logger(message = "convert to matrix and apply names", from = "Arms", line = 10, level = 1);
 	if(!is.matrix(X)){
 		X = as.matrix(X)
 		colnames(X) =  name
@@ -1537,6 +1638,7 @@ Arms = function(X, Volume, lag, plot=FALSE, ...){
 		colnames(X) =  name
 	}
 	# calculate trin index 
+	Logger(message = "calculate trin index ", from = "Arms", line = 17, level = 1);
 	res = ADratio(X, lag) / ADratio(Volume, lag);
 	
 	class(res) = "oscil";
@@ -1559,12 +1661,14 @@ hhv = function(X, lag, na.rm=TRUE){
 	i = length(X)
 	
 	# get rolling max
+	Logger(message = "get rolling max", from = "hhv", line = 4, level = 1);
 	while (i >= (lag-1)){
 		maax[i] = max(X[i:(i - lag+1)])
 		i = i - 1
 	}
 	
 	# return results with or without NAs
+	Logger(message = "return results with or without NAs", from = "hhv", line = 9, level = 1);
 	if(na.rm)
 		maax[-(1:lag)]
 	else
@@ -1578,12 +1682,14 @@ llv = function(X, lag, na.rm=TRUE){
 	i = length(X)
 	
 	# get rolling min
+	Logger(message = "get rolling min", from = "llv", line = 4, level = 1);
 	while (i >= (lag-1)){
 		miin[i] = min(X[i:(i - lag+1)])
 		i = i - 1
 	}
 	
 	# return results with or without NAs
+	Logger(message = "return results with or without NAs", from = "llv", line = 9, level = 1);
 	if(na.rm)
 		miin[-(1:lag)]
 	else
@@ -1600,16 +1706,21 @@ Pchan = function(CLose, High, Low, lag=20, na.rm=TRUE, plot=FALSE, ...){
 		colnames(Close) = attr(X, "SName");
 	}
 	# highest high
+	Logger(message = "highest high", from = "Pchan", line = 9, level = 1);
 	up = hhv(High, lag, na.rm)
 	# lowest low
+	Logger(message = "lowest low", from = "Pchan", line = 11, level = 1);
 	down = llv(Low, lag, na.rm)
 	# mid trend
+	Logger(message = "mid trend", from = "Pchan", line = 13, level = 1);
 	mid = (up + down) / 2
 	
 	# matrix of results
+	Logger(message = "matrix of results", from = "Pchan", line = 15, level = 1);
 	res = cbind(up,down,mid)
 	
 	# return results with or without NAs
+	Logger(message = "return results with or without NAs", from = "Pchan", line = 17, level = 1);
 	if(na.rm) 
 		res[-(1:lag),]
 	else
@@ -1638,16 +1749,22 @@ Ichkh = function(Close, High, Low, plot=FALSE, ...){
 		colnames(Close) = attr(X, "SName");
 	}
 	# Tenkan-Sen
+	Logger(message = "Tenkan-Sen", from = "Ichkh", line = 9, level = 1);
 	ts = (hhv(High, lag=9) + llv(Low, lag = 9)) / 2
 	# Kijun-Sen
+	Logger(message = "Kijun-Sen", from = "Ichkh", line = 11, level = 1);
 	ks = (hhv(High, lag = 26) + llv(Low, lag = 26)) / 2
 	# Chikou Span
+	Logger(message = "Chikou Span", from = "Ichkh", line = 13, level = 1);
 	cs = Lag(Close,  lag=-26)
 	# Senkou-Span A
+	Logger(message = "Senkou-Span A", from = "Ichkh", line = 15, level = 1);
 	ssa = Lag((ts + ks) / 2, lag=26)
 	# Senkou-Span A
+	Logger(message = "Senkou-Span A", from = "Ichkh", line = 17, level = 1);
 	ssb = Lag((hhv(High, lag = 52) + llv(Low, lag = 52)) / 2   , lag = 26)
 	# matrix of results
+	Logger(message = "matrix of results", from = "Ichkh", line = 19, level = 1);
 	res = cbind(Tenkan_sen = ts,
 			Kijun_sen = ks,
 			Chikou_span = cs,
@@ -1676,9 +1793,11 @@ forcidx = function(X, Volume, lag=5, sth=TRUE, sth.lag=13, mov=sma, plot=FALSE, 
 	}
 	
 	# series name
+	Logger(message = "series name", from = "forcidx", line = 8, level = 1);
 	name = deparse(substitute(X))
 	
 	# convert to matrix and apply names
+	Logger(message = "convert to matrix and apply names", from = "forcidx", line = 10, level = 1);
 	if(!is.matrix(X)){
 		X = as.matrix(X)
 		colnames(X) =  name
@@ -1686,12 +1805,16 @@ forcidx = function(X, Volume, lag=5, sth=TRUE, sth.lag=13, mov=sma, plot=FALSE, 
 		colnames(X) =  name
 	}
 	# price difference
+	Logger(message = "price difference", from = "forcidx", line = 17, level = 1);
 	idx = Diff(X, lag, ...) * Volume
 	
 	# get moving average type
+	Logger(message = "get moving average type", from = "forcidx", line = 19, level = 1);
 	#mov =((match.arg(mov)))
+	Logger(message = "mov =((match.arg(mov)))", from = "forcidx", line = 20, level = 1);
 	
 	# smooth results with mov
+	Logger(message = "smooth results with mov", from = "forcidx", line = 21, level = 1);
 	if(sth)
 		res = mov(idx, lag, ...)
 	else
@@ -1705,6 +1828,7 @@ forcidx = function(X, Volume, lag=5, sth=TRUE, sth.lag=13, mov=sma, plot=FALSE, 
 	}
 		
 	# return resutls
+	Logger(message = "return resutls", from = "forcidx", line = 32, level = 1);
 	res
 }
 ## ULCER INDEX ##
@@ -1717,9 +1841,11 @@ ulcer = function(X, lag, plot=FALSE, ...){
 	}
 	
 	# series name
+	Logger(message = "series name", from = "ulcer", line = 7, level = 1);
 	name = deparse(substitute(X));
 	
 	# convert to matrix and apply names
+	Logger(message = "convert to matrix and apply names", from = "ulcer", line = 9, level = 1);
 	if(!is.matrix(X)){
 		X = as.matrix(X)
 		colnames(X) =  name
@@ -1728,9 +1854,11 @@ ulcer = function(X, lag, plot=FALSE, ...){
 	};
 	
 	# highest high
+	Logger(message = "highest high", from = "ulcer", line = 16, level = 1);
 	hh = hhv(X, lag);
 	
 	# calculate index
+	Logger(message = "calculate index", from = "ulcer", line = 18, level = 1);
 	res = sqrt(sma(((1 - (X / hh)) * 100)^2));
 	
 	class(res) = "oscil";
@@ -1755,16 +1883,22 @@ starc = function(Close, High=NULL, Low=NULL, atr.mult=2, lag=5, atr.lag=14, mov=
 		colnames(Close) = attr(X, "SName");
 	}
 	# calculate average true range
+	Logger(message = "calculate average true range", from = "starc", line = 9, level = 1);
 	atr = trf(Close, High, Low, lag, avg.lag = atr.lag)[-(1:lag)];
 	# smoothing type
+	Logger(message = "smoothing type", from = "starc", line = 11, level = 1);
 	mov = match.arg(mov)
 	# calculate moving average
+	Logger(message = "calculate moving average", from = "starc", line = 13, level = 1);
 	ma = do.call(mov, list(Close,lag))[-(1:lag)];
 	# upper band
+	Logger(message = "upper band", from = "starc", line = 15, level = 1);
 	upp = ma + (atr.mult * atr);
 	# lower band
+	Logger(message = "lower band", from = "starc", line = 17, level = 1);
 	low = ma - (atr.mult * atr);
 	# matris of results
+	Logger(message = "matris of results", from = "starc", line = 19, level = 1);
 	res = cbind(Lower_band = low, Middle_band = ma, Upper_band = upp);
 	
 	class(res) = "oscil";
@@ -1787,9 +1921,11 @@ Perf = function(X, ini.per=1 ,cut=TRUE, plot=FALSE, ...){
 	}
 	
 	# series name
+	Logger(message = "series name", from = "Perf", line = 7, level = 1);
 	name = deparse(substitute(X))
 	
 	# convert to matrix and apply names
+	Logger(message = "convert to matrix and apply names", from = "Perf", line = 9, level = 1);
 	if(!is.matrix(X)){
 		X = as.matrix(X)
 		colnames(X) =  name
@@ -1798,8 +1934,10 @@ Perf = function(X, ini.per=1 ,cut=TRUE, plot=FALSE, ...){
 	}
 	
 	# starting reference point 
+	Logger(message = "starting reference point ", from = "Perf", line = 16, level = 1);
 	start = mean(X[1:ini.per,, drop=FALSE]);
 	# calculate index
+	Logger(message = "calculate index", from = "Perf", line = 18, level = 1);
 	if(cut)
 		res = (100 * (X/start - 1))[-(1:ini.per),,drop=FALSE]
 	else

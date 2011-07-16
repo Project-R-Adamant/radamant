@@ -25,18 +25,23 @@ cleanup = function(keep = c()
 	#cat("\n**********************\n*Performing cleanup.*\n**********************\n");
 	
 	# Get list of objects from the specified environment
+	Logger(message = "Get list of objects from the specified environment", from = "cleanup", line = 3, level = 1);
 	obj.list = ls(envir = env);
 	# Get index of objects to exclude from deletion
+	Logger(message = "Get index of objects to exclude from deletion", from = "cleanup", line = 5, level = 1);
 	keep.idx = which(obj.list %in% keep);
 	# Remove all objects from the specified environment
+	Logger(message = "Remove all objects from the specified environment", from = "cleanup", line = 7, level = 1);
 	if(length(keep.idx) > 0) {
 		rm(list = obj.list[-keep.idx], envir = env);
 	} else {
 		rm(list = obj.list, envir = env);
 	}
 	# Remove all objects from the current environment (this function)
+	Logger(message = "Remove all objects from the current environment (this function)", from = "cleanup", line = 13, level = 1);
 	rm(list = c("keep", "env", "obj.list", "keep.idx"));
 	# Perform gc() if required
+	Logger(message = "Perform gc() if required", from = "cleanup", line = 15, level = 1);
 	if(gc) {
 		gc(verbose = TRUE, reset = TRUE);
 	}
@@ -91,31 +96,40 @@ func.line.cnt = function(package = NULL, plot = TRUE, qtz.type = "NONE", qtz.nbi
 	is.pkg = FALSE;
 	
 	# Load the package
+	Logger(message = "Load the package", from = "func.line.cnt", line = 4, level = 1);
 	if(length(package) == 1) {
 		# Attempt to load package
+		Logger(message = "Attempt to load package", from = "func.line.cnt", line = 6, level = 1);
 		is.pkg = suppressWarnings(require(package, character.only=TRUE));
 		if(is.pkg) {
 			# Get list of functions contained in the pachage
+			Logger(message = "Get list of functions contained in the pachage", from = "func.line.cnt", line = 9, level = 1);
 			fcn.list = lsf.str(paste("package", package, sep=":"));
 		} else {
 			cat("Package ", package, " does not exists.\n");
 			cat("Assuming input data is a list of function.\n");
 			# Attempt matrix conversion
+			Logger(message = "Attempt matrix conversion", from = "func.line.cnt", line = 14, level = 1);
 			fcn.list = as.matrix(package);
 			# Transform to 1D array
+			Logger(message = "Transform to 1D array", from = "func.line.cnt", line = 16, level = 1);
 			dim(fcn.list)[2] = 1;
 		}
 	} else {
 		# Attempt matrix conversion
+		Logger(message = "Attempt matrix conversion", from = "func.line.cnt", line = 20, level = 1);
 		fcn.list = as.matrix(package);
 		# Transform to 1D array
+		Logger(message = "Transform to 1D array", from = "func.line.cnt", line = 22, level = 1);
 		dim(fcn.list)[2] = 1; 
 	}
 	
 	# Number of functions
+	Logger(message = "Number of functions", from = "func.line.cnt", line = 25, level = 1);
 	N = length(fcn.list);
 	
 	# Initialise output data frame
+	Logger(message = "Initialise output data frame", from = "func.line.cnt", line = 27, level = 1);
 	fcn.stats = data.frame( fcn.name = as.vector(fcn.list)
 							, fcn.lines = rep(0, N)
 							, fcn.subcalls = rep(0, N)
@@ -128,17 +142,22 @@ func.line.cnt = function(package = NULL, plot = TRUE, qtz.type = "NONE", qtz.nbi
 	
 	for (i in 1:N) {
 		# Check wheather the function exists
+		Logger(message = "Check wheather the function exists", from = "func.line.cnt", line = 38, level = 2);
 		if(exists(fcn.list[i], mode = "function")) {
 			# Retrieve the body of the current function
+			Logger(message = "Retrieve the body of the current function", from = "func.line.cnt", line = 40, level = 2);
 			curr.fcn = body(fcn.list[i]);
 			
 			# Split the function by lines
+			Logger(message = "Split the function by lines", from = "func.line.cnt", line = 42, level = 2);
 			curr.fcn.lines = deparse(curr.fcn);
 			
 			# Lines of code including the function header
+			Logger(message = "Lines of code including the function header", from = "func.line.cnt", line = 44, level = 2);
 			fcn.stats[i, 2] = length(curr.fcn.lines) + 1;
 			
 			# Look for calls to other functions of the package (excluding recursion)
+			Logger(message = "Look for calls to other functions of the package (excluding recursion)", from = "func.line.cnt", line = 46, level = 2);
 			for (subcall in fcn.list[-i]) {
 				if (length(grep(paste("(\\<)(\\W)?", subcall, "\\(", sep=""), curr.fcn.lines)) > 0) {
 					# Update the count of subcalls made by the current function
