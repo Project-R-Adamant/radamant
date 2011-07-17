@@ -1,8 +1,8 @@
 Package: RAdamant
 Type: Package
 Title: Financial Technical Analysis and Risk Management
-Version: 0.8.1
-Date: 2011-07-11
+Version: 0.8.2
+Date: 2011-07-17
 Author: RAdamant Development Team
 Maintainer: RAdamant Development Team <team@r-adamant.org>
 Depends: R (>= 2.11.1), utils, grDevices
