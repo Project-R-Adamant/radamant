@@ -11,7 +11,7 @@
 }
 
 \value{
-A financial Time Series object. This is a matrix with columns (Open, High, Low, Close, Volume, Adj.Close).
+A financial Time Series object. This is a matrix with columns (Open, High, Low, Close, Volume, Adj.Close).\cr
 The following attributes are attached to the object:
 \item{SName}{The Name/Description of the financial series.}
 \item{Symbol}{The input stock symbol.}

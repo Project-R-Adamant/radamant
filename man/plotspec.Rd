@@ -8,14 +8,14 @@
 
 \usage{
 \method{plot}{specgram}(x 
-	, show.periodicity = FALSE 
-	, theme.params = getCurrentTheme() 
-	, xtitle = "Time" 
-	, ytitle = ifelse(show.periodicity, "Periodicity", "Frequency") 
-	, plot3d = FALSE 
-	, overrides = list(...) 
-	, ...
-	)
+    , show.periodicity = FALSE 
+    , theme.params = getCurrentTheme() 
+    , xtitle = "Time" 
+    , ytitle = ifelse(show.periodicity, "Periodicity", "Frequency") 
+    , plot3d = FALSE 
+    , overrides = list(...) 
+    , ...
+    )
 }
 
 \arguments{ 

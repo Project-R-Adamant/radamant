@@ -17,10 +17,10 @@ The number of calls in the stack.
 \examples{
 # Create two nested functions
 f1 = function() {
-	f2();
+    f2();
 }
 f2 = function() {
-	CallStackLevels()
+    CallStackLevels()
 }
 
 f2(); # Returns 1

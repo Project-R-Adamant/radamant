@@ -22,18 +22,18 @@ hamming(N, normalized = TRUE)
 x = hamming(100)
 # Plot the window
 cplot(x 
-	, main = "Hamming Window" 
-	, legend = attr(x, "type") 
-	)
+    , main = "Hamming Window" 
+    , legend = attr(x, "type") 
+    )
 # Generate a non-normalised window
 y = hamming(100, FALSE)
 # Compare the two
 cplot(cbind(x, y) 
-	, main = "Hamming Window" 
-	, legend = paste(attr(x, "type"), c("Normalised", "Not Normalised")) 
-	, type = c("l", "o") 
-	, xlab.srt = 0 
-	)
+    , main = "Hamming Window" 
+    , legend = paste(attr(x, "type"), c("Normalised", "Not Normalised")) 
+    , type = c("l", "o") 
+    , xlab.srt = 0 
+    )
 
 }
 

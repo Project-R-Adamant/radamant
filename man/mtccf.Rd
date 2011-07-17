@@ -11,12 +11,12 @@
 \method{print}{cross.ccf}(x, ...)
 
 \method{plot}{cross.ccf}(x
-	, theme.params = getCurrentTheme()
-	, xtitle = "Lag"
-	, ytitle = expression(rho)
-	, overrides = list(...)
-	, ...
-	)
+    , theme.params = getCurrentTheme()
+    , xtitle = "Lag"
+    , ytitle = expression(rho)
+    , overrides = list(...)
+    , ...
+    )
 }
 
 \arguments{ 

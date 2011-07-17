@@ -22,18 +22,18 @@ bartlet(N, normalized = TRUE)
 x = bartlet(100)
 # Plot the window
 cplot(x 
-	, main = "Bartlet Window" 
-	, legend = attr(x, "type") 
-	)
+    , main = "Bartlet Window" 
+    , legend = attr(x, "type") 
+    )
 # Generate a non-normalised window
 y = bartlet(100, FALSE)
 # Compare the two
 cplot(cbind(x, y) 
-	, main = "Bartlet Window" 
-	, legend = paste(attr(x, "type"), c("Normalised", "Not Normalised")) 
-	, type = c("l", "o") 
-	, xlab.srt = 0 
-	)
+    , main = "Bartlet Window" 
+    , legend = paste(attr(x, "type"), c("Normalised", "Not Normalised")) 
+    , type = c("l", "o") 
+    , xlab.srt = 0 
+    )
 
 }
 

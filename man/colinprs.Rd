@@ -1,7 +1,7 @@
 \name{colinprs}
 \alias{colin.pairs}
 \title{Co-Linearity analysis}
-\description{This function performs a Co-Linearity analysis between the columns of X.
+\description{This function performs a Co-Linearity analysis between the columns of X.\cr
 Correlation factors between columns are computed, and pairs of columns with a correlation factor higher than a specified threshold are returned.
 }
 

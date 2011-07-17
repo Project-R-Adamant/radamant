@@ -32,10 +32,13 @@ The following attributes are attached to the object:
 }
 
 \details{
-A forward sliding window of length win.size is used to split the input data into segments, then for each segment the FFT of size NFFT = 2^ceiling(log2(win.size)) is computed.
-The sliding of the window is controlled by the 'by' parameter of the splitWindow function (default: by = 1). The 'by' parameter should take values between 1 and win.size.
-If by = win.size, the input data is split into Nwindows = ceiling(NRowX/win.size) non-overlapping adjacent blocks.
-If by = 1 then Nwindows = NRowX - win.size + 1 overlapping segments are computed.
+A forward sliding window of length win.size is used to split the input data into segments, then for each segment the FFT of size NFFT = 2^ceiling(log2(win.size)) is computed.\cr
+The sliding of the window is controlled by the 'by' parameter of the splitWindow function (default: by = 1). \cr
+The 'by' parameter should take values between 1 and win.size:
+\itemize{
+	\item{when by = win.size, the input data is split into Nwindows = ceiling(NRowX/win.size) non-overlapping adjacent blocks.}
+	\item{when by = 1, then Nwindows = NRowX - win.size + 1 overlapping segments are computed.}
+}
 }
 
 \seealso{

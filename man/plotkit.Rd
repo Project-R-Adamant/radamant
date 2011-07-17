@@ -58,22 +58,23 @@ draw.y.title(ytitle = "", theme.params = getCurrentTheme(), side = 1)
 \item{show.labels}{LOGICAL. If TRUE, labels are showed.}
 \item{show.ticks}{LOGICAL. If TRUE, tickmarks are showed.}
 \item{side}{The side (1 = left, 2 = right) where the y-axis labels and title are plotted.} 
-\item{method}{Controls how the x-coordinates of the grid vertical lines are computed. 
-If method = "equispaced", N = getThemeAttr("x.ticks", exact = TRUE) points between min(base) and max(base) are computed.
+\item{method}{Controls how the x-coordinates of the grid vertical lines are computed. \cr
+If method = "equispaced", N = getThemeAttr("x.ticks", exact = TRUE) points between min(base) and max(base) are computed. \cr
 If method = "sampling", the N lines are drawn at the points given by base[seq(1, length(base), len = N)].
 }
 \item{...}{ Further arguments to or from other methods.} 
 }
 
 \details{
-These are utility funtions used as building blocks for high level plotting with cplot. 
-Most of the behaviour is controlled by the theme options. For details on the available options, see \code{\link{setThemeAttr}}.
+These are utility funtions used as building blocks for high level plotting with cplot.
+Most of the behaviour is controlled by the theme options. \cr
+For details on the available options, see \code{\link{setThemeAttr}}.
 }
 
 
 \value{Void}
 
-\seealso{ \code{\link{cplot}} }
+\seealso{\code{\link{cplot}}}
 
 \author{ RAdamant Development Team \email{team@r-adamant.org} }
 

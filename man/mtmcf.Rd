@@ -11,11 +11,11 @@
 \method{print}{mcf}(x, ...) 
 
 \method{plot}{mcf}(x
-	, theme.params = getCurrentTheme()
-	, xtitle = "Lag"
-	, ytitle = expression(rho)
-	, overrides = list(...)
-	, ...)
+    , theme.params = getCurrentTheme()
+    , xtitle = "Lag"
+    , ytitle = expression(rho)
+    , overrides = list(...)
+    , ...)
 }
 
 \arguments{ 
@@ -27,7 +27,6 @@
 \item{...}{Alternative way to quickly override theme parameters}
 }
 
-\value{Void}
 
 \examples{
 \dontrun{

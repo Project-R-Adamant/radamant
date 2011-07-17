@@ -11,12 +11,12 @@
 \method{print}{cool.acf}(x, ...)
 
 \method{plot}{cool.acf}(x
-	, theme.params = getCurrentTheme()
-	, xtitle = "Lag"
-	, ytitle = expression(rho)
-	, overrides = list(...)
-	, ...
-	)
+    , theme.params = getCurrentTheme()
+    , xtitle = "Lag"
+    , ytitle = expression(rho)
+    , overrides = list(...)
+    , ...
+    )
 }
 
 \arguments{ 

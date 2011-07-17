@@ -23,19 +23,19 @@ kaiser(N, normalized = TRUE, alpha = 3)
 x = kaiser(100, FALSE)
 # Plot the window
 cplot(x 
-	, main = "Kaiser Window" 
-	, legend = attr(x, "type") 
-	)
+    , main = "Kaiser Window" 
+    , legend = attr(x, "type") 
+    )
 
 # Generate another window with different smoothing factor
 y = kaiser(100, normalized = FALSE, alpha = 6)
 # Compare the two windows
 cplot(cbind(x, y) 
-	, main = "Kaiser Window" 
-	, legend = paste("Kaiser (alpha = ", c(3, 6), ")", sep = "")
-	, type = c("l", "o") 
-	, xlab.srt = 0 
-	)
+    , main = "Kaiser Window" 
+    , legend = paste("Kaiser (alpha = ", c(3, 6), ")", sep = "")
+    , type = c("l", "o") 
+    , xlab.srt = 0 
+    )
 
 }
 

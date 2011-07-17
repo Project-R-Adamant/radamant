@@ -7,30 +7,30 @@
 
 \usage{
 cplot(X
-	, base = NULL
-	, xrange = NULL
-	, yrange = NULL
-	, theme.params = getCurrentTheme()
-	, xtitle = "" 
-	, xlabels = NULL 
-	, ytitle = "" 
-	, ylabels = NULL	
-	, ytitle2 = "" 
-	, ylabels2 = NULL
-	, show.xlabels = TRUE 
-	, show.ylabels = TRUE 
-	, main = NULL 
-	, legend = NULL 
-	, legend.col = theme.params[["col"]]
-	, show.legend = TRUE 
-	, shaded = FALSE
-	, grid = TRUE 
-	, overrides = list(...)
-	, new.device = FALSE
-	, append = FALSE
-	, multicolor = FALSE 
-	, ...
-	) 
+    , base = NULL
+    , xrange = NULL
+    , yrange = NULL
+    , theme.params = getCurrentTheme()
+    , xtitle = "" 
+    , xlabels = NULL 
+    , ytitle = "" 
+    , ylabels = NULL    
+    , ytitle2 = "" 
+    , ylabels2 = NULL
+    , show.xlabels = TRUE 
+    , show.ylabels = TRUE 
+    , main = NULL 
+    , legend = NULL 
+    , legend.col = theme.params[["col"]]
+    , show.legend = TRUE 
+    , shaded = FALSE
+    , grid = TRUE 
+    , overrides = list(...)
+    , new.device = FALSE
+    , append = FALSE
+    , multicolor = FALSE 
+    , ...
+    ) 
 }
 
 \arguments{ 
@@ -89,43 +89,43 @@ cplot(X)
 # Change Title and xlabels
 Xlab = paste("t[", 0:249, "]", sep = "");
 cplot(X
-	, main = "Four Random Time Series"
-	, xlabels = parse(text = Xlab)
-	)
+    , main = "Four Random Time Series"
+    , xlabels = parse(text = Xlab)
+    )
 
 # Add shaded area to the first time series
 cplot(X
-	, main = "Four Random Time Series"
-	, xlabels = parse(text = Xlab)
-	, shaded = TRUE
-	)
-	
+    , main = "Four Random Time Series"
+    , xlabels = parse(text = Xlab)
+    , shaded = TRUE
+    )
+    
 # Add 45 degree shaded area to the second time series
 cplot(X
-	, main = "Four Random Time Series"
-	, xlabels = parse(text = Xlab)
-	, shaded = c(FALSE, TRUE)
-	# Theme overrides
-	, shade.angle = 45
-	)
+    , main = "Four Random Time Series"
+    , xlabels = parse(text = Xlab)
+    , shaded = c(FALSE, TRUE)
+    # Theme overrides
+    , shade.angle = 45
+    )
 
 # Plot
 cplot(X[, 1]
-	, main = "Gradient Shaded Area Plot"
-	, xlabels = parse(text = Xlab)
-	, shaded = TRUE
-	# Use different Theme
-	, theme.params = getTheme("Vanilla")
-	#### Theme overrides ####
-	# filling density of the shaded area
-	, shade.density = 100 
-	# Alpha transparency will be interpolated from 0 to 1 (Not Run, VERY SLOW)
-	#, shade.alpha = c(0, 1) 
-	# Multiple colors for the shaded area
-	, shade.col = jet.colors(30) 
-	# Multiple stripes are used to generate color gradient
-	, shade.stripes = 50 
-	# Remove rotation for x-axis
-	, xlab.srt = 0 
-	)
+    , main = "Gradient Shaded Area Plot"
+    , xlabels = parse(text = Xlab)
+    , shaded = TRUE
+    # Use different Theme
+    , theme.params = getTheme("Vanilla")
+    #### Theme overrides ####
+    # filling density of the shaded area
+    , shade.density = 100 
+    # Alpha transparency will be interpolated from 0 to 1 (Not Run, VERY SLOW)
+    #, shade.alpha = c(0, 1) 
+    # Multiple colors for the shaded area
+    , shade.col = jet.colors(30) 
+    # Multiple stripes are used to generate color gradient
+    , shade.stripes = 50 
+    # Remove rotation for x-axis
+    , xlab.srt = 0 
+    )
 }

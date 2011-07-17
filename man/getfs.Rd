@@ -7,12 +7,12 @@
 
 \usage{
 get.fs(symbol = NULL 
-	, SName = NULL 
-	, from = as.Date("1950-01-01") 
-	, to = Sys.Date() 
-	, strip.spaces = TRUE 
-	, strip.char = "." 
-	)
+    , SName = NULL 
+    , from = as.Date("1950-01-01") 
+    , to = Sys.Date() 
+    , strip.spaces = TRUE 
+    , strip.char = "." 
+    )
 }
 
 \arguments{
@@ -25,7 +25,7 @@ get.fs(symbol = NULL
 }
 
 \value{
-A financial Time Series object. This is a matrix of Yahoo! daily data with columns (Open, High, Low, Close, Volume, Adj.Close).
+A financial Time Series object. This is a matrix of Yahoo! daily data with columns (Open, High, Low, Close, Volume, Adj.Close).\cr
 The following attributes are attached to the object:
 \item{SName}{The Name/Description of the financial series.}
 \item{Symbol}{the input stock symbol.}

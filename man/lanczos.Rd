@@ -22,18 +22,18 @@ lanczos(N, normalized = TRUE)
 x = lanczos(100)
 # Plot the window
 cplot(x 
-	, main = "Lanczos Window" 
-	, legend = attr(x, "type") 
-	)
+    , main = "Lanczos Window" 
+    , legend = attr(x, "type") 
+    )
 # Generate a non-normalised window
 y = lanczos(100, FALSE)
 # Compare the two
 cplot(cbind(x, y) 
-	, main = "Lanczos Window" 
-	, legend = paste(attr(x, "type"), c("Normalised", "Not Normalised")) 
-	, type = c("l", "o") 
-	, xlab.srt = 0 
-	)
+    , main = "Lanczos Window" 
+    , legend = paste(attr(x, "type"), c("Normalised", "Not Normalised")) 
+    , type = c("l", "o") 
+    , xlab.srt = 0 
+    )
 
 }
 

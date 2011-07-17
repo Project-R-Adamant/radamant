@@ -22,18 +22,18 @@ cosine(N, normalized = TRUE)
 x = cosine(100)
 # Plot the window
 cplot(x 
-	, main = "Cosine Window" 
-	, legend = attr(x, "type") 
-	)
+    , main = "Cosine Window" 
+    , legend = attr(x, "type") 
+    )
 # Generate a non-normalised window
 y = cosine(100, FALSE)
 # Compare the two
 cplot(cbind(x, y) 
-	, main = "Cosine Window" 
-	, legend = paste(attr(x, "type"), c("Normalised", "Not Normalised")) 
-	, type = c("l", "o") 
-	, xlab.srt = 0 
-	)
+    , main = "Cosine Window" 
+    , legend = paste(attr(x, "type"), c("Normalised", "Not Normalised")) 
+    , type = c("l", "o") 
+    , xlab.srt = 0 
+    )
 
 }
 

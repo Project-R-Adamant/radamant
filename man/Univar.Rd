@@ -4,15 +4,15 @@
 \description{Perform univariate analisys of the dependent variable Y versus each independent variable X, plotting the results}
 \usage{
 univar(Y
-	, X
-	, stress.period.idx = c()
-	, Y.logit = FALSE
-	, Y.logit.adj = 0.00005
-	, theme.params = getCurrentTheme()
-	, plot = TRUE
-	, overrides = list(...)
-	, ...
-	)
+    , X
+    , stress.period.idx = c()
+    , Y.logit = FALSE
+    , Y.logit.adj = 0.00005
+    , theme.params = getCurrentTheme()
+    , plot = TRUE
+    , overrides = list(...)
+    , ...
+    )
 }
 \arguments{ 
 \item{Y}{The dependent variable. This must be a one column matrix.}
@@ -47,16 +47,16 @@ X = ex_ptf[, -1];
 time.labels = paste("t[", 1:length(Y), "]", sep = "")
 # Univar Analysis
 univar(Y, X
-		, xlabels = parse(text = time.labels)
-		# Remove x-labels rotation
-		, xlab.srt = 0
-		# Set more space between x-labels and the x-axis line (10% of diff(par("usr")[3:4]))
-		, xlab.offset = 0.1
-		# Set more space between x-title and the x-axis line  (20% of diff(par("usr")[3:4]))
-		, xtitle.offset = 0.2
-		# Only 4 tickmarks on the y-axis
-		, y.ticks = 4
-		)
+    , xlabels = parse(text = time.labels)
+    # Remove x-labels rotation
+    , xlab.srt = 0
+    # Set more space between x-labels and the x-axis line (10% of diff(par("usr")[3:4]))
+    , xlab.offset = 0.1
+    # Set more space between x-title and the x-axis line  (20% of diff(par("usr")[3:4]))
+    , xtitle.offset = 0.2
+    # Only 4 tickmarks on the y-axis
+    , y.ticks = 4
+    )
 }
 
 

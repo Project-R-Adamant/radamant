@@ -20,7 +20,7 @@ combine(...)
 }
 
 \value{
-Result depends on the implementation.
+Result depends on the implementation. \cr
 The default method is a call to combine.fs which returns a matrix containing the selected columns from each input object.
 }
 

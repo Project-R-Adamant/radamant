@@ -11,13 +11,13 @@
 FFT(x, ...)
 
 \method{FFT}{default}(x
-	, Fs = 1
-	, half = FALSE
-	, window = NULL
-	, plot = TRUE
-	, optimised = TRUE
-	, ...
-	) 
+    , Fs = 1
+    , half = FALSE
+    , window = NULL
+    , plot = TRUE
+    , optimised = TRUE
+    , ...
+    ) 
 
 }
 
@@ -59,7 +59,7 @@ FFT(ex_fs, half = TRUE, window = kaiser, show.periodicity = TRUE, zoom = 10, sem
 # Multiple FFT on matrix input. 
 # Use Bartlet-Hann window, zoom in to show only 20% of the full frequency spectrum, use semilog axis (decibel)
 FFT(ex_fs[,], window = barthann, zoom = 20, semilog = TRUE, shaded = FALSE)
-	
+
 }
 
 \author{RAdamant Development Team \email{team@r-adamant.org}}

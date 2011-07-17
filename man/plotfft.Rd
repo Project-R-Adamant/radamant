@@ -9,16 +9,16 @@
 \usage{
 
 \method{plot}{FFT}(x 
-	, theme.params = getCurrentTheme() 
-	, overrides = list(...) 
-	, shaded = TRUE 
-	, show.periodicity = FALSE 
-	, show.legend = FALSE 
-	, zoom = 100 
-	, semilog = FALSE 
-	, new.device = FALSE 
-	, ... 
-	) 
+    , theme.params = getCurrentTheme() 
+    , overrides = list(...) 
+    , shaded = TRUE 
+    , show.periodicity = FALSE 
+    , show.legend = FALSE 
+    , zoom = 100 
+    , semilog = FALSE 
+    , new.device = FALSE 
+    , ... 
+    ) 
 
 }
 

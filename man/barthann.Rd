@@ -23,19 +23,19 @@ barthann(N, normalized = TRUE, alpha = 0.38)
 x = barthann(100, FALSE)
 # Plot the window
 cplot(x 
-	, main = "Bartlet-Hann Window" 
-	, legend = attr(x, "type") 
-	)
+    , main = "Bartlet-Hann Window" 
+    , legend = attr(x, "type") 
+    )
 
 # Generate another window with different smoothing factor
 y = barthann(100, normalized = FALSE, alpha = 0.5)
 # Compare the two windows
 cplot(cbind(x, y) 
-	, main = "Bartlet-Hann Window" 
-	, legend = paste("Bartlet-Hann (alpha = ", c(0.38, 0.5), ")", sep = "")
-	, type = c("l", "o") 
-	, xlab.srt = 0 
-	)
+    , main = "Bartlet-Hann Window" 
+    , legend = paste("Bartlet-Hann (alpha = ", c(0.38, 0.5), ")", sep = "")
+    , type = c("l", "o") 
+    , xlab.srt = 0 
+    )
 
 }
 

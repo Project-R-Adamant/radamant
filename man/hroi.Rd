@@ -8,15 +8,15 @@ For Financial series objects (class 'fs'), Close data is processed.
 
 \usage{
 hroi(X 
-	, lag = 1 
-	, mode = c("auto", "range", "selected") 
-	, autolag.start = 1 
-	, range.step = 1 
-	, log = TRUE 
-	, VaR.type = "norm" 
-	, p = 0.05 
-	, ... 
-	)
+    , lag = 1 
+    , mode = c("auto", "range", "selected") 
+    , autolag.start = 1 
+    , range.step = 1 
+    , log = TRUE 
+    , VaR.type = "norm" 
+    , p = 0.05 
+    , ... 
+    )
 }
 
 \arguments{
@@ -40,7 +40,8 @@ The following attributes are attached to the object:
 }
 
 \details{
-For each input time series, returns are calculated for multiple lags, hence average and two-sided Value at Risk (Profit & Loss with p% confidence interval) are computed on the returns.
+For each input time series, returns are calculated for multiple lags, hence average and two-sided Value at Risk (Profit & Loss with p\% 
+confidence interval) are computed on the returns. \cr
 The number and the way lags are computed is controlled by the mode parameter:
 \itemize{
 \item{auto: All lags between autolag.start and max(lag) (DEFAULT option)}

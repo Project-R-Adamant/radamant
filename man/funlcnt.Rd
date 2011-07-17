@@ -16,23 +16,23 @@ Results are plotted if requested.
 func.line.cnt(package = NULL, plot = TRUE, ...) 
 
 \method{plot}{modularity}(x
-	, qtz.type = "linear"
-	, qtz.nbins = 30
-	, qtz.cutoff = 30
-	, theme.params = getCurrentTheme()
-	, overrides = list(...)
-	, border = "transparent"
-	, savepng = FALSE
-	, savepath = getwd()
-	, save.width = 480
-	, save.height = 480
-	, save.resolution = 72
-	, ...
-	)
+    , qtz.type = "linear"
+    , qtz.nbins = 30
+    , qtz.cutoff = 30
+    , theme.params = getCurrentTheme()
+    , overrides = list(...)
+    , border = "transparent"
+    , savepng = FALSE
+    , savepath = getwd()
+    , save.width = 480
+    , save.height = 480
+    , save.resolution = 72
+    , ...
+    )
 }
 
 \arguments{ 
-\item{x}{ Package name or a list of functions.}
+\item{x}{Package name or a list of functions.}
 \item{package}{CHARACTER. Single name of the package to load or array list of function names.}
 \item{plot}{LOGICAL. If TRUE, results are plotted on bar charts.}
 \item{qtz.type}{CHARACTER. qtz.type = "Linear" | "Log" | "None". Partial match on the value is attempted.}
@@ -46,18 +46,18 @@ func.line.cnt(package = NULL, plot = TRUE, ...)
 \item{save.width}{The image width of the png file. See png for details.}
 \item{save.height}{The image height of the png file. See png for details.}
 \item{save.resolution}{The image resolution of the png file. See png for details.}
-\item{...}{ Further arguments to or from other methods.} 
+\item{...}{Alternative way to quickly override theme parameters.}
 }
 
 \details{
-The parameter "qtz.type" controls the type of quantization used to set the bin size for the bar chart of the Code Length Distribution.
+The parameter "qtz.type" controls the type of quantization used to set the bin size for the bar chart of the Code Length Distribution. \cr
 Values:
 \itemize{
 	\item{If "Linear", qtz.nbins equispaced intervarls are computed.}
 	\item{If "Log", qtz.nbins log-spaced intervals are computed based on qtz.cutoff.}
 	\item{In any other case the bin size is set to 1.}
 }
-The parameter "qtz.cutoff" controls how bins are computed when qtz.type = "Log": qtz.nbins equispaced intervals are computed on a log(x/qtz.cutoff) scale. 
+The parameter "qtz.cutoff" controls how bins are computed when qtz.type = "Log": qtz.nbins equispaced intervals are computed on a log(x/qtz.cutoff) scale. \cr
 This creates more intervals/bins in the range 0 < x < qtz.cutoff.
 
 }

@@ -23,19 +23,19 @@ blackman(N, normalized = TRUE, alpha = 0.16)
 x = blackman(100, FALSE)
 # Plot the window
 cplot(x 
-	, main = "Blackman Window" 
-	, legend = attr(x, "type") 
-	)
+    , main = "Blackman Window" 
+    , legend = attr(x, "type") 
+    )
 
 # Generate another window with lower smoothing factor
 y = blackman(100, normalized = FALSE, alpha = 0.4)
 # Compare the two windows
 cplot(cbind(x, y) 
-	, main = "Blackman Window" 
-	, legend = paste("Blackman (alpha = ", c(0.16, 0.4), ")", sep = "")
-	, type = c("l", "o") 
-	, xlab.srt = 0 
-	)
+    , main = "Blackman Window" 
+    , legend = paste("Blackman (alpha = ", c(0.16, 0.4), ")", sep = "")
+    , type = c("l", "o") 
+    , xlab.srt = 0 
+    )
 
 }
 

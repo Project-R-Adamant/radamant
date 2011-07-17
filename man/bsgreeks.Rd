@@ -53,4 +53,3 @@ class(bs2)
 BS.greeks(under=under, strike=strike, rfr=rfr, sigma=sigma, maty=maty, yield=yield, opt.type = "call", calc.type = "gammarec")
 }
 
-

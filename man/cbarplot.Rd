@@ -62,13 +62,15 @@ cbarplot(X
 \value{Void}
 
 \seealso{
-\code{\link{barplot}},  
+\code{\link{barplot}}, 
+\code{\link{setThemeAttr}}, 
 \code{\link{draw.grid}}, 
 \code{\link{draw.legend}}, 
 \code{\link{draw.x.axis}}, 
 \code{\link{draw.x.title}}, 
 \code{\link{draw.y.title}}, 
-\code{\link{draw.y.axis}}
+\code{\link{draw.y.axis}}.
+
 }
 
 \author{ RAdamant Development Team \email{team@r-adamant.org} }

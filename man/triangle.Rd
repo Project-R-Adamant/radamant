@@ -22,18 +22,18 @@ triangle(N, normalized = TRUE)
 x = triangle(100)
 # Plot the window
 cplot(x 
-	, main = "Triangle Window" 
-	, legend = attr(x, "type") 
-	)
+    , main = "Triangle Window" 
+    , legend = attr(x, "type") 
+    )
 # Generate a non-normalised window
 y = triangle(100, FALSE)
 # Compare the two
 cplot(cbind(x, y) 
-	, main = "Triangle Window" 
-	, legend = paste(attr(x, "type"), c("Normalised", "Not Normalised")) 
-	, type = c("l", "o") 
-	, xlab.srt = 0 
-	)
+    , main = "Triangle Window" 
+    , legend = paste(attr(x, "type"), c("Normalised", "Not Normalised")) 
+    , type = c("l", "o") 
+    , xlab.srt = 0 
+    )
 
 }
 
