@@ -12,7 +12,7 @@ barthann(N, normalized = TRUE, alpha = 0.38)
 
 \arguments{ 
 \item{N}{Window length.}
-\item{normalised}{LOGICAL. If TRUE (default), window is normalised to have unitary norm.}
+\item{normalized}{LOGICAL. If TRUE (default), window is normalised to have unitary norm.}
 \item{alpha}{Shape factor (DEFAULT = 0.38).}
 }
 

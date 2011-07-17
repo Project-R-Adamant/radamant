@@ -1,60 +1,79 @@
 \name{plotkit}
 \alias{draw.grid}
 \alias{draw.legend}
-\alias{draw.projections}
 \alias{draw.x.axis}
 \alias{draw.x.title}
 \alias{draw.y.title}
 \alias{draw.y.axis}
 \title{Plotting Tools}
-\description{Utilities functions used for Plotting}
+\description{Utility functions used for Plotting}
 
 \usage{ 
-draw.grid(X, base = NULL, theme.params = getCurrentTheme()) 
+draw.grid(X
+	, base = NULL
+	, theme.params = getCurrentTheme()
+	, method = c("equispaced", "sampling")
+	) 
 
-draw.legend(legend = "", theme.params = getCurrentTheme(), 
-overrides = list(...), ...) 
+draw.legend(legend = ""
+	, theme.params = getCurrentTheme()
+	, overrides = list(...)
+	, ...
+	) 
 
-draw.projections(X, Y, Y.fit, 
-col = getCurrentTheme()[["projection.col"]][1],
-type = getCurrentTheme()[["projection.type"]][1], 
-lty = getCurrentTheme()[["projection.lty"]][1]) 
+draw.x.axis(X
+	, base = NULL
+	, xlabels = NULL
+	, theme.params = getCurrentTheme()
+	, show.labels = TRUE
+	, show.ticks = TRUE
+	, ...
+	) 
+	
+draw.x.title(xtitle = "", theme.params = getCurrentTheme())
 
-draw.x.axis(X, base = NULL, xlabels = NULL, 
-theme.params = getCurrentTheme(), show.labels = TRUE, ...) 
+draw.y.axis(X
+	, ylabels = NULL
+	, theme.params = getCurrentTheme()
+	, side = 1
+	, show.labels = TRUE
+	, show.ticks = TRUE
+	, ...
+	) 
+	
+draw.y.title(ytitle = "", theme.params = getCurrentTheme(), side = 1)
 
-draw.x.title(xtitle = "", theme.params = getCurrentTheme()) 
-
-draw.y.axis(X, ylabels = NULL, theme.params = getCurrentTheme(), 
-side = 1, show.labels = TRUE, ...) 
-
-draw.y.title(ytitle = "", theme.params = getCurrentTheme(), side = 1) 
 }
 
 \arguments{
-\item{X}{ X}
-\item{Y}{ Y}
-\item{base}{ base}
-\item{theme.params}{ theme.params}
-\item{overrides}{ overrides}
-\item{legend}{ legend}
-\item{xlabels}{ xlabels}
-\item{ylabels}{ ylabels}
-\item{xtitle}{ xtitle}
-\item{ytitle}{ ytitle}
-\item{show.labels}{ show.labels}
-\item{Y.fit}{ Y.fit}  
-\item{col}{ col} 
-\item{type}{ type}  
-\item{lty}{ lty}  
-\item{side}{ side} 
+\item{X}{Matrix of data series being plotted (y-values). One column per series.}
+\item{base}{Corresponding x-values (common to all series) associated to the entries of X. If NULL, then base = 1:NROW(X). }
+\item{theme.params}{A valid RAdamant Theme. See setThemeAttr for details. (DEFAULT = getCurrentTheme())}
+\item{overrides}{List of parameters used to override the theme. Only parameters that match those defined by the theme are overridden (DEFAULT = list(...))}
+\item{legend}{Vector of legend texts}
+\item{xlabels}{Labels for the x-axis}
+\item{ylabels}{Labels for the y-axis}
+\item{xtitle}{Title for the x-axis}
+\item{ytitle}{Title for the y-axis}
+\item{show.labels}{LOGICAL. If TRUE, labels are showed.}
+\item{show.ticks}{LOGICAL. If TRUE, tickmarks are showed.}
+\item{side}{The side (1 = left, 2 = right) where the y-axis labels and title are plotted.} 
+\item{method}{Controls how the x-coordinates of the grid vertical lines are computed. 
+If method = "equispaced", N = getThemeAttr("x.ticks", exact = TRUE) points between min(base) and max(base) are computed.
+If method = "sampling", the N lines are drawn at the points given by base[seq(1, length(base), len = N)].
+}
 \item{...}{ Further arguments to or from other methods.} 
 }
 
+\details{
+These are utility funtions used as building blocks for high level plotting with cplot. 
+Most of the behaviour is controlled by the theme options. For details on the available options, see \code{\link{setThemeAttr}}.
+}
+
+
 \value{Void}
 
-\seealso{\code{\link{cplot}}}
+\seealso{ \code{\link{cplot}} }
 
 \author{ RAdamant Development Team \email{team@r-adamant.org} }
-
 

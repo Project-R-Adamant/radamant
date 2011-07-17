@@ -1,13 +1,7 @@
 \name{grautil}
-\alias{getTheme}
-\alias{getCurrentTheme}
-\alias{getThemeAttr}
-\alias{setCurrentTheme}
-\alias{setThemeAttr}
 \alias{transition}
 \alias{gradient}
 \alias{jet.colors}
-\alias{loadThemes}
 \alias{override.list}
 \alias{set.bg}
 \alias{set.bg3d}
@@ -19,12 +13,10 @@
 \alias{comma.mFmt}
 \alias{SI.format} 
 \alias{apply.format} 
-\alias{get.plot.layout}
-\alias{get.plot.params}
-\alias{getProjectionMatrix}
-\alias{setProjectionMatrix}
-\title{ RAdamant Graphical utilities}
-\description{Graphical utilities used by the plotting functions}
-\author{ RAdamant Development Team \email{team@r-adamant.org} }
+
+\title{RAdamant Plot Utility Functions}
+\description{Utility functions for internal plotting functions.}
+
+\author{RAdamant Development Team \email{team@r-adamant.org}}
 
 

@@ -19,7 +19,7 @@ hroi(X
 	)
 }
 
-\arguments{h
+\arguments{
 \item{X}{Input matrix of data to be plotted.}
 \item{lag}{The maximum lag used to compute returns (DEFAULT = 1).}
 \item{mode}{Controls how the lags are computed. See details.}

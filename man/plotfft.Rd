@@ -29,6 +29,9 @@
 \item{shaded}{LOGICAL. If TRUE, the modulus of x is shaded.}
 \item{show.periodicity}{LOGICAL. If TRUE, Periods (1/frequencies) are showed instead of frequencies on the x-axis (DEFAULT = FALSE).}
 \item{show.legend}{LOGICAL. If TRUE, legend is added to the plot (DEFAULT = FALSE)}
+\item{zoom}{ Zoom}
+\item{semilog}{ Semilog}
+\item{new.device}{ new.device}
 \item{...}{Additional parameters passed to the cplot function. Also used to quickly specify theme overrides.}
 }
 

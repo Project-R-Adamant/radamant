@@ -12,7 +12,8 @@ cross.plot(Y
 	, xlabels = NULL
 	, two.axis = TRUE
 	, shaded.first = FALSE
-	, overrides = NULL
+	, overrides = list(...)
+	, ...
 	)
 }
 
@@ -23,7 +24,8 @@ cross.plot(Y
 \item{xlabels}{Vector of labels associated to the rows of X (i.e. Time labels)(DEFAULT: NULL)}
 \item{two.axis}{LOGICAL. If TRUE, series are plotted on two axis (two scales).}
 \item{shaded.first}{LOGICAL. If TRUE, the variable Y is shaded.}
-\item{overrides}{List of parameters to override the theme. Must match by name the parameters defined by the theme (DEFAULT: NULL)}
+\item{overrides}{List of parameters to override the theme. Must match by name the parameters defined by the theme (DEFAULT: list(...))}
+\item{...}{Alternative way to quickly override the theme.}
 }
 
 \value{Void}
