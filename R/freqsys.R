@@ -14,7 +14,6 @@
 #######################################################################################################################
 hann = function(N, normalized = TRUE) {
 	# Hann raised cosine
-	Logger(message = "Hann raised cosine", from = "hann", line = 2, level = 1);
 	res = 0.5*(1-cos(2*pi*0:(N-1)/(N-1)));
 	class(res) = "Window";
 	attr(res, "type") = "Hann";
@@ -38,7 +37,6 @@ hann = function(N, normalized = TRUE) {
 #######################################################################################################################
 hamming = function(N, normalized = TRUE) {
 	# Hamming raised cosine
-	Logger(message = "Hamming raised cosine", from = "hamming", line = 2, level = 1);
 	res = 0.54 - 0.46*cos(2*pi*0:(N-1)/(N-1));
 	class(res) = "Window";
 	attr(res, "type") = "Hamming";
@@ -85,8 +83,8 @@ cosine = function(N, normalized = TRUE) {
 lanczos = function(N, normalized = TRUE) {
 	x = pi*0:(N-1)/(N-1);
 	# Sinc window
-	Logger(message = "Sinc window", from = "lanczos", line = 3, level = 1);
 	res = sin(x)/x;
+	res[1] = 1;
 	class(res) = "Window";
 	attr(res, "type") = "lanczos";
 	if(normalized)
@@ -260,33 +258,25 @@ kaiser = function(N, normalized = TRUE, alpha = 3) {
 FFT = function(x, ...) UseMethod("FFT")
 FFT.default = function(x, Fs = 1, half = FALSE, window = NULL, plot = TRUE, optimised = TRUE, ...) {
 	# Check if input is an instance of the Financial Series class
-	Logger(message = "Check if input is an instance of the Financial Series class", from = "FFT.default", line = 2, level = 1);
 	if(class(x) == "fs") {
 		# Take a copy
-		Logger(message = "Take a copy", from = "FFT.default", line = 4, level = 1);
 		Y = x;
 		# Process Close data
-		Logger(message = "Process Close data", from = "FFT.default", line = 6, level = 1);
 		x = Y[, "Close", drop = FALSE];
 		# Assign Column Name
-		Logger(message = "Assign Column Name", from = "FFT.default", line = 8, level = 1);
 		colnames(x) = attr(Y, "SName");
 	}
 	# Frequency points
-	Logger(message = "Frequency points", from = "FFT.default", line = 11, level = 1);
 	N = NROW(x);
 	# Number of time series
-	Logger(message = "Number of time series", from = "FFT.default", line = 13, level = 1);
 	V = NCOL(x);
 	if(is.null(dim(x)))
 		dim(x) = c(N, V);
 	if(optimised) {
 		# Compute number of FFT points that would allow for a true FFT algorithm
-		Logger(message = "Compute number of FFT points that would allow for a true FFT algorithm", from = "FFT.default", line = 18, level = 1);
 		Nfft = 2^ceiling(log2(N));
 		if(Nfft != N) {
 			# Padding data
-			Logger(message = "Padding data", from = "FFT.default", line = 21, level = 1);
 			x = rbind(x, matrix(0, nrow = Nfft-N, ncol = V));
 			N = Nfft;
 		}
@@ -297,63 +287,48 @@ FFT.default = function(x, Fs = 1, half = FALSE, window = NULL, plot = TRUE, opti
 		window = NULL;
     }
 	# Compute Unitary FFT
-	Logger(message = "Compute Unitary FFT", from = "FFT.default", line = 31, level = 1);
 	if(is.null(window)) {
 		# Rectangular window
-		Logger(message = "Rectangular window", from = "FFT.default", line = 33, level = 1);
 		Xf = mvfft(x)/sqrt(N);
 	} else {
 		# Use specified window
-		Logger(message = "Use specified window", from = "FFT.default", line = 36, level = 1);
 		w = window(N);
 		Xf = mvfft(w * x)/sqrt(N);
 	}
 	colnames(Xf) = get.col.names(x);
 	# Generate frequency interval (-Fs/2:Fstep:Fs/2)
-	Logger(message = "Generate frequency interval (-Fs/2:Fstep:Fs/2)", from = "FFT.default", line = 41, level = 1);
 	fstep = Fs/N;
 	if(half) {
 		# Frequencies vector
-		Logger(message = "Frequencies vector", from = "FFT.default", line = 44, level = 1);
 		f = seq(0,(ceiling(N/2)-1) *fstep, by = fstep); 
 		# Select frequency points  
-		Logger(message = "Select frequency points  ", from = "FFT.default", line = 46, level = 1);
 		fpoints = 1:ceiling(N/2);
 	} else {
 		# Frequencies vector
-		Logger(message = "Frequencies vector", from = "FFT.default", line = 49, level = 1);
 		f = seq(0,(N-1) *fstep, by = fstep) -floor(N/2)*fstep; 
 		# Select frequency points  
-		Logger(message = "Select frequency points  ", from = "FFT.default", line = 51, level = 1);
 		fpoints = c( (ceiling(N/2)+1):N, 1:ceiling(N/2) ) ;
 	}
 	class(Xf) = "FFT";
 	# Sampling frequency
-	Logger(message = "Sampling frequency", from = "FFT.default", line = 55, level = 1);
 	attr(Xf, "Fs") = Fs;
 	# Windowing function
-	Logger(message = "Windowing function", from = "FFT.default", line = 57, level = 1);
 	if(is.null(window)) {
 		attr(Xf, "window") = "Rectangular";
 	} else {
 		attr(Xf, "window") = attr(w, "type");
 	}
 	# Frequencies
-	Logger(message = "Frequencies", from = "FFT.default", line = 63, level = 1);
 	attr(Xf, "freq") = f;
 	# Frequency points (index)
-	Logger(message = "Frequency points (index)", from = "FFT.default", line = 65, level = 1);
 	attr(Xf, "fpoints") = fpoints;
 	# Half spectrum flag
-	Logger(message = "Half spectrum flag", from = "FFT.default", line = 67, level = 1);
 	attr(Xf, "half") = half;
 	if(plot)
 		plot(Xf, ...);	
 	# Cleanup memory
-	Logger(message = "Cleanup memory", from = "FFT.default", line = 71, level = 1);
 	cleanup(keep = "Xf");
 	# Return output
-	Logger(message = "Return output", from = "FFT.default", line = 73, level = 1);
 	Xf
 }
 #######################################################################################################################
@@ -410,10 +385,8 @@ plot.FFT = function(x
 	if(class(x) != "FFT")
 		stop("Argument is not an istance of the class FFT");
 	# Get series names
-	Logger(message = "Get series names", from = "plot.FFT", line = 4, level = 1);
 	X.names = get.col.names(x);
     # Set defaults parameters for spectral domain plots
-    Logger(message = "Set defaults parameters for spectral domain plots", from = "plot.FFT", line = 6, level = 1);
     default.parms = list(xlab.srt = 0
 						, xlab.fmt = "%.2f"
 						, shade.density = 100
@@ -424,45 +397,34 @@ plot.FFT = function(x
 						, y.ticks = 4
                         );
     # Combine FFT default parms with overrides, giving precedence to overrides
-    Logger(message = "Combine FFT default parms with overrides, giving precedence to overrides", from = "plot.FFT", line = 16, level = 1);
     overrides = override.list(what = default.parms, overrides = overrides, append = TRUE);
     # Override theme parameters if necessary
-    Logger(message = "Override theme parameters if necessary", from = "plot.FFT", line = 18, level = 1);
     theme.params = override.list(what = theme.params, override = overrides);
 	# Number of frequency series to plot
-	Logger(message = "Number of frequency series to plot", from = "plot.FFT", line = 20, level = 1);
 	V = NCOL(x);
 	# Get frequency points
-	Logger(message = "Get frequency points", from = "plot.FFT", line = 22, level = 1);
 	fpoints = attr(x, "fpoints");
 	freq = attr(x, "freq");
 	if(zoom < 100) {
 		# Number of available frequency points
-		Logger(message = "Number of available frequency points", from = "plot.FFT", line = 26, level = 1);
 		N = length(fpoints);
 		if(attr(x, "half")) {
 			# Compute number of points to show, (percentage of the full frequency spectrum)
-			Logger(message = "Compute number of points to show, (percentage of the full frequency spectrum)", from = "plot.FFT", line = 29, level = 1);
 			Nzoom = max(round(zoom*N/100), 2);
 			# Subset frequency points
-			Logger(message = "Subset frequency points", from = "plot.FFT", line = 31, level = 1);
 			fpoints = fpoints[1:Nzoom];
 			freq = freq[1:Nzoom];
 		} else {
 			# Compute number of points to show, (percentage of the full frequency spectrum)
-			Logger(message = "Compute number of points to show, (percentage of the full frequency spectrum)", from = "plot.FFT", line = 35, level = 1);
 			Nzoom = min(max(2*round(zoom*N/100)+1, 2), N);
 			# Workout the shift needed to soom on the center of the spectrum
-			Logger(message = "Workout the shift needed to soom on the center of the spectrum", from = "plot.FFT", line = 37, level = 1);
 			shift = N - (ceiling(N/2)+1) + 1 - ((Nzoom-1)/2)
 			# Subset frequency points
-			Logger(message = "Subset frequency points", from = "plot.FFT", line = 39, level = 1);
 			fpoints = fpoints[1:Nzoom + shift];
 			freq = freq[1:Nzoom + shift];
 		}
 	}
 	# Set title and labels for x axis
-	Logger(message = "Set title and labels for x axis", from = "plot.FFT", line = 44, level = 1);
 	xlabels = apply.format(freq, fmt = theme.params[["xlab.fmt"]]);
 	xtitle = "Frequency";
 	if(show.periodicity) {
@@ -475,25 +437,19 @@ plot.FFT = function(x
 	while(v < V) {
 		v = v + 1;
         # Multiple plots on one window
-        Logger(message = "Multiple plots on one window", from = "plot.FFT", line = 56, level = 2);
 		if(v > 1 || new.device)
 			dev.new();
         # Set the number of plottable areas in the window
-        Logger(message = "Set the number of plottable areas in the window", from = "plot.FFT", line = 59, level = 2);
         par(mfrow = c(2, 1));
         # Plot |x|
-        Logger(message = "Plot |x|", from = "plot.FFT", line = 61, level = 2);
 		if(semilog) {
 			# Plot in decibel scale
-			Logger(message = "Plot in decibel scale", from = "plot.FFT", line = 63, level = 2);
 			x.Mod = 10*log10(Mod(x[fpoints, v, drop = FALSE]));
 			# Adjust suffix for y-axis labels in case of semilog scale
-			Logger(message = "Adjust suffix for y-axis labels in case of semilog scale", from = "plot.FFT", line = 65, level = 2);
 			overrides[["ylab.suffix"]] = "dB";
 			yrange = range(x.Mod, na.rm = TRUE);
 		} else {
 			# Plot on linear scale
-			Logger(message = "Plot on linear scale", from = "plot.FFT", line = 69, level = 2);
 			x.Mod = Mod(x[fpoints, v, drop = FALSE]);
 			yrange = c(0, max(x.Mod, na.rm = TRUE));
 		}
@@ -511,10 +467,8 @@ plot.FFT = function(x
 			, ...
 			);
 		# Restore suffix on y-axis labels for Arg plot
-		Logger(message = "Restore suffix on y-axis labels for Arg plot", from = "plot.FFT", line = 86, level = 2);
 		overrides[["ylab.suffix"]] = theme.params[["ylab.suffix"]];
         # Plot Arg(x)
-        Logger(message = "Plot Arg(x)", from = "plot.FFT", line = 88, level = 2);
         cplot(Arg(x[fpoints, v, drop = FALSE])
 					, yrange = c(-pi, pi)
                     , theme.params = theme.params
@@ -529,7 +483,6 @@ plot.FFT = function(x
 					, ...
                 );
 		# Draw custom labels for the phase
-		Logger(message = "Draw custom labels for the phase", from = "plot.FFT", line = 102, level = 2);
 		draw.y.axis(X = c(-pi, -pi/2, pi/2, pi)
 					, ylabels = expression(-pi, -pi/2, pi/2, pi)
 					, theme.params = theme.params
@@ -566,50 +519,39 @@ plot.FFT = function(x
 #######################################################################################################################
 specgram = function(X, win.size = max(1, NROW(X)/20), plot = TRUE, ...) {
 	# Check if input is an instance of the Financial Series class
-	Logger(message = "Check if input is an instance of the Financial Series class", from = "specgram", line = 2, level = 1);
 	if(class(X) == "fs") {
 		# Take a copy
-		Logger(message = "Take a copy", from = "specgram", line = 4, level = 1);
 		Y = X;
 		# Process Close data
-		Logger(message = "Process Close data", from = "specgram", line = 6, level = 1);
 		X = Y[, "Close", drop = FALSE];
 		# Assign Column Name
-		Logger(message = "Assign Column Name", from = "specgram", line = 8, level = 1);
 		colnames(X) = attr(Y, "SName");
 	}
 	# Frequency points
-	Logger(message = "Frequency points", from = "specgram", line = 11, level = 1);
 	N = NROW(X);
 	# Number of time series
-	Logger(message = "Number of time series", from = "specgram", line = 13, level = 1);
 	V = NCOL(X);
 	if(is.null(dim(X)))
 		dim(X) = c(N, V);
 	# Compute window indexes
-	Logger(message = "Compute window indexes", from = "specgram", line = 17, level = 1);
 	X.rownames = get.row.names(X);
 	win.idx = splitWindow(N, win.size = win.size, labels = X.rownames, mode = "SW", ...);
 	# Extract index components
-	Logger(message = "Extract index components", from = "specgram", line = 20, level = 1);
 	start.idx = win.idx[, 1];
 	end.idx = win.idx[, 2];
 	TotIterations = NROW(win.idx);
 	NFFT = 2^ceiling(log2(win.size));	
 	# Declare output
-	Logger(message = "Declare output", from = "specgram", line = 25, level = 1);
 	res = array(NA, dim = c(NFFT, TotIterations, V));
 	dimnames(res) = list(1:NFFT, rownames(win.idx), get.col.names(X));
 	n = 0;
 	while(n < TotIterations) {
 		n = n + 1;
 		# Compute FFT
-		Logger(message = "Compute FFT", from = "specgram", line = 31, level = 2);
 		curr.Xf = FFT(X[start.idx[n]:end.idx[n], , drop = FALSE], optimise = TRUE, plot = FALSE, half = TRUE, ...);
 		res[, n, ] = curr.Xf;
 	}
 	# Set attributes
-	Logger(message = "Set attributes", from = "specgram", line = 35, level = 1);
 	class(res) = "specgram";
 	attr(res, "Fs") = attr(curr.Xf, "Fs");
 	attr(res, "window") = attr(curr.Xf, "window");
@@ -617,7 +559,6 @@ specgram = function(X, win.size = max(1, NROW(X)/20), plot = TRUE, ...) {
 	attr(res, "fpoints") = attr(curr.Xf, "fpoints");
 	attr(res, "half") = attr(curr.Xf, "half");
 	# Plotting
-	Logger(message = "Plotting", from = "specgram", line = 42, level = 1);
 	if(plot)
 		plot(res, ...);
 	res
@@ -653,41 +594,31 @@ plot.specgram = function(x
 						, ...
 						) {
 	# Define default plotting parameters
-	Logger(message = "Define default plotting parameters", from = "plot.specgram", line = 2, level = 1);
 	default.params = list(theta = 50, xlab3d.srt = 15);
 	# Override default parameters (if necessary)
-	Logger(message = "Override default parameters (if necessary)", from = "plot.specgram", line = 4, level = 1);
 	overrides = override.list(what = default.params, override = overrides, append = TRUE);
 	# Override theme parameters
-	Logger(message = "Override theme parameters", from = "plot.specgram", line = 6, level = 1);
 	theme.params = override.list(what = theme.params, override = overrides);
 	# Extract attributes
-	Logger(message = "Extract attributes", from = "plot.specgram", line = 8, level = 1);
 	freqs = attr(x, "freq");
 	fpoints = attr(x, "fpoints");
 	Fs = attr(x, "Fs");
 	# Number of Series analysed
-	Logger(message = "Number of Series analysed", from = "plot.specgram", line = 12, level = 1);
 	Nseries = dim(x)[3];
 	# Number of FFT windows
-	Logger(message = "Number of FFT windows", from = "plot.specgram", line = 14, level = 1);
 	Nwin = dim(x)[2];
 	# Extract x-axis Labels
-	Logger(message = "Extract x-axis Labels", from = "plot.specgram", line = 16, level = 1);
 	xlabels = dimnames(x)[[2]];
 	# Series Names
-	Logger(message = "Series Names", from = "plot.specgram", line = 18, level = 1);
 	x.names = dimnames(x)[[3]];
 	n = 0;
 	while(n < Nseries) {
 		n = n + 1;
 		# Compute Module of the current frequency spectra
-		Logger(message = "Compute Module of the current frequency spectra", from = "plot.specgram", line = 23, level = 2);
 		xmod = Mod(x[fpoints, , n]);
 		if(n > 1)
 			dev.new();
 		# Set plotting window background
-		Logger(message = "Set plotting window background", from = "plot.specgram", line = 27, level = 2);
 		par(bg = theme.params[["fg.col"]]);
 		if(show.periodicity[n]) {
 			ydata = 1/freqs;
@@ -698,7 +629,6 @@ plot.specgram = function(x
 		}
 		if(plot3d) {
 			# Define function for image3d plotting
-			Logger(message = "Define function for image3d plotting", from = "plot.specgram", line = 37, level = 2);
 			image3d = function(x, y, z, xlim, ylim, zlim, col.lev, colmat, theme.params, ...) {
 				par(new = TRUE);
 				cplot3d(x, y, matrix(zlim[1], NROW(z), NCOL(z))
@@ -710,7 +640,6 @@ plot.specgram = function(x
 						)
 			}
 			# Plot 3D Spectrogram
-			Logger(message = "Plot 3D Spectrogram", from = "plot.specgram", line = 48, level = 2);
 			cplot3d(x = 1:Nwin
 					, y = ydata
 					, z = t(xmod)
@@ -726,19 +655,17 @@ plot.specgram = function(x
 					)
 		} else {
 			# Plot Spectrogram
-			Logger(message = "Plot Spectrogram", from = "plot.specgram", line = 63, level = 2);
 			image(x = 1:Nwin
 					, y = ydata
 					, z = t(xmod)
 					, col = theme.params[["colmap"]]
 					, xlab = ""
 					, ylab = ""
-					, axes = F
+					, axes = FALSE
 					, main = paste("Spectrogram of", x.names[n])
 					, col.main = theme.params[["col.main"]]
 					);
 			# Add x-axis
-			Logger(message = "Add x-axis", from = "plot.specgram", line = 74, level = 2);
 			draw.x.axis(c(range(ydata), rep(NA, Nwin-2))
 						, base = 1:Nwin
 						, xlabels = xlabels
@@ -746,17 +673,14 @@ plot.specgram = function(x
 						, show.labels = TRUE
 						);
 			# Add x title
-			Logger(message = "Add x title", from = "plot.specgram", line = 81, level = 2);
 			draw.x.title(xtitle = xtitle, theme.params = theme.params);
 			# Add y-axis
-			Logger(message = "Add y-axis", from = "plot.specgram", line = 83, level = 2);
 			draw.y.axis(ydata
 						, theme.params = theme.params
 						, side = 1
 						, show.labels = TRUE
 						);
 			# Add y title  (left side)
-			Logger(message = "Add y title  (left side)", from = "plot.specgram", line = 89, level = 2);
 			draw.y.title(ytitle = ytitle, theme.params = theme.params, side = 1);
 		}
 	}

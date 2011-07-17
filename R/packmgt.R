@@ -1,6 +1,9 @@
 # FUNCTION: cleanup
 #######################################################################
 #
+# AUTHOR: Rocco Claudio Cannizzaro
+# DATE: 10/08/2010
+#
 # DESCRIPTION:
 # Cleanup environment and (optionally) performs Garbage Collection
 #
@@ -15,39 +18,36 @@
 # {Boolean} gc = FALSE
 # - If TRUE, garbage collection is performed to release memory.
 #
+#
 # RETURNS: VOID
 #
 #######################################################################
 cleanup = function(keep = c()
 					, env = parent.frame() 
 					, gc = FALSE) {
-	
 	#cat("\n**********************\n*Performing cleanup.*\n**********************\n");
-	
 	# Get list of objects from the specified environment
-	Logger(message = "Get list of objects from the specified environment", from = "cleanup", line = 3, level = 1);
 	obj.list = ls(envir = env);
 	# Get index of objects to exclude from deletion
-	Logger(message = "Get index of objects to exclude from deletion", from = "cleanup", line = 5, level = 1);
 	keep.idx = which(obj.list %in% keep);
 	# Remove all objects from the specified environment
-	Logger(message = "Remove all objects from the specified environment", from = "cleanup", line = 7, level = 1);
 	if(length(keep.idx) > 0) {
 		rm(list = obj.list[-keep.idx], envir = env);
 	} else {
 		rm(list = obj.list, envir = env);
 	}
 	# Remove all objects from the current environment (this function)
-	Logger(message = "Remove all objects from the current environment (this function)", from = "cleanup", line = 13, level = 1);
 	rm(list = c("keep", "env", "obj.list", "keep.idx"));
 	# Perform gc() if required
-	Logger(message = "Perform gc() if required", from = "cleanup", line = 15, level = 1);
 	if(gc) {
 		gc(verbose = TRUE, reset = TRUE);
 	}
 }
 #######################################################################
 # FUNCTION: func.line.cnt
+#
+# AUTHOR: Rocco Claudio Cannizzaro
+# DATE: 10/08/2010
 #
 # DESCRIPTION:
 # Given a package name or a list of functions, for each function X in
@@ -90,46 +90,33 @@ cleanup = function(keep = c()
 # - $fcn.called = Number of function calling the function
 #
 #######################################################################
-func.line.cnt = function(package = NULL, plot = TRUE, qtz.type = "NONE", qtz.nbins = 10, qtz.cutoff = 30) {
+func.line.cnt = function(package = NULL, plot = TRUE, ...) {
 	stopifnot(package != NULL);
-	
 	is.pkg = FALSE;
-	
 	# Load the package
-	Logger(message = "Load the package", from = "func.line.cnt", line = 4, level = 1);
 	if(length(package) == 1) {
 		# Attempt to load package
-		Logger(message = "Attempt to load package", from = "func.line.cnt", line = 6, level = 1);
-		is.pkg = suppressWarnings(require(package, character.only=TRUE));
+		is.pkg = suppressWarnings(require(package, character.only = TRUE));
 		if(is.pkg) {
 			# Get list of functions contained in the pachage
-			Logger(message = "Get list of functions contained in the pachage", from = "func.line.cnt", line = 9, level = 1);
 			fcn.list = lsf.str(paste("package", package, sep=":"));
 		} else {
 			cat("Package ", package, " does not exists.\n");
 			cat("Assuming input data is a list of function.\n");
 			# Attempt matrix conversion
-			Logger(message = "Attempt matrix conversion", from = "func.line.cnt", line = 14, level = 1);
 			fcn.list = as.matrix(package);
 			# Transform to 1D array
-			Logger(message = "Transform to 1D array", from = "func.line.cnt", line = 16, level = 1);
 			dim(fcn.list)[2] = 1;
 		}
 	} else {
 		# Attempt matrix conversion
-		Logger(message = "Attempt matrix conversion", from = "func.line.cnt", line = 20, level = 1);
 		fcn.list = as.matrix(package);
 		# Transform to 1D array
-		Logger(message = "Transform to 1D array", from = "func.line.cnt", line = 22, level = 1);
 		dim(fcn.list)[2] = 1; 
 	}
-	
 	# Number of functions
-	Logger(message = "Number of functions", from = "func.line.cnt", line = 25, level = 1);
 	N = length(fcn.list);
-	
 	# Initialise output data frame
-	Logger(message = "Initialise output data frame", from = "func.line.cnt", line = 27, level = 1);
 	fcn.stats = data.frame( fcn.name = as.vector(fcn.list)
 							, fcn.lines = rep(0, N)
 							, fcn.subcalls = rep(0, N)
@@ -139,27 +126,20 @@ func.line.cnt = function(package = NULL, plot = TRUE, qtz.type = "NONE", qtz.nbi
 	names(subcalls.list) = fcn.list;
 	called.list = vector("list", N);
 	names(called.list) = fcn.list;
-	
-	for (i in 1:N) {
+	i = 0;
+	while(i < N) {
+		i = i + 1;
 		# Check wheather the function exists
-		Logger(message = "Check wheather the function exists", from = "func.line.cnt", line = 38, level = 2);
 		if(exists(fcn.list[i], mode = "function")) {
 			# Retrieve the body of the current function
-			Logger(message = "Retrieve the body of the current function", from = "func.line.cnt", line = 40, level = 2);
 			curr.fcn = body(fcn.list[i]);
-			
 			# Split the function by lines
-			Logger(message = "Split the function by lines", from = "func.line.cnt", line = 42, level = 2);
 			curr.fcn.lines = deparse(curr.fcn);
-			
 			# Lines of code including the function header
-			Logger(message = "Lines of code including the function header", from = "func.line.cnt", line = 44, level = 2);
 			fcn.stats[i, 2] = length(curr.fcn.lines) + 1;
-			
 			# Look for calls to other functions of the package (excluding recursion)
-			Logger(message = "Look for calls to other functions of the package (excluding recursion)", from = "func.line.cnt", line = 46, level = 2);
 			for (subcall in fcn.list[-i]) {
-				if (length(grep(paste("(\\<)(\\W)?", subcall, "\\(", sep=""), curr.fcn.lines)) > 0) {
+				if (length(grep(paste("(\\<)(\\W)?", subcall, "\\(", sep=""), curr.fcn.lines)) > 0) { # Balance parenthesys )
 					# Update the count of subcalls made by the current function
 					fcn.stats[i, 3] = fcn.stats[i, 3] + 1;
 					subcalls.list[[i]] = c(subcalls.list[[i]], subcall);
@@ -176,135 +156,182 @@ func.line.cnt = function(package = NULL, plot = TRUE, qtz.type = "NONE", qtz.nbi
 			fcn.stats[i, 2:4] = rep(0, 3);
 		}
 	}
-	
-	# Plotting results
-	if(plot) {
-	
-		
-		qtz.x.labels = FALSE;
-		# Linear quantisation of the lines of code
-		if (length(grep("lin", qtz.type, ignore.case = TRUE)) > 0) {
-			qtz.x.labels = TRUE;
-			# Equispaced thresholds
-			qtz.step = floor(max(fcn.stats[,2])/qtz.nbins);
-			qtz.values = floor(fcn.stats[,2]/qtz.step)*qtz.step;
-			# Lines of code distribution
-			#code.lines = 100*table(paste(qtz.values, qtz.values+qtz.step-1, sep="~"))/N;
-			code.lines = 100*table(qtz.values)/N;
-		} else if (length(grep("log", qtz.type, ignore.case = TRUE)) > 0) {
-			qtz.x.labels = TRUE;
-			# Scale the x axis based on the cutoff point:
-			#  - log scale expands values less than cutoff
-			#  - log scale collapse values grater than cutoff
-			qtz.scaled.values = fcn.stats[,2] / qtz.cutoff;
-			# Log transform
-			qtz.log.values = log(qtz.scaled.values);
-			# Equispaced log thresholds
-			qtz.step = max(qtz.log.values) / qtz.nbins;
-			qtz.trsh = floor(qtz.log.values/qtz.step)*qtz.step;
-			# Inverse log transform
-			qtz.values = round(qtz.cutoff*exp(qtz.trsh), digit = 0);
-			# Lines of code distribution
-			#code.lines = 100*table(paste(qtz.values, qtz.values + c(diff(qtz.values), max(qtz.values)), sep="~"))/N;
-			code.lines = 100*table(qtz.values)/N;
-		
-		} else {
-			# Lines of code distribution
-			code.lines = 100*table(fcn.stats[,2])/N;
-		}
-		
-		if (qtz.x.labels) {
-			# get the bins
-			x.bins = as.integer(dimnames(code.lines)[[1]]);
-			x.bins.len = length(x.bins);
-			# calculate right interval of each bin
-			x.bins.bounds = c(x.bins[-x.bins.len] + diff(x.bins) - 1, x.bins[x.bins.len]);
-			# define the labels
-			x.labels = paste(x.bins, "~", x.bins.bounds, "  ", sep="");
-			# remove labels for bins of interval lenght 1
-			idx = which(x.bins.bounds-x.bins == 0);
-			x.labels[idx] = paste(x.bins[idx], "  ", sep="");
-		} else {
-			x.labels = paste(dimnames(code.lines)[[1]], "  ", sep="");
-		}
-		
-		y.max = max(code.lines);
-		if(y.max > 0) {
-			y.labels = round(seq(0, y.max, y.max/10), digit=0);
-		} else {
-			y.labels = 0;
-		}
-		
-		X11()
-        par(mar = c(5, 4, 4, 2) + 0.1)
-		bp = barplot(code.lines
-				, main = "Code length distribution"
-				, xlab = "Lines of code"
-				, ylab = "# Functions"
-				, density = 60
-				, axes = FALSE
-				, axisnames = FALSE
-				#, names.arg = x.labels
-				, ylim = c(0, 1.05*y.max)
-				);
-		## Plot rotated axis labels
-		text(bp
-			, par("usr")[3] - 1
-			, srt = 45
-			, adj = 1
-			, labels = x.labels
-			, xpd = TRUE
-			);
-		axis(side = 2, at = y.labels, labels = paste(y.labels, "%", sep=""), las=1); 
-		grid();
-		# Calls distribution
-		subcalls = 100*table(fcn.stats[,3])/N;
-		y.max = max(subcalls);
-		y.labels = round(seq(0, y.max, y.max/10), digit=0);
-		
-		X11()
-		barplot(subcalls
-				, main = "Modularity distribution"
-				, xlab = "Sub-calls"
-				, ylab = "# Functions"
-				, density = 60
-				, axes = FALSE
-				, ylim = c(0, 1.05*y.max)
-				);
-		axis(side = 2, at = y.labels, labels = paste(y.labels, "%", sep=""), las=1); 
-		grid();
-		# Lines of code distribution
-		called = 100*table(fcn.stats[,4])/N;
-		y.max = max(called);
-		y.labels = round(seq(0, y.max, y.max/10), digit=0);
-		
-		X11()
-		barplot(called
-				, main = "Impact Analysis"
-				, xlab = "dependant"
-				, ylab = "# Functions"
-				, density = 60
-				, axes = FALSE
-				, ylim = c(0, 1.05*y.max)
-				);
-		axis(side = 2, at = y.labels, labels = paste(y.labels, "%", sep=""), las=1); 
-		grid();
-		
-	}
-	if(is.pkg) {
-		# Unload the package
-		detach(paste("package", package, sep=":"), character.only=TRUE);
-	}
-		
 	# Return results
-	list(fcn.stats = fcn.stats
-			, subcalls.list = subcalls.list
-			, called.list = called.list
-		)
+	res = list(fcn.stats = fcn.stats
+				, subcalls.list = subcalls.list
+				, called.list = called.list
+				);
+	class(res) = "modularity"
+	attr(res, "package") = package;
+	if(plot) {
+		# Plot Results
+		plot(res, ...);
+	}
+	res
 }
+plot.modularity = function(x
+							, qtz.type = "linear"
+							, qtz.nbins = 30
+							, qtz.cutoff = 30
+							, theme.params = getCurrentTheme()
+							, overrides = list(...)
+							, border = "transparent"
+							, savepng = FALSE
+							, savepath = getwd()
+							, save.width = 480
+							, save.height = 480
+							, save.resolution = 72
+							, ...
+							) {
+	# Get package name
+	package = attr(x, "package");
+	N = dim(x$fcn.stats)[1];
+	qtz.x.labels = FALSE;
+	# Linear quantisation of the lines of code
+	if (length(grep("lin", qtz.type, ignore.case = TRUE)) > 0) {
+		qtz.x.labels = TRUE;
+		# Equispaced thresholds
+		qtz.step = floor(max(x$fcn.stats[,2])/qtz.nbins);
+		qtz.values = floor(x$fcn.stats[,2]/qtz.step)*qtz.step;
+		# Lines of code distribution
+		code.lines = 100*table(qtz.values)/N;
+	} else if (length(grep("log", qtz.type, ignore.case = TRUE)) > 0) {
+		qtz.x.labels = TRUE;
+		# Scale the x axis based on the cutoff point:
+		#  - log scale expands values less than cutoff
+		#  - log scale collapse values grater than cutoff
+		qtz.scaled.values = x$fcn.stats[,2] / qtz.cutoff;
+		# Log transform
+		qtz.log.values = log(qtz.scaled.values);
+		# Equispaced log thresholds
+		qtz.step = max(qtz.log.values) / qtz.nbins;
+		qtz.trsh = floor(qtz.log.values/qtz.step)*qtz.step;
+		# Inverse log transform
+		qtz.values = round(qtz.cutoff*exp(qtz.trsh), digit = 0);
+		# Lines of code distribution
+		#code.lines = 100*table(paste(qtz.values, qtz.values + c(diff(qtz.values), max(qtz.values)), sep="~"))/N;
+		code.lines = 100*table(qtz.values)/N;
+	} else {
+		# Lines of code distribution
+		code.lines = 100*table(x$fcn.stats[,2])/N;
+	}
+	if (qtz.x.labels) {
+		# get the bins
+		x.bins = as.integer(dimnames(code.lines)[[1]]);
+		x.bins.len = length(x.bins);
+		# calculate right interval of each bin
+		x.bins.bounds = c(x.bins[-x.bins.len] + diff(x.bins) - 1, x.bins[x.bins.len]);
+		# define the labels
+		x.labels = paste(x.bins, "~", x.bins.bounds, "  ", sep="");
+		# remove labels for bins of interval lenght 1
+		idx = which(x.bins.bounds-x.bins == 0);
+		x.labels[idx] = paste(x.bins[idx], "  ", sep="");
+		x.labels[x.bins.len] = paste(x.bins[x.bins.len], "+", sep = "")
+	} else {
+		x.labels = paste(dimnames(code.lines)[[1]], "  ", sep="");
+	}
+	y.max = max(code.lines);
+	if(y.max > 0) {
+		y.labels = round(seq(0, y.max, len = 6), digit = 1);
+	} else {
+		y.labels = 0;
+	}
+	# Compute Code Length Distribution
+	dev.new();
+	if(savepng)
+		png(file=paste(savepath, "/", package, "_CodeLenght.png", sep = "")
+			, width = save.width
+			, height = save.height
+			, res = save.resolution
+			);
+	# Set default plotting parameters
+	default.params = list(xlab.srt = ifelse(qtz.x.labels, 45, 0)
+							, y.ticks = 4
+							, x.ticks = "ALL"
+							, xlab.offset = 0.01
+							, xtitle.offset = 0.13
+							, xtitle.font = 4
+							, ytitle.font = 4
+							, ylab.suffix = "%"
+							);
+	# Override Theme parameters with default for this class
+	theme.params = override.list(what = theme.params, overrides = default.params);
+	# Plot Code Length Distribution
+	cbarplot(code.lines
+			, main = paste(package, "Code Length Distribution", sep = " - ")
+			, xtitle = "Lines of code"
+			, ytitle = "% Functions"
+			, xlabels = x.labels
+			, legend = paste("Total Functions:", N)
+			, theme.params = theme.params
+			, overrides = overrides
+			, border = border
+			);
+	if(savepng)
+		dev.off();
+	# Compute Modularity Distribution
+	subcalls = 100*table(x$fcn.stats[,3])/N;
+	y.max = max(subcalls);
+	y.labels = round(seq(0, y.max, len = 6), digit = 1);
+	dev.new();
+	if(savepng)
+		png(file = paste(savepath, "/", package, "_Subcalls.png", sep = "")
+			, width = save.width
+			, height = save.height
+			, res = save.resolution
+			);
+	# Change x-axis label rotation for the next plots
+	theme.params[["xlab.srt"]] = 0;
+	# Change x-axis label offset for the next plots
+	theme.params[["xlab.offset"]] = 0.03;
+	# Change x-axis title offset for the next plots
+	theme.params[["xtitle.offset"]] = 0.1;
+	# Plot Modularity Distribution
+	cbarplot(subcalls
+			, main = paste(package, "Modularity Distribution", sep = " - ")
+			, xtitle = "Sub-calls"
+			, ytitle = "% Functions"
+			, legend = paste("Total Functions:", N)
+			, theme.params = theme.params
+			, overrides = overrides
+			, border = border
+			);
+	if(savepng)
+		dev.off();
+	# Compute Impact Analysis
+	called = 100*table(x$fcn.stats[,4])/N;
+	y.max = max(called);
+	y.labels = round(seq(0, y.max, y.max/10), digit=0);
+	dev.new();
+	if(savepng)
+		png(file = paste(savepath, "/", package, "_Impact.png", sep = "")
+			, width = save.width
+			, height = save.height
+			, res = save.resolution
+			);
+	# Plot Impact Analysis
+	cbarplot(called
+			, main = paste(package, "Impact Analysis", sep = " - ")
+			, xtitle = "Functions Impacted"
+			, ytitle = "% Functions"
+			, legend = paste("Total Functions:", N)
+			, theme.params = theme.params
+			, overrides = overrides
+			, border = border
+			);
+	if(savepng)
+		dev.off();
+}
+## Example (using package)
+#func.line.cnt("Radamant")
+#func.line.cnt("lattice", qtz.type="log")
+## Example (using list of functions)
+#func.line.cnt(c("sd", "lm", "glm"))
 #######################################################################
 # FUNCTION: func.comment.idx
 #
+# AUTHOR: Rocco Claudio Cannizzaro
+# DATE: 10/08/2010
 #
 # DESCRIPTION:
 # Given an input file, this functions created an index based commented
@@ -358,14 +385,11 @@ func.comment.idx = function(
 							, max.dgt = 3
 							) 
 {							
-	
 	# Check input file
 	stopifnot((infile != NULL) | (incode != NULL));
-	
 	# Total number of functions to process
 	N.func = dim(control.df)[1];
 	stopifnot(N.func > 0);
-	
 	# Define Class Lookup (Hash table)
 	class.lookup = new.env(hash = TRUE, parent = emptyenv());
 	C.cnt = 0;
@@ -377,19 +401,15 @@ func.comment.idx = function(
 		cls.mapping[C.cnt, 1] = paste("#   ", sprintf(paste("C%0", max.dgt, "d", sep=""), C.cnt), " => ", cls);
 		assign(cls, sprintf(paste("C%0", max.dgt, "d", sep=""), C.cnt), envir = class.lookup);
 	}
-	
 	# Comment Tree
 	comment.tree = matrix(NA, nrow=0, ncol=1);
-	
 	# Code Tree Hierarchy
 	comment.lookup = matrix("", nrow=N.func, ncol = dim(control.df)[2]+4 );
 	colnames(comment.lookup) = c(colnames(control.df), "Fxxx", "Axxx", "Sxxx", "Cxxx") ;
-	
 	# Order the control data frame by AREA, SECTION, FNAME
 	comment.lookup[, colnames(control.df)] = as.matrix(control.df[with(control.df, order(AREA, SECTION, FNAME)), ]);
 	# Assign the Cxxx code to each function
 	comment.lookup[, "Cxxx"] = as.character(mget(comment.lookup[, "CLASS"], envir = class.lookup));
-	
 	# Assign Fxxx, Axxx, Sxxx for the first function
 	F.cnt = 1;
 	A.cnt = 1;
@@ -398,7 +418,6 @@ func.comment.idx = function(
 													  , sprintf(paste("A%0", max.dgt, "d", sep=""), A.cnt)
 													  , sprintf(paste("S%0", max.dgt, "d", sep=""), S.cnt)
 													);
-													
 	# Generate comment tree
 	filename = "None";
 	if(!is.null(outfile)) {
@@ -417,7 +436,6 @@ func.comment.idx = function(
 	comment.tree = rbind(comment.tree, paste("#   ", comment.lookup[1, "Axxx"], " (", comment.lookup[1, "AREA"], ")", sep=""));
 	comment.tree = rbind(comment.tree, paste("#   |-->", comment.lookup[1, "Sxxx"], " (", comment.lookup[1, "SECTION"], ")", sep=""));
 	comment.tree = rbind(comment.tree, paste("#   |    |-->", comment.lookup[1, "Fxxx"], " (", comment.lookup[1, "FNAME"], ")", sep=""));
-	
 	# Assign Fxxx, Axxx, Sxxx for all the other functions
 	for (n in 2:N.func) {
 		if(comment.lookup[n, "AREA"] != comment.lookup[n-1, "AREA"]) {
@@ -431,16 +449,12 @@ func.comment.idx = function(
 			F.cnt = 0;
 			comment.tree = rbind(comment.tree, paste("#   |-->", sprintf(paste("S%0", max.dgt, "d", sep=""), S.cnt), " (", comment.lookup[n, "SECTION"], ")", sep=""));
 		}
-		
 		F.cnt = F.cnt + 1;
 		comment.lookup[n, "Fxxx"] = sprintf(paste("F%0", max.dgt, "d", sep=""), F.cnt);
 		comment.lookup[n, "Axxx"] = sprintf(paste("A%0", max.dgt, "d", sep=""), A.cnt);
 		comment.lookup[n, "Sxxx"] = sprintf(paste("S%0", max.dgt, "d", sep=""), S.cnt);
-		
 		comment.tree = rbind(comment.tree, paste("#   |    |-->", comment.lookup[n, "Fxxx"], " (", comment.lookup[n, "FNAME"], ")", sep=""));
 	}
-	
-	
 	if(!is.null(infile)) {
 		# Read input file
 		code = scan(what = character(10000), file = infile, sep = "\n");
@@ -448,13 +462,11 @@ func.comment.idx = function(
 		# Use input code
 		code = incode;
 	}
-	
 	# Number of rows
 	N = length(code);
 	# Declare output vector
 	output.code = matrix("", nrow=2*N, ncol=1);
 	colnames(output.code) = "Code";
-	
 	# Output row count
 	j = 1;
 	# Static part of the comment within the function code Axxx/Sxxx/Fxxx/FCODE/Cxxx
@@ -478,12 +490,10 @@ func.comment.idx = function(
 				# Retrieve from the lookup the row where this function is stored 
 				#fidx = grep(fname, comment.lookup[, "FNAME"], fixed = TRUE);
 				fidx = which(comment.lookup[, "FNAME"] == fname);
-				
 				if (length(fidx) > 1) {
 					cat(fname, "====> idx=", fidx, "\n");
 					flush.console();
 				}
-					
 				# Generate base comment Axxx/Sxxx/Fxxx/FCODE/Cxxx
 				curr.base.comment = paste(comment.lookup[fidx, c("Axxx", "Sxxx", "Fxxx", "FCODE", "Cxxx")], collapse="/");
 			} else {
@@ -495,10 +505,8 @@ func.comment.idx = function(
 					curr.base.comment = paste(comment.lookup[fidx, c("Axxx", "Sxxx", "Fxxx", "Cxxx")], collapse="/");
 				}
 			}
-			
 			# Get Indentation
 			indent = sub(sub("^(\\s)*", "", code[n]), "", code[n], fixed = TRUE);
-			
 			# Generate comment
 			ln.cnt = ln.cnt + 1;
 			output.code[j] = paste(indent, "# ", curr.base.comment, "/", sprintf(paste("%0", max(4, max.dgt), "d", sep=""), ln.cnt), sep="");
@@ -508,7 +516,6 @@ func.comment.idx = function(
 		}
 		j = j + 1;
 	}
-	
 	output.code = rbind(comment.tree
 						, "###########################################################"
 						, ""
@@ -516,17 +523,31 @@ func.comment.idx = function(
 						, ""
 						, as.matrix(output.code[1:j])
 						);
-	
 	# Write output file if requested
 	if(length(outfile) > 0)
 		write.table(output.code, file = outfile, col.names = FALSE, row.names = FALSE, quote = FALSE);
 	if(is.null(outfile)) {
 		# Cleanup
 		cleanup(keep = "output.code");
-		
 		# Return Ouput
 		return(output.code);
 	} else {
 		cleanup();
 	}
 }
+#### EXAMPLE #####
+#tst = data.frame(FNAME = c("sd", "lm")
+#				, FCODE = c("SD", "LM")
+#				, AREA = c("s5", "s2")
+#				, SECTION = c("s1", "s1")
+#				, CLASS = c("c1", "c2")
+#				);
+#				
+#incode = rbind(paste("sd =", as.character(deparse(args(sd)))[1])
+#				, as.matrix(deparse(body(sd)))
+#				, ""
+#				, ""
+#				, paste("lm =", as.character(deparse(args(lm)))[1])
+#				, as.matrix(deparse(body(lm)))
+#			   )
+#func.comment.idx(tst, incode = incode, max.dgt=3)

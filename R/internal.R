@@ -63,7 +63,7 @@
 #### Black & Scholes - LogNormal ####
 ".BS.price.lgn" <- function(under, strike, rfr, sigma, maty, yield, opt.type=c("call","put"))  
 { 
-	MOMS = BS.moments(under, rfr, sigma, yield, maty)
+	MOMS = BS.moments(NULL, under, rfr, sigma, yield, maty)
 	# differential factor 2
 	d2 = (MOMS[3,1] - log(strike)) / sqrt(MOMS[4,1])
 	# differential factor 1
@@ -85,7 +85,7 @@
 ".BS.price.gamr" <- function(under, strike, rfr, sigma, maty, yield, opt.type=c("call","put"))  
 { 
 	# calculate moments
-	MOMS = BS.moments(under, rfr, sigma, yield, maty)
+	MOMS = BS.moments(NULL, under, rfr, sigma, yield, maty)
 	# gamma parameters
 	alpha = (2*MOMS[2,1] - MOMS[1,1]^2) / (MOMS[2,1] - MOMS[1,1]^2)
 	beta = (MOMS[2,1] - MOMS[1,1]^2) / (MOMS[2,1]*MOMS[1,1])
@@ -108,6 +108,31 @@
 	# return results
 	Results = cbind(Price_GR = res, Diff_1 = d1, Diff_2 = d2)
 		Results;
+}
+# BS formula
+".BS.formula" <- function(type=c("call","put")){ 
+	# different calculation for "call" and "put" options
+	if (match.arg(type) == "call") 
+		res = expression(under*exp(-yield*maty)*pnorm(log(under/strike) + (((rfr-yield) + 0.5*sigma^2)*maty) / (sigma*sqrt(maty))) - strike*exp(-rfr*maty)*pnorm(log(under/strike) + (((rfr-yield) + 0.5*sigma^2)*maty) / (sigma*sqrt(maty))- sigma*sqrt(maty)))
+	else
+		res = expression(under*exp(-yield*maty)*pnorm(-(log(under/strike) + (((rfr-yield) + 0.5*sigma^2)*maty) / (sigma*sqrt(maty)))) - strike*exp(-rfr*maty)*pnorm(-(log(under/strike) + (((rfr-yield) + 0.5*sigma^2)*maty) / (sigma*sqrt(maty))- sigma*sqrt(maty))) - under*exp(-yield*maty)+strike*exp(-rfr*maty))
+
+	res
+}
+# Edgeworth factor
+".EdgeFact" <- function(x, s, k){
+	# calculate Edgeworth factor
+	1 + s * (x^3-3*x) + (k-3) * (x^4-6*x^2+3)/24 + s^2*(x^6-15*x^4+45*x^2-15)/72
+}
+# Peizer-Pratt Inversion formula
+".InvPP" <- function(z, n){
+	# Peizer-Pratt Inversion formula
+	0.5 + sign(z) * sqrt(0.25 - 0.25*exp( -(z/(n+(1/3)+(0.1/(n+1))) )^2 * (n+(1/6))))
+}
+# Binomial coefficient
+".BinCoef" <- function(N, n){
+	# calcualte binomial coefficient
+	factorial(N) / (factorial(N-n)*factorial(n))
 }
 #### Simulate GARCH process ###
 ".Garch.proc" <- function(pars, order, res, type=c("garch", "mgarch", "tgarch", "egarch"), r, prob){
@@ -273,4 +298,17 @@
 			);
 	# return likelihood value
 	sum(l, na.rm=TRUE)	
+}
+######### transform factorise data to weight of evidence #######
+".factor2woe" <- function(segm, woe){
+	RES = matrix(0, NROW(segm), NCOL(segm))
+	colnames(RES) = colnames(segm)
+	var = 1
+	while(var <= NCOL(segm)){
+		idx = which(!is.na(match(woe[ ,1], colnames(segm)[var])))
+		for(i in (idx))
+			RES[segm[ ,var] == woe[i ,2], var] = as.numeric(woe[i, 10])
+		var = var + 1
+	}
+	invisible(RES);
 }

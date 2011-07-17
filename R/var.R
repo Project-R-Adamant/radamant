@@ -26,7 +26,6 @@ hVaR = function(X, p = 0.05, centered = FALSE){
 	colnames(res) = get.col.names(X);
 	
 #	for(v in seq(1, V, len = V))
-Logger(message = "for(v in seq(1, V, len = V))", from = "hVaR", line = 10, level = 1);
 	v = 0;
 	while(v < V) {
 		v = v + 1;
@@ -67,18 +66,14 @@ whVaR = function(X, p = 0.05, lambda = 0.9, centered = FALSE) {
 		dim(X) = c(N, V);
 	
 	# Declare Output
-	Logger(message = "Declare Output", from = "whVaR", line = 7, level = 1);
 	res = matrix(NA, nrow = Lp, ncol = V);
 	rownames(res) = paste("WVaR: ", 100*p, "%", sep = "");
 	colnames(res) = get.col.names(X);
 	# Exponential window
-	Logger(message = "Exponential window", from = "whVaR", line = 11, level = 1);
 	win = lambda^((N-1):0);
 	# Normalised cumulative exponential window
-	Logger(message = "Normalised cumulative exponential window", from = "whVaR", line = 13, level = 1);
 	ncwin = cumsum(win/sum(win));
 	# Sort each column ascending
-	Logger(message = "Sort each column ascending", from = "whVaR", line = 15, level = 1);
 	if(centered) {
 		Xsort = SORT(Zscore(X));
 	} else {
@@ -89,7 +84,6 @@ whVaR = function(X, p = 0.05, lambda = 0.9, centered = FALSE) {
 	while(lp < Lp) {
 		lp = lp + 1;
 		# Find the VaR threshold
-		Logger(message = "Find the VaR threshold", from = "whVaR", line = 24, level = 2);
 		trsh.idx = which(ncwin >= min(p[lp], 1))[1];
 		res[lp, ] = Xsort[trsh.idx, ];
 	}
@@ -193,15 +187,12 @@ VaR.default = function(X, p = 0.05, probf = c("norm","t","cofi"), df = max(4, (k
 		
 	
 	# Number of degrees of freedoms should be equal to V
-	Logger(message = "Number of degrees of freedoms should be equal to V", from = "VaR.default", line = 7, level = 1);
 	if(length(df) != V)
 		df = recycle(df, V);
 		
 	# Mean vector
-	Logger(message = "Mean vector", from = "VaR.default", line = 10, level = 1);
 	mean = colMeans(X);
 	# Standard deviations
-	Logger(message = "Standard deviations", from = "VaR.default", line = 12, level = 1);
 	sigma = sd(X);
 		
 	switch(match.arg(probf),
@@ -214,7 +205,6 @@ VaR.default = function(X, p = 0.05, probf = c("norm","t","cofi"), df = max(4, (k
 	colnames(res) = get.col.names(X);
 	rownames(res) = paste("GVaR: ", 100*p, "%", sep = "");
 	# Compute VaR
-	Logger(message = "Compute VaR", from = "VaR.default", line = 22, level = 1);
 	res[, ] = matrix(mean, nrow = Lp, ncol = V, byrow = TRUE) + matrix(sigma, nrow = Lp, ncol = V, byrow = TRUE) * phi;
 
 	attr(res,"method") = as.character(match.arg(probf))
@@ -256,10 +246,8 @@ VaRPtf = function(X, p = 0.05, weights = rep(1/NCOL(X), NCOL(X)), probf = c("nor
 		dim(weights) = c(V, 1);
 	
 	# Mean vector
-	Logger(message = "Mean vector", from = "VaRPtf", line = 9, level = 1);
 	mean = colMeans(X);
 	# Standard deviations
-	Logger(message = "Standard deviations", from = "VaRPtf", line = 11, level = 1);
 	sigma2 = cov(X);
 		
 	switch(match.arg(probf),
@@ -270,7 +258,6 @@ VaRPtf = function(X, p = 0.05, weights = rep(1/NCOL(X), NCOL(X)), probf = c("nor
 	colnames(res) = "Portfolio";
 	rownames(res) = paste("Ptf VaR: ", 100*p, "%", sep = "");
 	# Compute VaR
-	Logger(message = "Compute VaR", from = "VaRPtf", line = 20, level = 1);
 	res[, ] = (t(weights) %*% mean)[1] + sqrt(t(weights) %*% sigma2 %*% weights)[1] * phi;
 	class(res) = "VaR";
 	attr(res,"method") = as.character(match.arg(probf))
@@ -302,20 +289,16 @@ cofit = function(X, p, k = NULL, s = NULL) {
 	V = NCOL(X);
 	
 	# Kurtosis
-	Logger(message = "Kurtosis", from = "cofit", line = 4, level = 1);
 	if(is.null(k)) 
 		k = kurt(X, pval = FALSE);
 	# Skewness
-	Logger(message = "Skewness", from = "cofit", line = 7, level = 1);
 	if(is.null(s)) 
 		s = skew(X, pval = FALSE);
 	
 	# Inverse Normal Cumulative threshold
-	Logger(message = "Inverse Normal Cumulative threshold", from = "cofit", line = 10, level = 1);
 	f = qnorm(p);
 	
 	# Declare output
-	Logger(message = "Declare output", from = "cofit", line = 12, level = 1);
 	res = matrix(NA, nrow = Lp, ncol = V);
 	colnames(res) = get.col.names(X);
 	rownames(res) = paste("Cornish-Fisher: ", 100*p, "%", sep = "");
@@ -324,7 +307,6 @@ cofit = function(X, p, k = NULL, s = NULL) {
 	while(lp < Lp) {
 		lp = lp + 1;
 		# perform CF transformation
-		Logger(message = "perform CF transformation", from = "cofit", line = 19, level = 2);
 		res[lp, ] = f[lp] + (s/6)*(f[lp]^2-1) + (k/24)*(f[lp]^3-3*f[lp]) - (s^2/36)*(2*f[lp]^3-5*f[lp]);
 	}
 	
@@ -349,33 +331,26 @@ Hill = function(X, trsh) {
 	V = NCOL(X);
 	
 	# quantile of y with prob 1-u
-	Logger(message = "quantile of y with prob 1-u", from = "Hill", line = 4, level = 1);
 	qx = hVaR(X, 1-trsh);
 	# Declare output
-	Logger(message = "Declare output", from = "Hill", line = 6, level = 1);
 	res = matrix(NA, nrow = Lu, ncol = V);
 	colnames(res) = get.col.names(X);
 	rownames(res) = paste("Hill: ", 100*trsh, "%", sep = "");
 	
 	# Cycle through quantiles
-	Logger(message = "Cycle through quantiles", from = "Hill", line = 10, level = 1);
 	lu = 0;
 	while(lu < Lu) {
 		lu = lu + 1;
 		# Cycle through each column
-		Logger(message = "Cycle through each column", from = "Hill", line = 14, level = 2);
 		v = 0;
 		while(v < V) {
 			v = v + 1;
 			# Find values of X[, v] higher than the given quantile qx[lu]
-			Logger(message = "Find values of X[, v] higher than the given quantile qx[lu]", from = "Hill", line = 18, level = 3);
 			idx = which(X[, v] > qx[lu]);
 			# Compute Hill transform
-			Logger(message = "Compute Hill transform", from = "Hill", line = 20, level = 3);
 			res[lu, v] = sum(log(X[idx, v]/qx[lu])) / length(idx);
 		}
 	}
 	# Return results
-	Logger(message = "Return results", from = "Hill", line = 24, level = 1);
 	res
 }

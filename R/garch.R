@@ -66,53 +66,43 @@ print.Garch = function(x, digits=5, ...){
 #######################################################################################################################	
 Garch.default = function(x, Y=NULL, order=c(alpha=1,beta=1), phi=0, delta=0, type=c("garch","mgarch","tgarch","egarch"), prob=c("norm","ged","t"), ...){ 
 	# coerce input data to matrix and check for NA values
-	Logger(message = "coerce input data to matrix and check for NA values", from = "Garch.default", line = 2, level = 1);
 	if(!is.matrix(x))
 		x = as.matrix(x)
 	if(any(is.na(x)))
 			x = x[-is.na(x),]
 	# check names of order vector 	
-	Logger(message = "check names of order vector 	", from = "Garch.default", line = 7, level = 1);
 	if(is.null(names(order)))
 		names(order) = c("alpha","beta")
 	
 	# check for consistency of order parameters
-	Logger(message = "check for consistency of order parameters", from = "Garch.default", line = 10, level = 1);
 	if(any(order<0) | order["alpha"]==0 | length(order)<2){
 		message("Arch order must be at least = 1 and both Arch and Garch order must be positive \n No computation performed")
 		return(NULL)
 		}
 	
 	# get probability function and garch type
-	Logger(message = "get probability function and garch type", from = "Garch.default", line = 15, level = 1);
 	prob = match.arg(prob)
 	type = match.arg(type)
 	
 	n = NROW(x) 
 	
 	# matrix of mean regressors
-	Logger(message = "matrix of mean regressors", from = "Garch.default", line = 19, level = 1);
 	if(is.null(Y))
 		Y = matrix(1, n, 1)
 	# number of regressors 
-	Logger(message = "number of regressors ", from = "Garch.default", line = 22, level = 1);
 	k = NCOL(Y)
 	# vector of initial innovations
-	Logger(message = "vector of initial innovations", from = "Garch.default", line = 24, level = 1);
 	ee = vector("numeric", n+max(order))
 	
 	# initial regression coefficient and residual series 
-	Logger(message = "initial regression coefficient and residual series ", from = "Garch.default", line = 26, level = 1);
 	reg = lm(x ~ 0 + Y)
 	ee[-(1:max(order))] = (x - Y%*%as.matrix(reg$coef))^2
 	
 	# initial residual standard deviation
-	Logger(message = "initial residual standard deviation", from = "Garch.default", line = 29, level = 1);
 	sig0 = mean(ee[-(1:max(order))], na.rm=TRUE) 
 	ee[1:max(order)] = (sig0)
 	
 	# parameters initialization
-	Logger(message = "parameters initialization", from = "Garch.default", line = 32, level = 1);
 	theta = rep(0, sum(order)+5)
 	theta[3:(order["alpha"] + 2)] = in_a = rep(0.15/order["alpha"], order["alpha"])
 	theta[(order["alpha"]+3) : (order["alpha"]+order["beta"]+2)] = in_b = rep(0.45/order["beta"], order["beta"])
@@ -123,7 +113,6 @@ Garch.default = function(x, Y=NULL, order=c(alpha=1,beta=1), phi=0, delta=0, typ
 		
 	
 	# probability function and shape parameter
-	Logger(message = "probability function and shape parameter", from = "Garch.default", line = 40, level = 1);
 	if(prob == "norm"){
 		r = 0
 		theta[(length(theta))-1] = r
@@ -162,7 +151,6 @@ Garch.default = function(x, Y=NULL, order=c(alpha=1,beta=1), phi=0, delta=0, typ
 	parSD = sqrt(diag(vcov))
 	tstat = coef / parSD
 	# mean equation
-	Logger(message = "mean equation", from = "Garch.default", line = 70, level = 1);
 	mc = opt$par[(1:k)] 
 	mse = sqrt(diag(solve(opt$hessian[(k),(1:k)])))
 	mts = mc / mse
@@ -170,38 +158,30 @@ Garch.default = function(x, Y=NULL, order=c(alpha=1,beta=1), phi=0, delta=0, typ
 	mean_coef = data.frame(Mean_Coef=mc, Mean_Se=mse, Mean_TStat=mts, Mean_PVal=mpt)
 	
 	# volatility persistence 
-	Logger(message = "volatility persistence ", from = "Garch.default", line = 76, level = 1);
 	if(type == "garch"){
 		pers = sum(coef[-1])
 	} else {
 		pers = sum(coef[-1]) + coef[length(coef)]/2
 	}
 	# store epsilon and sigma in matrix
-	Logger(message = "store epsilon and sigma in matrix", from = "Garch.default", line = 82, level = 1);
 	fitted = matrix(0, n, 5)
 	colnames(fitted) = c("Returns", "Fitted_ME", "Residuals", "Eps", "Sigma") 
 	
 	# calculate new innovations
-	Logger(message = "calculate new innovations", from = "Garch.default", line = 85, level = 1);
 	ee = x - Y %*% as.matrix(opt$par[1:k])
 	
 	# store residuals
-	Logger(message = "store residuals", from = "Garch.default", line = 87, level = 1);
 	fitted[, 3] = ee
 	
 	# get fitted series with Epsilon and Sigma
-	Logger(message = "get fitted series with Epsilon and Sigma", from = "Garch.default", line = 89, level = 1);
 	fitted[, 4:5] = .Garch.proc(pars=opt$par[-(1:k)], order=order, res=ee, type=type, r=r, prob=prob)
 	# store original series
-	Logger(message = "store original series", from = "Garch.default", line = 91, level = 1);
 	fitted[,1] = x
 	
 	# fitted values of the mean equation
-	Logger(message = "fitted values of the mean equation", from = "Garch.default", line = 93, level = 1);
 	fitted[,2] = Y %*% as.matrix(opt$par[1])
 	
 	# table of results
-	Logger(message = "table of results", from = "Garch.default", line = 95, level = 1);
 	coef.tab = data.frame(Estimates = coef, Std.Errors = parSD, T_Stat = tstat, P_Value = 2*(1-pnorm(abs(tstat))))
 	
 	rownames(coef.tab)[1] = "Omega"
@@ -223,7 +203,6 @@ Garch.default = function(x, Y=NULL, order=c(alpha=1,beta=1), phi=0, delta=0, typ
 	)
 	class(Results) = "Garch"
 	# clean memory
-	Logger(message = "clean memory", from = "Garch.default", line = 114, level = 1);
 	cleanup("Results")
 	Results
 }
@@ -244,7 +223,6 @@ Garch.default = function(x, Y=NULL, order=c(alpha=1,beta=1), phi=0, delta=0, typ
 like.garch = function(theta, ee, x, Y, order, prob=c("norm","ged","t"), r){
 	
 	# parameters
-	Logger(message = "parameters", from = "like.garch", line = 2, level = 1);
 	omega = theta[2] 
 	alpha = theta[3:(order["alpha"] + 2)]
 	beta = theta[(order["alpha"]+3) : (order["alpha"]+order["beta"]+2)]
@@ -252,28 +230,22 @@ like.garch = function(theta, ee, x, Y, order, prob=c("norm","ged","t"), r){
 	r = theta[length(theta)-1]
 	n = length(x)		 
 	# vector of initial innovations
-	Logger(message = "vector of initial innovations", from = "like.garch", line = 9, level = 1);
 	ee = vector("numeric", n+max(order))
 	
 	# initial regression coefficient and residual series 
-	Logger(message = "initial regression coefficient and residual series ", from = "like.garch", line = 11, level = 1);
 	ee[-(1:max(order))] = (x - Y%*%reg)
 	
 	# initial residual standard deviation
-	Logger(message = "initial residual standard deviation", from = "like.garch", line = 13, level = 1);
 	sig0 = mean(ee^2, na.rm=TRUE) 
 	ee[(1:max(order))] = sqrt(sig0)
 	
 	# compute ARCH part
-	Logger(message = "compute ARCH part", from = "like.garch", line = 16, level = 1);
 	fit = omega + filter(ee^2, c(0,alpha), method="c", sides=1)
 	fit[1] = sig0
 	# compute GARCH part
-	Logger(message = "compute GARCH part", from = "like.garch", line = 19, level = 1);
 	if(all(!is.na(beta))){
 		fit = filter(fit, beta, method="r", init = rep(0, order["beta"]))	}	
 	# log-likelihood calculation   
-	Logger(message = "log-likelihood calculation   ", from = "like.garch", line = 22, level = 1);
 	.garch.like(X=ee[-(1:length(alpha))], S=fit[-(1:max(order))], prob=prob, r=r)  
 	
 }
@@ -296,7 +268,6 @@ like.garch = function(theta, ee, x, Y, order, prob=c("norm","ged","t"), r){
 like.tgarch = function(theta, ee, x, Y, order, prob=c("norm","ged","t")){
 	
 	# parameters
-	Logger(message = "parameters", from = "like.tgarch", line = 2, level = 1);
 	omega = theta[2] 
 	alpha = theta[3:(order["alpha"] + 2)]
 	beta = theta[(order["alpha"]+3) : (order["alpha"]+order["beta"]+2)]
@@ -307,35 +278,27 @@ like.tgarch = function(theta, ee, x, Y, order, prob=c("norm","ged","t")){
 	n = length(x)
 			 
 	# vector of initial innovations
-	Logger(message = "vector of initial innovations", from = "like.tgarch", line = 10, level = 1);
 	ee = vector("numeric", n+max(order))
 	
 	# initial regression coefficient and residual series 
-	Logger(message = "initial regression coefficient and residual series ", from = "like.tgarch", line = 12, level = 1);
 	ee[-(1:max(order))] = x - Y%*%reg
 	
 	# initial residual standard deviation
-	Logger(message = "initial residual standard deviation", from = "like.tgarch", line = 14, level = 1);
 	sig0 = mean(ee^2, na.rm=TRUE) 
 	ee[1:max(order)] = sqrt(sig0)
 	
 	# step sign
-	Logger(message = "step sign", from = "like.tgarch", line = 17, level = 1);
 	gb = as.numeric(ee<0);
    
 	# asymetry factor
-	Logger(message = "asymetry factor", from = "like.tgarch", line = 19, level = 1);
 	asym = abs(filter(ee^2*gb, c(0,phi), method="c", sides=1))
 	asym[1] = sig0
 	# arch component
-	Logger(message = "arch component", from = "like.tgarch", line = 22, level = 1);
 	fit = omega + filter(ee^2, c(0,alpha), method="c", sides=1) + asym;
 	fit[1] = sig0
 	# garch component
-	Logger(message = "garch component", from = "like.tgarch", line = 25, level = 1);
 	fit = filter(fit, beta, method="r", init=rep(0, order["beta"]));
 	# log-likelihood calculation   
-	Logger(message = "log-likelihood calculation   ", from = "like.tgarch", line = 27, level = 1);
 	.garch.like(X=ee[-(1:length(alpha))], S=fit[-(1:max(order))], prob=prob, r=r)  
 	
 }
@@ -358,7 +321,6 @@ like.tgarch = function(theta, ee, x, Y, order, prob=c("norm","ged","t")){
 like.egarch = function(theta, ee, x, Y, order=c(alpha=1,beta=1), prob=c("norm","ged","t")){
 	
 	# parameters
-	Logger(message = "parameters", from = "like.egarch", line = 2, level = 1);
 	omega = theta[2] 
 	alpha = theta[3:(order["alpha"] + 2)]
 	beta = theta[(order["alpha"]+3) : (order["alpha"]+order["beta"]+2)]
@@ -368,20 +330,16 @@ like.egarch = function(theta, ee, x, Y, order=c(alpha=1,beta=1), prob=c("norm","
 	
 	n = length(x)		 
 	# vector of initial innovations
-	Logger(message = "vector of initial innovations", from = "like.egarch", line = 10, level = 1);
 	ee = vector("numeric", n+max(order))
 	
 	# initial regression coefficient and residual series 
-	Logger(message = "initial regression coefficient and residual series ", from = "like.egarch", line = 12, level = 1);
 	ee[-(1:max(order))] = x - Y%*%reg
 	
 	# initial residual standard deviation
-	Logger(message = "initial residual standard deviation", from = "like.egarch", line = 14, level = 1);
 	sig0 = mean(ee^2, na.rm=TRUE) 
 	ee[1:max(order)] = sqrt(sig0)
 	
     # initial variance
-    Logger(message = "initial variance", from = "like.egarch", line = 17, level = 1);
 	fit = vector("numeric", n+max(order))
 	fit[1:max(order)] = log(sig0)
 	
@@ -392,7 +350,6 @@ like.egarch = function(theta, ee, x, Y, order=c(alpha=1,beta=1), prob=c("norm","
 			);   
 	i = 1 + max(order)
 	# calculate likelihood values
-	Logger(message = "calculate likelihood values", from = "like.egarch", line = 26, level = 1);
 	while(i <= n+max(order)){
 		
 			fit[i] = omega + 
@@ -404,7 +361,6 @@ like.egarch = function(theta, ee, x, Y, order=c(alpha=1,beta=1), prob=c("norm","
 		
 	};
 	# log-likelihood calculation   
-	Logger(message = "log-likelihood calculation   ", from = "like.egarch", line = 34, level = 1);
 	.garch.like(X=ee[-(1:length(alpha))], S=exp(fit[-(1:max(order))]), prob=prob, r=r)  
 	
 }
@@ -413,7 +369,6 @@ like.egarch = function(theta, ee, x, Y, order=c(alpha=1,beta=1), prob=c("norm","
 like.mgarch = function(theta, x, Y, order, prob=c("norm","ged","t")){
 	
 	# parameters
-	Logger(message = "parameters", from = "like.mgarch", line = 2, level = 1);
 	omega = theta[2] 
 	alpha = theta[3:(order["alpha"] + 2)]
 	beta = theta[(order["alpha"]+3) : (order["alpha"]+order["beta"]+2)]
@@ -423,15 +378,12 @@ like.mgarch = function(theta, x, Y, order, prob=c("norm","ged","t")){
 
 	n = length(x)		 
 	# vector of initial innovations
-	Logger(message = "vector of initial innovations", from = "like.mgarch", line = 10, level = 1);
 	ee = vector("numeric", n+max(order))
 	
 	# initial regression coefficient and residual series 
-	Logger(message = "initial regression coefficient and residual series ", from = "like.mgarch", line = 12, level = 1);
 	ee[-(1:max(order))] = (x - Y%*%reg)
 	
 	# initial residual standard deviation
-	Logger(message = "initial residual standard deviation", from = "like.mgarch", line = 14, level = 1);
 	sig0 = mean(ee^2, na.rm=TRUE) 
 	ee[(1:max(order))] = sqrt(sig0)
 	
@@ -452,7 +404,6 @@ like.mgarch = function(theta, x, Y, order, prob=c("norm","ged","t")){
 	 };
 
 	# log-likelihood calculation   
-	Logger(message = "log-likelihood calculation   ", from = "like.mgarch", line = 29, level = 1);
 	.garch.like(X=ee[-(1:length(alpha))], S=fit[-(1:max(order))], prob=prob, r=r)  
 	
 }
@@ -474,17 +425,14 @@ like.mgarch = function(theta, x, Y, order, prob=c("norm","ged","t")){
 newsimp.default = function(x, theta, order, type=c("garch","mgarch", "egarch","tgarch"), plot=FALSE, ...){
 	
 	# coerce input data to matrix
-	Logger(message = "coerce input data to matrix", from = "newsimp.default", line = 2, level = 1);
 	if(!is.matrix(x) | any(is.na(x)))
 		x = as.matrix(x[!is.na(x)])
 	# check names of order vector 	
-	Logger(message = "check names of order vector 	", from = "newsimp.default", line = 5, level = 1);
 	if(is.null(names(order)))
 		names(order) = c("alpha","beta")
 	mtype = match.arg(type);
 	
 	# estimated coefficients 
-	Logger(message = "estimated coefficients ", from = "newsimp.default", line = 9, level = 1);
 	omega = theta[1]; 
 	alpha = theta[ 2:(1+order["alpha"]) ]; 
 	beta = theta[(order["alpha"]+2):(order["beta"]+order["alpha"]+1)];
@@ -498,7 +446,6 @@ newsimp.default = function(x, theta, order, type=c("garch","mgarch", "egarch","t
 	}
 	
 	# NIC garch
-	Logger(message = "NIC garch", from = "newsimp.default", line = 20, level = 1);
 	if(mtype == "garch"){
 		
 		nic = function(x){ 
@@ -507,7 +454,6 @@ newsimp.default = function(x, theta, order, type=c("garch","mgarch", "egarch","t
 		}
 		
 	# NIC egarch
-	Logger(message = "NIC egarch", from = "newsimp.default", line = 26, level = 1);
 	} else if(mtype == "egarch") {
 			
 			nic = function(x){
@@ -517,7 +463,6 @@ newsimp.default = function(x, theta, order, type=c("garch","mgarch", "egarch","t
 				exp(omega - alpha * sqrt(2/pi)) * sig^(2*beta) * exp(b/sig)
 			}
 	# NIC tgarch
-	Logger(message = "NIC tgarch", from = "newsimp.default", line = 34, level = 1);
 	} else {
 			
 		nic = function(x){
@@ -529,13 +474,11 @@ newsimp.default = function(x, theta, order, type=c("garch","mgarch", "egarch","t
 	}
 	
 	# get values of news impact curve
-	Logger(message = "get values of news impact curve", from = "newsimp.default", line = 43, level = 1);
 	vv = curve(nic, from=min(x), to=max(x), cex.axis=0.8, type="n")
 	dev.off()	
 	if(plot)
 		cplot( vv[[2]], vv[[1]], main=paste("NIC:",mtype), ... ) 
 	# return results
-	Logger(message = "return results", from = "newsimp.default", line = 48, level = 1);
 	cbind(Sigma = vv[[2]], Innovations = vv[[1]]) 
 }
 #######################################################################################################################
@@ -555,7 +498,6 @@ Archlm = function(x, lags, std=FALSE, plot.acf=FALSE){
 	
 	if(class(x) == "Garch"){
 		# get squared residuals from Garch object
-		Logger(message = "get squared residuals from Garch object", from = "Archlm", line = 3, level = 1);
 		res = x$Fitted[,3]^2
 	} else {
 		res = as.numeric(x)^2
@@ -564,40 +506,30 @@ Archlm = function(x, lags, std=FALSE, plot.acf=FALSE){
 	if(std)
 		res = scale(res, center = TRUE, scale=FALSE)
 	# sample length
-	Logger(message = "sample length", from = "Archlm", line = 10, level = 1);
 	N = length(res[!is.na(res)])
 	# lags frame
-	Logger(message = "lags frame", from = "Archlm", line = 12, level = 1);
 	mod = MLag(res, lag=0:lags, mode="range");
 	# auxiliary regression model
-	Logger(message = "auxiliary regression model", from = "Archlm", line = 14, level = 1);
 	aux = lm(mod[,1] ~ mod[,-1]);
 	# coefficient table
-	Logger(message = "coefficient table", from = "Archlm", line = 16, level = 1);
 	Coef = summary(aux)$coef;
 	# R_Squared from auxiliary regression
-	Logger(message = "R_Squared from auxiliary regression", from = "Archlm", line = 18, level = 1);
 	r2 = summary(aux)$r.squared;
 	
 	# Test based on R-Squared
-	Logger(message = "Test based on R-Squared", from = "Archlm", line = 20, level = 1);
 	Test1 = N * r2;
 	Pval1 = 1 - pchisq(Test1, lags);
 	# Test based on F-Statistic
-	Logger(message = "Test based on F-Statistic", from = "Archlm", line = 23, level = 1);
 	Test2 = (r2 / lags) / ((1 - r2) / (N - lags));
 	Pval2 = 1 - pf(Test2, lags, N-lags);
 	
 	# Statistics table
-	Logger(message = "Statistics table", from = "Archlm", line = 26, level = 1);
 	Statistics = data.frame(NxRSq = c(Test1, Pval1), F_Stat = c(Test2, Pval2))
 	rownames(Statistics) = c("Statistic","P_Value")
 	
 	# list of results
-	Logger(message = "list of results", from = "Archlm", line = 29, level = 1);
 	Results = list(Coefficients = round(Coef, 6), Results = round(Statistics,5));
 	# clean memory
-	Logger(message = "clean memory", from = "Archlm", line = 31, level = 1);
 	cleanup("Results")
 	
 	if(plot.acf)
@@ -612,33 +544,27 @@ LjungBox = function(x, lags, plot.acf=FALSE){
 	
 	if(class(x) == "Garch"){
 		# get squared residuals from Garch object
-		Logger(message = "get squared residuals from Garch object", from = "LjungBox", line = 3, level = 1);
 		res = x$Fitted[,3]^2
 	} else {
 		res = as.numeric(x)^2
 	}
 
 	# sample length
-	Logger(message = "sample length", from = "LjungBox", line = 8, level = 1);
 	T = length(res)
 	
 	# calculate squared acf coefficients
-	Logger(message = "calculate squared acf coefficients", from = "LjungBox", line = 10, level = 1);
 	r = as.numeric(acf(res, lag=lags, plot=FALSE)$acf)[-1]^2
 	
 	# Q stat
-	Logger(message = "Q stat", from = "LjungBox", line = 12, level = 1);
 	Q = T*(T+2) * sum(r / (T - (1:lags)))
 	
 	# P-Value
-	Logger(message = "P-Value", from = "LjungBox", line = 14, level = 1);
 	pv = 1 - pchisq(Q, lags)
 	
 	if(plot.acf)
 		mcf(res)
 	
 	# return results
-	Logger(message = "return results", from = "LjungBox", line = 18, level = 1);
 	cbind(LB_stat = Q, PVal = round(pv,5))
 	
 }
@@ -649,17 +575,13 @@ newsimp.Garch = function(x, plot=TRUE, ...){
 	## get parameters from object of class "Garch"	# original series
 	X = x$Fitted[,1]
 	# estimated parameters
-	Logger(message = "estimated parameters", from = "newsimp.Garch", line = 4, level = 1);
 	theta = x$Results[,1]
 	# arch - garch order
-	Logger(message = "arch - garch order", from = "newsimp.Garch", line = 6, level = 1);
 	order = x[[2]]
 	# garch type
-	Logger(message = "garch type", from = "newsimp.Garch", line = 8, level = 1);
 	type = x$Type
 	
 	# call generic news impact curve function
-	Logger(message = "call generic news impact curve function", from = "newsimp.Garch", line = 10, level = 1);
 	newsimp.default(X, theta, order, type, plot, ...)
 }
 #### Statitc Prediction for Garch models ####
@@ -672,7 +594,6 @@ predict.Garch = function(object, plot=TRUE, ...){
 	Var = ff[ ,4]
 	
 	# plot predicted values
-	Logger(message = "plot predicted values", from = "predict.Garch", line = 7, level = 1);
 	if(plot){
 		par(mfrow=c(2,1))
 		cplot(Returns, main="Predicted values for Return (Mean Equation)") 
