@@ -16,16 +16,20 @@ Zscore = function(X, means=NULL, sigma=NULL) {
 	if(is.null(dim(X)))
 		dim(X) = c(N, V);	
 	# Mean vector
+	Logger(message = "Mean vector", from = "Zscore", line = 6, level = 1);
 	if(is.null(means))
 		means = colMeans(X, na.rm=TRUE);
 	# Standard deviations
+	Logger(message = "Standard deviations", from = "Zscore", line = 9, level = 1);
 	if(is.null(sigma))
 		sigma = sd(X, na.rm=TRUE);
 	# Declare output
+	Logger(message = "Declare output", from = "Zscore", line = 12, level = 1);
 	res = matrix(NA, nrow = N, ncol = V);
 	colnames(res) = colnames(X);
 	rownames(res) = rownames(X);
 	# loop through each column of the input matrix
+	Logger(message = "loop through each column of the input matrix", from = "Zscore", line = 16, level = 1);
 	v = 0;
 	while(v < V) {
 		v = v + 1;
@@ -48,21 +52,25 @@ Zscore = function(X, means=NULL, sigma=NULL) {
 #######################################################################################################################
 hmean = function(X,...) {
 	# Data dimensions
+	Logger(message = "Data dimensions", from = "hmean", line = 2, level = 1);
 	N = NROW(X);
 	V = NCOL(X);
 	if(is.null(dim(X)))
 		dim(X) = c(N, V);
 	# Init result
+	Logger(message = "Init result", from = "hmean", line = 7, level = 1);
 	res = matrix(NA, nrow = 1, ncol = V);
 	colnames(res) = get.col.names(X);
 	rownames(res) = "H-Mean";
 	# loop through each column of the input matrix
+	Logger(message = "loop through each column of the input matrix", from = "hmean", line = 11, level = 1);
 	v = 0;
 	while(v < V) {
 		v = v + 1;
 		res[1, v] = N/sum(1/X[, v], ...);
 	}
 	# Return result
+	Logger(message = "Return result", from = "hmean", line = 17, level = 1);
 	res
 }
 #######################################################################################################################
@@ -80,21 +88,25 @@ hmean = function(X,...) {
 #######################################################################################################################
 gmean = function(X, ...) {
 	# Data dimensions
+	Logger(message = "Data dimensions", from = "gmean", line = 2, level = 1);
 	N = NROW(X);
 	V = NCOL(X);
 	if(is.null(dim(X)))
 		dim(X) = c(N, V);
 	# Init result
+	Logger(message = "Init result", from = "gmean", line = 7, level = 1);
 	res = matrix(NA, nrow = 1, ncol = V);
 	colnames(res) = get.col.names(X);
 	rownames(res) = "G-Mean";
 	# loop through each column of the input matrix	
+	Logger(message = "loop through each column of the input matrix	", from = "gmean", line = 11, level = 1);
 	v = 0;
 	while(v < V) {
 		v = v + 1;
 		res[, v] = prod(X[, v]^(1/N), ...);
 	}
 	# Return result
+	Logger(message = "Return result", from = "gmean", line = 17, level = 1);
 	res
 }
 #######################################################################################################################
@@ -112,36 +124,48 @@ gmean = function(X, ...) {
 #######################################################################################################################
 kurt = function(X, pval = FALSE) {
 	# Data dimensions
+	Logger(message = "Data dimensions", from = "kurt", line = 2, level = 1);
 	N = NROW(X);
 	V = NCOL(X);
 	if(is.null(dim(X)))
 		dim(X) = c(N, V);
 	# allocate matrix of results
+	Logger(message = "allocate matrix of results", from = "kurt", line = 7, level = 1);
 	res = matrix(NA, nrow = 2, ncol = V);
 	colnames(res) = get.col.names(X);
 	rownames(res) = c("kurtosis", "P-Value");
 	# loop through each column of the input matrix
+	Logger(message = "loop through each column of the input matrix", from = "kurt", line = 11, level = 1);
 	v = 0;
 	while(v < V) {
 		v = v + 1;
 		# Mean
+		Logger(message = "Mean", from = "kurt", line = 15, level = 2);
 		m1 = mean(X[, v]);
 		# Variance
+		Logger(message = "Variance", from = "kurt", line = 17, level = 2);
 		m2 = var(X[, v]);
 		# Squared Variance
+		Logger(message = "Squared Variance", from = "kurt", line = 19, level = 2);
 		m2_2 = m2^2;
 		# Fourth moment
+		Logger(message = "Fourth moment", from = "kurt", line = 21, level = 2);
 		m4 = sum((X[, v]-m1)^4)/(N-1);
 		# Kurtosis
+		Logger(message = "Kurtosis", from = "kurt", line = 23, level = 2);
 		kurt = (m4/m2_2)-3;
 		# Two-Sided P-Value
+		Logger(message = "Two-Sided P-Value", from = "kurt", line = 25, level = 2);
 		pvalue = 2*(1 - pnorm( abs(kurt)/sqrt(24/N) ) );
 		# Result
+		Logger(message = "Result", from = "kurt", line = 27, level = 2);
 		res[, v] = c(kurt, pvalue);
 	}
 	# Cleanup
+	Logger(message = "Cleanup", from = "kurt", line = 30, level = 1);
 	cleanup(keep = c("res", "pval"));
 	#Return result
+	Logger(message = "Return result", from = "kurt", line = 32, level = 1);
 	res[1:ifelse(pval, 2, 1), , drop = FALSE]
 }
 #######################################################################################################################
@@ -159,36 +183,48 @@ kurt = function(X, pval = FALSE) {
 #######################################################################################################################
 skew = function(X, pval = FALSE) {
 	# Data dimensions
+	Logger(message = "Data dimensions", from = "skew", line = 2, level = 1);
 	N = NROW(X);
 	V = NCOL(X);
 	if(is.null(dim(X)))
 		dim(X) = c(N, V);
 	# allocate matrix of results
+	Logger(message = "allocate matrix of results", from = "skew", line = 7, level = 1);
 	res = matrix(NA, nrow = 2, ncol = V);
 	colnames(res) = get.col.names(X);
 	rownames(res) = c("Skewness", "P-Value");
 	# loop through each column of the input matrix
+	Logger(message = "loop through each column of the input matrix", from = "skew", line = 11, level = 1);
 	v = 0;
 	while(v < V) {
 		v = v + 1;
 		# Mean
+		Logger(message = "Mean", from = "skew", line = 15, level = 2);
 		m1 = mean(X[, v]);
 		# Variance
+		Logger(message = "Variance", from = "skew", line = 17, level = 2);
 		m2 = var(X[, v]);
 		# Squared Variance
+		Logger(message = "Squared Variance", from = "skew", line = 19, level = 2);
 		m2_2 = m2^2;
 		# Third moment
+		Logger(message = "Third moment", from = "skew", line = 21, level = 2);
 		m3 = sum((X[, v]-m1)^3)/(N-1)
 		# Skewness
+		Logger(message = "Skewness", from = "skew", line = 23, level = 2);
 		skew = m3/m2_2;
 		# Two-Sided P-Value
+		Logger(message = "Two-Sided P-Value", from = "skew", line = 25, level = 2);
 		pvalue = 2*(1 - pnorm( abs(skew)/sqrt(6/N) ) );
 		# Result
+		Logger(message = "Result", from = "skew", line = 27, level = 2);
 		res[, v] = c(skew, pvalue);
 	}
 	# Cleanup
+	Logger(message = "Cleanup", from = "skew", line = 30, level = 1);
 	cleanup(keep = c("res", "pval"));
 	#Return result
+	Logger(message = "Return result", from = "skew", line = 32, level = 1);
 	res[1:ifelse(pval, 2, 1), , drop = FALSE]
 }
 #######################################################################################################################
@@ -206,6 +242,7 @@ skew = function(X, pval = FALSE) {
 #######################################################################################################################
 JB.test = function(X, plot.hist=FALSE) {
 	# Data dimensions
+	Logger(message = "Data dimensions", from = "JB.test", line = 2, level = 1);
 	N = NROW(X);
 	V = NCOL(X);
 	if(is.null(dim(X)))
@@ -214,22 +251,29 @@ JB.test = function(X, plot.hist=FALSE) {
 	colnames(res) = get.col.names(X);
 	rownames(res) = c("Jaques-Brera", "P-Value");
 	# Skewness
+	Logger(message = "Skewness", from = "JB.test", line = 10, level = 1);
 	sk = skew(X);
 	# Kurtosis
+	Logger(message = "Kurtosis", from = "JB.test", line = 12, level = 1);
 	ku = kurt(X);
 	# Jaques-Brera
+	Logger(message = "Jaques-Brera", from = "JB.test", line = 14, level = 1);
 	jb = (sk^2 + (1/4)*ku^2) * (N/6);
 	# P-Value
+	Logger(message = "P-Value", from = "JB.test", line = 16, level = 1);
 	pvalue = 1-pchisq(jb,2);
 	# Result
+	Logger(message = "Result", from = "JB.test", line = 18, level = 1);
 	res[,] = rbind(jb, pvalue);
 	if(plot.hist){
 		mm = paste("JB Test for Normality:", "JB_stat ->", round(res[1], 5), "; Pval->", round(res[2], 5))
 		chist(X, main=mm)
 	}
 	# Cleanup
+	Logger(message = "Cleanup", from = "JB.test", line = 24, level = 1);
 	cleanup(keep = c("res"));
 	#Return result
+	Logger(message = "Return result", from = "JB.test", line = 26, level = 1);
 	res
 }
 ####################################################
@@ -254,13 +298,16 @@ Sum.dens = function(x, ...) {
 #######################################################################################################################
 moments = function(X){
 	# get / set input dimensions
+	Logger(message = "get / set input dimensions", from = "moments", line = 2, level = 1);
 	N = NROW(X);
 	V = NCOL(X);
 	if(is.null(dim(X)))
 		dim(X) = c(N, V);
 	# standardised variables
+	Logger(message = "standardised variables", from = "moments", line = 7, level = 1);
 	Z = Zscore(X);	
 	# list of results with: n, mean, sd, kurt, skew, jb
+	Logger(message = "list of results with: n, mean, sd, kurt, skew, jb", from = "moments", line = 9, level = 1);
 	list(N = N
 		, Mean = colMeans(X)
 		, sd = sd(X)
@@ -275,6 +322,7 @@ SampMom = function(P, X, moms=1:2){
 	rownames(res) = paste("Mom_", moms, sep="")
 	j = 1
 	# calculate pdf moments
+	Logger(message = "calculate pdf moments", from = "SampMom", line = 5, level = 1);
 	while(j <= length(moms)){
 		res[j, ] = t(X)^moms[j] %*% P
 		j = j +1	

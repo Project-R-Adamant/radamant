@@ -22,6 +22,7 @@
 #######################################################################################################################
 get.fs = function(symbol = NULL, SName = NULL, from = as.Date("1950-01-01"), to = Sys.Date(), strip.spaces = TRUE, strip.char = ".") {
 	# Define URL (Yahoo! Finance) 
+	Logger(message = "Define URL (Yahoo! Finance) ", from = "get.fs", line = 2, level = 1);
 	URL = paste("http://ichart.finance.yahoo.com/table.csv?s="
 				, symbol
 				, "&c=", format(from, "%Y")
@@ -34,14 +35,18 @@ get.fs = function(symbol = NULL, SName = NULL, from = as.Date("1950-01-01"), to 
 				, sep = ""
 				);
 	# Get symbol data
+	Logger(message = "Get symbol data", from = "get.fs", line = 14, level = 1);
 	symbol.data = read.csv(file = URL, header = TRUE);
 	# Order by ascending date
+	Logger(message = "Order by ascending date", from = "get.fs", line = 16, level = 1);
 	sort.idx = with(symbol.data, order(Date));
 	# Series Name
+	Logger(message = "Series Name", from = "get.fs", line = 18, level = 1);
 	SName = ifelse(is.null(SName), symbol.lookup(symbol)[1, "Name"], SName)
 	if(strip.spaces)
 		SName = gsub("\\s", strip.char, gsub("^(\\s+)||(\\s+)$", "", SName));
 	# Return Financial Time Serie data
+	Logger(message = "Return Financial Time Serie data", from = "get.fs", line = 22, level = 1);
 	as.fs(symbol.data[sort.idx, , drop = FALSE], SName = SName, Symbol = symbol);
 }
 #######################################################################################################################
@@ -64,24 +69,30 @@ get.fs = function(symbol = NULL, SName = NULL, from = as.Date("1950-01-01"), to 
 #######################################################################################################################
 symbol.lookup = function(what = "") {
 	# Define URL (Yahoo! Finance)
+	Logger(message = "Define URL (Yahoo! Finance)", from = "symbol.lookup", line = 2, level = 1);
 	URL = paste("http://d.yimg.com/aq/autoc?"
 				, "query=", URLencode(what, reserved = TRUE)
 				, "&callback=YAHOO.util.ScriptNodeDataSource.callbacks"
 				, sep = "");
 	# Get lookup data (JSON format)
+	Logger(message = "Get lookup data (JSON format)", from = "symbol.lookup", line = 7, level = 1);
 	json.list = scan(URL, what = character(0), sep="\n");
 	# Split result
+	Logger(message = "Split result", from = "symbol.lookup", line = 9, level = 1);
 	records = strsplit(json.list, "\\[\\{|\\]|\\}\\,\\{")[[1]]; # Balance parenthesis }
 	# Declare output
+	Logger(message = "Declare output", from = "symbol.lookup", line = 11, level = 1);
 	res = matrix("", nrow = length(records)-2, ncol = 4);
 	colnames(res) = c("Symbol", "Name", "Exchange", "Type");
 	n = 1;
 	while(n < length(records)-1) {
 		n = n + 1;
 		# Extract column fields
+		Logger(message = "Extract column fields", from = "symbol.lookup", line = 17, level = 2);
 		res[n-1, ] = gsub("\\\"", "", strsplit(records[n], "\\:|\\,\\\"")[[1]][c(2, 4, 6, 10)])
 	}
 	# Return result
+	Logger(message = "Return result", from = "symbol.lookup", line = 20, level = 1);
 	res
 }
 #######################################################################################################################
@@ -189,30 +200,37 @@ combine.default = function(...) {
 }
 combine.fs = function(..., which = "Close") {
 	# Get input data list
+	Logger(message = "Get input data list", from = "combine.fs", line = 2, level = 1);
 	X = list(...);
 	# Number of Financial Time series to process
+	Logger(message = "Number of Financial Time series to process", from = "combine.fs", line = 4, level = 1);
 	N = length(X);
 	if(N == 0)
 		stop("No input parameters provided!");
 	w = length(which);
 	# Declare output
+	Logger(message = "Declare output", from = "combine.fs", line = 9, level = 1);
 	res = matrix(NA, nrow = NROW(X[[1]]), ncol = N*w);
 	res.names = rep("", N*w);
 	n = 0;
 	while(n < N) {
 		n = n + 1;
 		# Extract Series Name
+		Logger(message = "Extract Series Name", from = "combine.fs", line = 15, level = 2);
 		SName = attr(X[[n]], "SName");
 		if(nchar(SName) == 0)
 			SName = paste("X", n, sep = "");
 		# Extract Series data
+		Logger(message = "Extract Series data", from = "combine.fs", line = 19, level = 2);
 		res[, n:(n+w-1) + (n-1)*(w-1)] = X[[n]][, which, drop = FALSE];
 		# Assign column name to output
+		Logger(message = "Assign column name to output", from = "combine.fs", line = 21, level = 2);
 		res.names[n:(n+w-1) + (n-1)*(w-1)] = if(w == 1) SName else paste(SName, which, sep = ".");
 	}
 	colnames(res) = res.names;
 	attr(res, "which") = which;
 	# Return output
+	Logger(message = "Return output", from = "combine.fs", line = 26, level = 1);
 	res
 }
 #######################################################################################################################
@@ -259,11 +277,13 @@ fin.plot = function(X
 					, overrides2 = NULL
 					, ...) {
 	# Number of	rows and columns
+	Logger(message = "Number of	rows and columns", from = "fin.plot", line = 2, level = 1);
 	N = NROW(X);
 	V = NCOL(X);
 	if(is.null(dim(X)))
 		dim(X) = c(N, V);
 	# Set default overrides
+	Logger(message = "Set default overrides", from = "fin.plot", line = 7, level = 1);
 	margins1 = theme.top[["one.side.margin"]];
 	margins2 = theme.top[["two.side.margin"]];
 	overrides.top = override.list(what = list(one.side.margin = c(0, margins1[2], 2, margins1[4])
@@ -279,8 +299,10 @@ fin.plot = function(X
 									, overrides = overrides2
 									, append = TRUE);
 	# Set plot layout
+	Logger(message = "Set plot layout", from = "fin.plot", line = 22, level = 1);
 	layout(matrix(c(1,2), nrow = 2, ncol = 1), height = c(3, 2));
 	# Top plot
+	Logger(message = "Top plot", from = "fin.plot", line = 24, level = 1);
 	Xtop = X[, top.vars, drop = FALSE];
 	if(!is.null(snames))
 		colnames(Xtop) = paste(snames, top.vars, sep = " - ");
@@ -293,6 +315,7 @@ fin.plot = function(X
 				, ...
 				);
 	# Bottom plot
+	Logger(message = "Bottom plot", from = "fin.plot", line = 36, level = 1);
 	Xbottom = X[, bottom.vars, drop = FALSE];
 	if(!is.null(snames))
 		colnames(Xbottom) = paste(snames, bottom.vars, sep = " - ");
@@ -342,38 +365,50 @@ hroi = function(X
 				, ...
 				) {
 	# Check if input is an instance of the Financial Series class
+	Logger(message = "Check if input is an instance of the Financial Series class", from = "hroi", line = 2, level = 1);
 	if(class(X) == "fs") {
 		# Take a copy
+		Logger(message = "Take a copy", from = "hroi", line = 4, level = 1);
 		Y = X;
 		# Process Close data
+		Logger(message = "Process Close data", from = "hroi", line = 6, level = 1);
 		X = Y[, "Close", drop = FALSE];
 		# Assign Column Name
+		Logger(message = "Assign Column Name", from = "hroi", line = 8, level = 1);
 		colnames(X) = attr(Y, "SName");
 	}
 	mode = mode[1];
 	if(mode == "auto") {
 		# Vector of lags to be computed
+		Logger(message = "Vector of lags to be computed", from = "hroi", line = 13, level = 1);
 		lvec = sort(sign(lag) * min(autolag.start, abs(lag), na.rm = TRUE):abs(lag));
 	} else if(mode == "range") {
 		# Vector of lags to be computed
+		Logger(message = "Vector of lags to be computed", from = "hroi", line = 16, level = 1);
 		lvec = seq(min(lag, na.rm = TRUE), max(lag, na.rm = TRUE), by = range.step);
 	} else {
 		# Vector of lags to be computed
+		Logger(message = "Vector of lags to be computed", from = "hroi", line = 19, level = 1);
 		lvec = sort(lag);
 	}
 	# Data length	
+	Logger(message = "Data length	", from = "hroi", line = 22, level = 1);
 	N = NROW(X);
 	V = NCOL(X);
 	# Number of lags to be computed
+	Logger(message = "Number of lags to be computed", from = "hroi", line = 25, level = 1);
 	Nlags = length(lvec);	
 	# Declare Output
+	Logger(message = "Declare Output", from = "hroi", line = 27, level = 1);
 	res = vector("list", V);
 	names(res) = get.col.names(X);
 	# Loop through each input column
+	Logger(message = "Loop through each input column", from = "hroi", line = 30, level = 1);
 	v = 0;
 	while(v < V) {
 		v = v + 1;
 		# Declare result matrix
+		Logger(message = "Declare result matrix", from = "hroi", line = 34, level = 2);
 		res[[v]] = matrix(NA, nrow = Nlags, ncol = 3);
 		colnames(res[[v]]) = paste(names(res)[v], c("Return (Avg.)", "VaR (Profit)", "VaR (Loss)"), sep = " - ");
 		rownames(res[[v]]) = lvec;
@@ -381,8 +416,10 @@ hroi = function(X
 		while(n < Nlags) {
 			n = n + 1;
 			# Compute Returns
+			Logger(message = "Compute Returns", from = "hroi", line = 41, level = 3);
 			ret = Ret(X[, v, drop = FALSE], lag = lvec[n], log = log, na.rm = TRUE);
 			# Compute Average Return
+			Logger(message = "Compute Average Return", from = "hroi", line = 43, level = 3);
 			res[[v]][n, 1] = mean(ret, na.rm = TRUE);
 			res[[v]][n, 2:3] = VaR(ret, probf = VaR.type, p = c(1-p, p), ...);
 		}
@@ -391,6 +428,7 @@ hroi = function(X
 	attr(res, "log") = log;
 	attr(res, "lag") = lvec;
 	# Return Result
+	Logger(message = "Return Result", from = "hroi", line = 51, level = 1);
 	res
 }
 #######################################################################################################################
