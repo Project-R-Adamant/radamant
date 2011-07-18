@@ -567,11 +567,10 @@ newsimp.Garch = function(x, plot=TRUE, ...){
 predict.Garch = function(object, plot=TRUE, ...){
 	ff = object$Fitted
 	cc = object$Results[,1]
-	se = sqrt(ff[ ,3])	
+	se = sqrt(ff[ ,4])	
 	Returns = cbind(Returns_ME = ff[ ,2], Lower_SE = ff[ ,2] - 2*se, Upper_SE = ff[ ,2] + 2*se)
-	Var = ff[ ,4]
+	Var = ff[ ,5]
 	# plot predicted values
-	Logger(message = "plot predicted values", from = "predict.Garch", line = 7, level = 1);
 	if(plot){
 		par(mfrow=c(2,1))
 		cplot(Returns, main="Predicted values for Return (Mean Equation)") 
