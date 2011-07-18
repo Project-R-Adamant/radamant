@@ -20,7 +20,7 @@ drawdown.default = function(x, FUN=max, relative=FALSE, plot=FALSE, ...){
 	lx = length(x)
 	# cumulative returns
 	Logger(message = "cumulative returns", from = "drawdown.default", line = 15, level = 1);
-	cx = cumsum(x)
+	cx = cummax(x)
 	# initialise vector of results
 	Logger(message = "initialise vector of results", from = "drawdown.default", line = 17, level = 1);
 	i = 1
