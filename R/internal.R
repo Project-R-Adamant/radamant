@@ -169,10 +169,10 @@
 		# arch component
 		fit = omega + filter(res^2, c(0,alpha), method="c", sides=1) + asym;
 		fit[1] = sig0
-		fitt[,1] = fit
+		fitt[1:length(fit), 1] = fit
 		# garch component
 		fit = filter(fit, beta, method="r", init=rep(0, order["beta"]))
-		fitt[,2] = fit
+		fitt[1:length(fit) ,2] = fit
 	} else {
 		## EGARCH
 		exval = switch(prob,
