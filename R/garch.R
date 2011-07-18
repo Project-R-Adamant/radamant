@@ -425,7 +425,7 @@ newsimp.default = function(x, theta, order, type=c("garch","mgarch", "egarch","t
 				sig = omega / (1 - alpha - beta - phi/2)
 				a = (alpha + phi) * x^2
 				b = a - 2*((as.numeric(x < 0) * phi) * x^2) 
-				exp(omega - alpha * sqrt(2/pi)) * sig^(2*beta) * exp(b/sig)
+				exp(omega - alpha * sqrt(2/pi)) * -(-(sig))^(2*beta) * exp(b/sig)
 			}
 	# NIC tgarch
 	Logger(message = "NIC tgarch", from = "newsimp.default", line = 34, level = 1);
