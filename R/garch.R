@@ -55,121 +55,109 @@ print.Garch = function(x, digits=5, ...){
 # RETURNS:
 #  List of results with summary table for estimated parameters and Volatility persistence;
 #######################################################################################################################	
-Garch.default = function(x, Y=NULL, order=c(alpha=1,beta=1), phi=0, delta=0, type=c("garch","mgarch","tgarch","egarch"), prob=c("norm","ged","t"), ...){ 
+Garch.default = function(x, Y=NULL, order=c(alpha=1,beta=1), type=c("garch","mgarch","tgarch","egarch"), prob=c("norm","ged","t"), ...){ 
 	# coerce input data to matrix and check for NA values
-	Logger(message = "coerce input data to matrix and check for NA values", from = "Garch.default", line = 2, level = 1);
 	if(!is.matrix(x))
 		x = as.matrix(x)
 	if(any(is.na(x)))
 			x = x[-is.na(x),]
 	# check names of order vector 	
-	Logger(message = "check names of order vector 	", from = "Garch.default", line = 7, level = 1);
 	if(is.null(names(order)))
 		names(order) = c("alpha","beta")
 	# check for consistency of order parameters
-	Logger(message = "check for consistency of order parameters", from = "Garch.default", line = 10, level = 1);
 	if(any(order<0) | order["alpha"]==0 | length(order)<2){
 		message("Arch order must be at least = 1 and both Arch and Garch order must be positive \n No computation performed")
 		return(NULL)
 		}
 	# get probability function and garch type
-	Logger(message = "get probability function and garch type", from = "Garch.default", line = 15, level = 1);
 	prob = match.arg(prob)
 	type = match.arg(type)
 	n = NROW(x) 
 	# matrix of mean regressors
-	Logger(message = "matrix of mean regressors", from = "Garch.default", line = 19, level = 1);
 	if(is.null(Y))
 		Y = matrix(1, n, 1)
 	# number of regressors 
-	Logger(message = "number of regressors ", from = "Garch.default", line = 22, level = 1);
 	k = NCOL(Y)
 	# vector of initial innovations
-	Logger(message = "vector of initial innovations", from = "Garch.default", line = 24, level = 1);
 	ee = vector("numeric", n+max(order))
 	# initial regression coefficient and residual series 
-	Logger(message = "initial regression coefficient and residual series ", from = "Garch.default", line = 26, level = 1);
 	reg = lm(x ~ 0 + Y)
 	ee[-(1:max(order))] = (x - Y%*%as.matrix(reg$coef))^2
 	# initial residual standard deviation
-	Logger(message = "initial residual standard deviation", from = "Garch.default", line = 29, level = 1);
 	sig0 = mean(ee[-(1:max(order))], na.rm=TRUE) 
 	ee[1:max(order)] = (sig0)
 	# parameters initialization
-	Logger(message = "parameters initialization", from = "Garch.default", line = 32, level = 1);
 	theta = rep(0, sum(order)+5)
-	theta[3:(order["alpha"] + 2)] = in_a = rep(0.15/order["alpha"], order["alpha"])
-	theta[(order["alpha"]+3) : (order["alpha"]+order["beta"]+2)] = in_b = rep(0.45/order["beta"], order["beta"])
-	theta[2] = (sig0*(1-sum(in_a)-sum(in_b)))
-	theta[1] = reg$coef
-	theta[(length(theta)-2)] = phi
-	theta[(length(theta))] = delta
-	# probability function and shape parameter
-	Logger(message = "probability function and shape parameter", from = "Garch.default", line = 40, level = 1);
+	theta[(k+2):(order["alpha"] + 2)] = in_a = rep(0.15/order["alpha"], order["alpha"])
+	theta[(order["alpha"]+k+2) : (order["alpha"]+order["beta"]+2)] = in_b = rep(0.45/order["beta"], order["beta"])
+	theta[k+1] = (sig0*(1-sum(in_a)-sum(in_b)))
+	theta[1:k] = reg$coef
+	theta[(length(theta)-2)] = 0.01
+	theta[(length(theta))] = 0.01
+	# coef position in theta
+	pos = (2:(sum(order)+1) + k)
+	# probability function and shape parameter when prob = "norms"
 	if(prob == "norm"){
-		r = 0
+		r = 0.5
 		theta[(length(theta))-1] = r
-		upper = c(Inf, Inf, as.double(rep(1,sum(order))),Inf,Inf)
-		lower = c(-Inf, rep(1e-5,sum(order)+1), r, delta)
+		upper = c(Inf, Inf, rep(1,sum(order)),Inf ,Inf ,Inf)
+		lower = c(-Inf, 1e-6, rep(as.double(0), sum(order)), -Inf, as.double(0), -Inf)
 	} else  if(prob == "t"){
+	# probability function and shape parameter when prob = "t"	
 		r = 3
 		theta[(length(theta))-1] = r
 		upper = c(Inf, Inf, as.double(rep(1,sum(order))), Inf, Inf, Inf)
-		lower = c(-Inf, rep(0L,sum(order)+1), -Inf, r, delta)
+		lower = c(-Inf, rep(as.double(0), sum(order)+1), -Inf, as.double(0), -Inf)
 	} else {
+	# probability function and shape parameter when prob = "ged"	
 		r = 1
 		theta[(length(theta))-1] = r
-		upper = c(Inf, Inf, as.double(rep(1,sum(order))), -Inf, 2, Inf)
-		lower = c(-Inf, rep(0L,sum(order)+1), -Inf, r, delta)
+		upper = c(Inf, Inf, as.double(rep(1,sum(order))), -Inf, Inf, Inf)
+		lower = c(-Inf, rep(as.double(0), sum(order)+1), -Inf, as.double(0), -Inf)
 	}	
 	if(type == "egarch"){
-		opt = optim(par=theta, fn=like.egarch,  gr=NULL, ee=ee, x, Y, order=order, prob=prob, hessian=TRUE)
+		opt = optim(par=theta, fn=like.egarch, gr=NULL, ee=ee, x, Y, order=order, prob=prob, hessian=TRUE)
 	} else if(type == "tgarch") {
-		opt = optim(par=theta, fn=like.tgarch,  gr=NULL, ee=ee, x, Y, order=order ,prob=prob, hessian=TRUE, lower=lower, upper=upper, method="L-BFGS-B")
+		opt = optim(par = theta, fn=like.tgarch, gr=NULL, ee=ee, x, Y, order=order ,prob=prob, hessian=TRUE, lower=lower, upper=upper, method="L-BFGS-B", control = list(parscale = c(rep(1,k), signif(theta[k+1],1)*10, rep(0.1, length(pos)), 0.1, 1, 1)))
 	} else if(type == "garch") {
-		opt = optim(par=theta, fn=like.garch,  gr=NULL, ee=ee,  x, Y, order=order, prob=prob, hessian=TRUE, lower=lower, upper=upper, method="L-BFGS-B")
+		opt = optim(par=theta, fn=like.garch, gr=NULL, ee=ee,  x, Y, order=order, prob=prob, hessian=TRUE, lower=lower, upper=upper, method="L-BFGS-B", control = list(parscale = c(rep(1,k), signif(theta[k+1],1)*10, rep(0.1, length(pos)), 1, 1, 1)))
 	} else {
 		opt = optim(par=theta, fn=like.mgarch,  gr=NULL, x, Y, order=order, prob=prob, hessian=TRUE, lower=lower, upper=upper, method="L-BFGS-B")
 	}
-	coef = opt$par[1:(sum(order)+1) + k] 
-	vcov = solve(opt$hessian[1:(sum(order)+1) + k, 1:(sum(order)+1) + k])
+	if(type == "garch")
+		dum = 0
+	else 
+		dum = 1
+	coef = opt$par[1:(sum(order)+1+dum) + k] 
+	vcov = solve(opt$hessian[(1:(sum(order)+1+dum) + k), (1:(sum(order)+1+dum) + k)])
 	parSD = sqrt(diag(vcov))
 	tstat = coef / parSD
 	# mean equation
-	Logger(message = "mean equation", from = "Garch.default", line = 70, level = 1);
 	mc = opt$par[(1:k)] 
 	mse = sqrt(diag(solve(opt$hessian[(k),(1:k)])))
 	mts = mc / mse
 	mpt = 2*(1-pnorm(abs(mts)))
 	mean_coef = data.frame(Mean_Coef=mc, Mean_Se=mse, Mean_TStat=mts, Mean_PVal=mpt)
 	# volatility persistence 
-	Logger(message = "volatility persistence ", from = "Garch.default", line = 76, level = 1);
 	if(type == "garch"){
 		pers = sum(coef[-1])
 	} else {
 		pers = sum(coef[-1]) + coef[length(coef)]/2
 	}
 	# store epsilon and sigma in matrix
-	Logger(message = "store epsilon and sigma in matrix", from = "Garch.default", line = 82, level = 1);
 	fitted = matrix(0, n, 5)
 	colnames(fitted) = c("Returns", "Fitted_ME", "Residuals", "Eps", "Sigma") 
 	# calculate new innovations
-	Logger(message = "calculate new innovations", from = "Garch.default", line = 85, level = 1);
 	ee = x - Y %*% as.matrix(opt$par[1:k])
 	# store residuals
-	Logger(message = "store residuals", from = "Garch.default", line = 87, level = 1);
 	fitted[, 3] = ee
 	# get fitted series with Epsilon and Sigma
-	Logger(message = "get fitted series with Epsilon and Sigma", from = "Garch.default", line = 89, level = 1);
 	fitted[, 4:5] = .Garch.proc(pars=opt$par[-(1:k)], order=order, res=ee, type=type, r=r, prob=prob)
 	# store original series
-	Logger(message = "store original series", from = "Garch.default", line = 91, level = 1);
 	fitted[,1] = x
 	# fitted values of the mean equation
-	Logger(message = "fitted values of the mean equation", from = "Garch.default", line = 93, level = 1);
 	fitted[,2] = Y %*% as.matrix(opt$par[1])
 	# table of results
-	Logger(message = "table of results", from = "Garch.default", line = 95, level = 1);
 	coef.tab = data.frame(Estimates = coef, Std.Errors = parSD, T_Stat = tstat, P_Value = 2*(1-pnorm(abs(tstat))))
 	rownames(coef.tab)[1] = "Omega"
 	rownames(coef.tab)[2:(order["alpha"]+1)] = paste("Alpha_",1:order["alpha"],sep="")
@@ -189,7 +177,6 @@ Garch.default = function(x, Y=NULL, order=c(alpha=1,beta=1), phi=0, delta=0, typ
 	)
 	class(Results) = "Garch"
 	# clean memory
-	Logger(message = "clean memory", from = "Garch.default", line = 114, level = 1);
 	cleanup("Results")
 	Results
 }
