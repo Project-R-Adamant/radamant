@@ -596,11 +596,12 @@ LjungBox = function(x, lags, plot.acf=FALSE){
 	cbind(LB_stat = Q, PVal = round(pv,5))
 }
 newsimp.Garch = function(x, plot=TRUE, ...){
-	## get parameters from object of class "Garch"	# original series
-	X = x$Fitted[,1]
+	## get parameters from object of class "Garch"	
+        # residual series
+	X = x$Fitted[, 3]
 	# estimated parameters
 	Logger(message = "estimated parameters", from = "newsimp.Garch", line = 4, level = 1);
-	theta = x$Results[,1]
+	theta = x$Results[, 1]
 	# arch - garch order
 	Logger(message = "arch - garch order", from = "newsimp.Garch", line = 6, level = 1);
 	order = x[[2]]
