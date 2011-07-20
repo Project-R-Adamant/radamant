@@ -44,16 +44,14 @@ print.Garch = function(x, digits=5, ...){
 #
 # PARAMETERS:
 # - x: input time series (usally returns);
+# - Y: exogenous variable for the mean equation
 # - ee: vector of innovations;
 # - order: vector of p and q order;
 # - type: type of garch to be estimated;
 # - prob: probability function to be used;
-# - par.init: initial parameters estimation method;
-# - r: shape parameters (GED) or degrees of freedom (T);
-# - opt.met: optimisation method used for numerical estimation of parameters;
 #
 # RETURNS:
-#  List of results with summary table for estimated parameters and Volatility persistence;
+#  An object of class "Garch"
 #######################################################################################################################	
 Garch.default = function(x, Y=NULL, order=c(alpha=1,beta=1), type=c("garch","mgarch","tgarch","egarch"), prob=c("norm","ged","t"), ...){ 
 	# coerce input data to matrix and check for NA values
@@ -86,53 +84,115 @@ Garch.default = function(x, Y=NULL, order=c(alpha=1,beta=1), type=c("garch","mga
 	# initial residual standard deviation
 	sig0 = mean(ee[-(1:max(order))], na.rm=TRUE) 
 	ee[1:max(order)] = (sig0)
-	# parameters initialization
-	theta = rep(0, sum(order)+5)
+	# parameters initialization 
+	theta = double(sum(order)+5)
+	# alpha parameter(s)
 	theta[(k+2):(order["alpha"] + 2)] = in_a = rep(0.15/order["alpha"], order["alpha"])
+	# beta parameter(s)
 	theta[(order["alpha"]+k+2) : (order["alpha"]+order["beta"]+2)] = in_b = rep(0.45/order["beta"], order["beta"])
+	# constant term
 	theta[k+1] = (sig0*(1-sum(in_a)-sum(in_b)))
+	# mean equation coefficient
 	theta[1:k] = reg$coef
-	theta[(length(theta)-2)] = 0.01
+	# phi coefficient (only for egarch and tgarch)
+	theta[(length(theta)-2)] = 0.1
+	#
 	theta[(length(theta))] = 0.01
 	# coef position in theta
 	pos = (2:(sum(order)+1) + k)
 	# probability function and shape parameter when prob = "norms"
 	if(prob == "norm"){
-		r = 0.5
+		r = 1
 		theta[(length(theta))-1] = r
 		upper = c(Inf, Inf, rep(1,sum(order)),Inf ,Inf ,Inf)
-		lower = c(-Inf, 1e-6, rep(as.double(0), sum(order)), -Inf, as.double(0), -Inf)
+		lower = c(-Inf, rep(1e-6, sum(order+1)), -Inf, double(0), -Inf)
 	} else  if(prob == "t"){
 	# probability function and shape parameter when prob = "t"	
 		r = 3
 		theta[(length(theta))-1] = r
 		upper = c(Inf, Inf, as.double(rep(1,sum(order))), Inf, Inf, Inf)
-		lower = c(-Inf, rep(as.double(0), sum(order)+1), -Inf, as.double(0), -Inf)
+		lower = c(-Inf, rep(1e-6, sum(order+1)), -Inf, double(0), -Inf)
 	} else {
 	# probability function and shape parameter when prob = "ged"	
 		r = 1
 		theta[(length(theta))-1] = r
 		upper = c(Inf, Inf, as.double(rep(1,sum(order))), -Inf, Inf, Inf)
-		lower = c(-Inf, rep(as.double(0), sum(order)+1), -Inf, as.double(0), -Inf)
+		lower = c(-Inf, rep(1e-6, sum(order+1)), -Inf, double(0), -Inf)
 	}	
 	if(type == "egarch"){
-		opt = optim(par=theta, fn=like.egarch, gr=NULL, ee=ee, x, Y, order=order, prob=prob, hessian=TRUE)
+		# optimise egarch parameter (hopefully)
+		opt = optim(par=theta
+					, fn=like.egarch
+					, gr=NULL
+					, ee=ee
+					, x
+					, Y
+					, order=order
+					, prob=prob
+					, hessian=TRUE)
 	} else if(type == "tgarch") {
-		opt = optim(par = theta, fn=like.tgarch, gr=NULL, ee=ee, x, Y, order=order ,prob=prob, hessian=TRUE, lower=lower, upper=upper, method="L-BFGS-B", control = list(parscale = c(rep(1,k), signif(theta[k+1],1)*10, rep(0.1, length(pos)), 0.1, 1, 1)))
+		# optimise tgarch parameter (hopefully)		
+		opt = optim(par = theta
+					, fn=like.tgarch
+					, gr=NULL
+					, ee=ee
+					, x
+					, Y
+					, order=order
+					, prob=prob
+					, hessian=TRUE
+					, lower=lower
+					, upper=upper
+					, method="L-BFGS-B"
+					, control = list(parscale = c(rep(1,k), signif(theta[k+1],1), rep(0.1, length(pos)), 0.1, 1, 1)
+						, ndeps = c(1e-3, 1e-05, rep(1e-03, length(pos)), 1e-03, 1e-03, 1e-03))
+					)
 	} else if(type == "garch") {
-		opt = optim(par=theta, fn=like.garch, gr=NULL, ee=ee,  x, Y, order=order, prob=prob, hessian=TRUE, lower=lower, upper=upper, method="L-BFGS-B", control = list(parscale = c(rep(1,k), signif(theta[k+1],1)*10, rep(0.1, length(pos)), 1, 1, 1)))
+		# optimise garch parameter (hopefully)
+		opt = optim(par=theta
+					, fn=like.garch
+					, gr=NULL
+					, ee=ee
+					, x
+					, Y
+					, order=order
+					, prob=prob
+					, hessian=TRUE
+					, lower=lower
+					, upper=upper
+					, method="L-BFGS-B"
+					, control = list(parscale = c(rep(1,k), signif(theta[k+1],1), rep(0.1, length(pos)), 0.1, 1, 1)
+						, ndeps = c(1e-3, 1e-06, rep(1e-03, length(pos)), 1e-03, 1e-03, 1e-03) )
+					)
 	} else {
-		opt = optim(par=theta, fn=like.mgarch,  gr=NULL, x, Y, order=order, prob=prob, hessian=TRUE, lower=lower, upper=upper, method="L-BFGS-B")
+		# optimise mgarch parameter (hopefully)
+		opt = optim(par=theta
+					, fn=like.mgarch
+					, gr=NULL
+					, x
+					, Y
+					, order=order
+					, prob=prob
+					, hessian=TRUE
+					, lower=lower
+					, upper=upper
+					, method="L-BFGS-B"
+					, control = list(parscale = c(rep(1,k), signif(theta[k+1],1), rep(0.1, length(pos)), 0.1, 1, 1))
+					)
 	}
 	if(type == "garch")
 		dum = 0
 	else 
 		dum = 1
+	# extract estimated coefficient
 	coef = opt$par[1:(sum(order)+1+dum) + k] 
+	# extract hessian matrix and get vcov matrix
 	vcov = solve(opt$hessian[(1:(sum(order)+1+dum) + k), (1:(sum(order)+1+dum) + k)])
+	# get standard error (finger crossed!)
 	parSD = sqrt(diag(vcov))
+	# compute t-stat
 	tstat = coef / parSD
-	# mean equation
+	# mean equation results
 	mc = opt$par[(1:k)] 
 	mse = sqrt(diag(solve(opt$hessian[(k),(1:k)])))
 	mts = mc / mse
@@ -156,7 +216,7 @@ Garch.default = function(x, Y=NULL, order=c(alpha=1,beta=1), type=c("garch","mga
 	# store original series
 	fitted[,1] = x
 	# fitted values of the mean equation
-	fitted[,2] = Y %*% as.matrix(opt$par[1])
+	fitted[,2] = Y %*% as.matrix(opt$par[1:k])
 	# table of results
 	coef.tab = data.frame(Estimates = coef, Std.Errors = parSD, T_Stat = tstat, P_Value = 2*(1-pnorm(abs(tstat))))
 	rownames(coef.tab)[1] = "Omega"
@@ -164,6 +224,7 @@ Garch.default = function(x, Y=NULL, order=c(alpha=1,beta=1), type=c("garch","mga
 	rownames(coef.tab)[(order["alpha"]+2):(order["beta"]+order["alpha"]+1)] = paste("Beta_",1:order["beta"],sep="")
 	if(type != "garch")
 		rownames(coef.tab)[NROW(coef.tab)] = "Phi"
+	# create list of results (output)
 	Results=list(
 		Type = type,
 		Order = order,
