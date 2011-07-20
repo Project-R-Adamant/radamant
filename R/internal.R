@@ -149,6 +149,7 @@
 	if((match.arg(type) != "garch"))
 		phi = pars[length(pars)-2]
 	# initial matrix with initial sample variance
+	#browser()
 	fitt = matrix(NA, length(res)+max(order), 2)
 	fitt[1:max(order),] = (sig0)
 	if(match.arg(type) == "garch" || match.arg(type) == "mgarch"){
@@ -172,23 +173,24 @@
 		fitt[1:length(fit), 1] = fit
 		# garch component
 		fit = filter(fit, beta, method="r", init=rep(0, order["beta"]))
-		fitt[1:length(fit) ,2] = fit
+		fitt[1:length(fit), 2] = fit
 	} else {
 		## EGARCH
 		exval = switch(prob,
 			"norm" = (sqrt(2/pi)) ,
 			"ged" = (gamma(2/r)/sqrt(gamma(1/r)*gamma(3/r))),
 			"t" = (sqrt((r-2))*gamma((r-1)*0.5)/gamma(0.5)*gamma(r*0.5)) 
-			);   
+			); 
 		# run egarch equation and calculate epsilon and sigma2 separately
 		i = 1 + max(order)
 		while(i <= length(res) + max(order)){
 			# epsilon calculation - arch component
-			fitt[i, 1] = omega + alpha %*% ((abs(res[(i-1):(i-max(order))])/sqrt(exp(fitt[(i-1):(i-max(order)), 1]))) - exval) + phi * (res[i-1] / sqrt(exp(fitt[i-1, 1])))
+			fitt[i, 1] = omega + alpha %*% ((abs(res[(i-1):(i-max(order))])/sqrt(exp(fitt[(i-1):(i-max(order)), 2]))) - exval) + phi * (res[i-1] / sqrt(exp(fitt[(i-1):(i-max(order)), 2])))
 			# sigma calculation - garch component
 			fitt[i, 2] = fitt[i, 1] + beta %*% fitt[(i-1):(i-max(order)), 2]
 			i = i + 1;
 		};
+		fitt = exp(fitt)
 	}
 	# return new fitted series Epsilon and Sigma
 	fitt[-(1:max(order)),]
