@@ -105,19 +105,19 @@ Garch.default = function(x, Y=NULL, order=c(alpha=1,beta=1), type=c("garch","mga
 		r = 1
 		theta[(length(theta))-1] = r
 		upper = c(Inf, Inf, rep(1,sum(order)),Inf ,Inf ,Inf)
-		lower = c(-Inf, rep(1e-6, sum(order+1)), -Inf, double(0), -Inf)
+		lower = c(-Inf, rep(1e-6, sum(order+1)), -Inf, 0.1, -Inf)
 	} else  if(prob == "t"){
 	# probability function and shape parameter when prob = "t"	
 		r = 3
 		theta[(length(theta))-1] = r
-		upper = c(Inf, Inf, as.double(rep(1,sum(order))), Inf, Inf, Inf)
-		lower = c(-Inf, rep(1e-6, sum(order+1)), -Inf, double(0), -Inf)
+		upper = c(Inf, Inf, as.double(rep(1,sum(order))), Inf, 10, Inf)
+		lower = c(-Inf, rep(1e-6, sum(order+1)), -Inf, 0.1, -Inf)
 	} else {
 	# probability function and shape parameter when prob = "ged"	
 		r = 1
 		theta[(length(theta))-1] = r
 		upper = c(Inf, Inf, as.double(rep(1,sum(order))), -Inf, Inf, Inf)
-		lower = c(-Inf, rep(1e-6, sum(order+1)), -Inf, double(0), -Inf)
+		lower = c(-Inf, rep(1e-6, sum(order+1)), -Inf, 0.1, -Inf)
 	}	
 	if(type == "egarch"){
 		# optimise egarch parameter (hopefully)
