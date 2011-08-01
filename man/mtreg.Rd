@@ -1,29 +1,38 @@
 \name{mtreg}
 
 \alias{summary.reg}
-\alias{print.reg}
-\alias{plot.reg}
+\alias{summary.mreg}
 
-\title{Methods for reg}
+\title{Summary methods for (Multi)-Regression object}
 
-\description{Plot, Print ND Summary method for "reg"}
+\description{Summary method for classes 'reg' and 'mreg'.}
 
 \usage{
-\method{print}{reg}(x, ...) 
-\method{summary}{reg}(object, ...) 
-\method{plot}{reg}(x, mode = c("response", "link"), 
-title = ifelse(x$model.type == "lm", "LS Regression","GLM Regression"), 
-theme.params = getCurrentTheme(), 
-overrides = list(...), ...) 
+\method{summary}{reg}(object, ...)
+
+\method{summary}{mreg}(object, ...)
 }
 
+\arguments{ 
+\item{object}{Instance of class 'reg'/'mreg'.}
+\item{...}{Further arguments to or from other methods.}
+}
 
-\arguments{ \item{x, object}{ x}\item{mode}{ mode}\item{title}{ title}
-\item{theme.params}{ theme.params}\item{overrides}{ overrides}\item{...}{Further arguments to or
-from other methods}}
+\examples{
+# Generate some random data
+N = 50;
+sigma = 1;
+X1 = cumsum(rnorm(N));
+X2 = cumsum(rnorm(N));
 
+# Define a linear model
+Y = 1.5 + X1 + 2*X2 + rnorm(N, sd = sigma);
+
+# Run Multi-Regression
+mod = mreg(Y, X = cbind(X1, X2), plot = FALSE);
+# Print Summary
+summary(mod)
+}
 \author{RAdamant Development Team \email{team@r-adamant.org}}
-
-\note{TO BE COMPLETED}
 
 

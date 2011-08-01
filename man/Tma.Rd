@@ -7,9 +7,8 @@ win.size[j] }
 \usage{tma(X, win.size = 10, plot = FALSE, ...) }
 \arguments{ 
 \item{X}{ Matrix of data series (one column per variable). }
-\item{win.size}{ vector of moving average window sizes (lags) to be applied on the data X. (DEFAULT
-= 10). }
-\item{plot}{LOGICAL. Return plot. }
+\item{win.size}{ vector of moving average window sizes (lags) to be applied on the data X. (Default: 10). }
+\item{plot}{Logical. Return plot. }
 \item{...}{ Additional parameters accepted by the function Mmovav.}
 }
 \details{For financial time series (class = 'fs'), only 'Close' column is processed.}

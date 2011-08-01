@@ -40,23 +40,23 @@ cplot(X
 \item{yrange}{y axis range}
 \item{theme.params}{RAdamant graphics theme}
 \item{xtitle}{Title for the x-axis}
-\item{xlabels}{Labels for x tick marks}
+\item{xlabels}{Labels for x-axis tick marks}
 \item{ytitle}{Title for the left y-axis}
-\item{ylabels}{Labels for left y tick marks}
+\item{ylabels}{Labels for left y-axis tick marks}
 \item{ytitle2}{Title for the right y-axis}
-\item{ylabels2}{ labels for right y tick marks}
-\item{show.xlabels}{LOGICAL. If TRUE, x-axis labels are plotted}
-\item{show.ylabels}{LOGICAL. If TRUE, y-axis labels are plotted}
+\item{ylabels2}{Labels for right y-axis tick marks}
+\item{show.xlabels}{Logical. If TRUE, x-axis labels are plotted}
+\item{show.ylabels}{Logical. If TRUE, y-axis labels are plotted}
 \item{main}{Main title for the plot}
 \item{legend}{Vector of text for the legend}
 \item{legend.col}{Colors for the elements in the legend}
-\item{show.legend}{LOGICAL. If TRUE, legend is added to the plot}
-\item{shaded}{LOGICAL vector. If TRUE, a shaded area is added to the corresponding column.}
-\item{grid}{LOGICAL. If TRUE, a grid is plotted.}
+\item{show.legend}{Logical. If TRUE, legend is added to the plot}
+\item{shaded}{Logical vector. If TRUE, a shaded area is added to the corresponding column.}
+\item{grid}{Logical. If TRUE, a grid is plotted.}
 \item{overrides}{overrides list}
-\item{new.device}{LOGICAL. If TRUE, a new window device is opened.}
-\item{append}{LOGICAL. If TRUE, append to existing plot}
-\item{multicolor}{LOGICAL. If TRUE, a separate color is used for each data point, as provided by the 'col' parameter of the theme}
+\item{new.device}{Logical. If TRUE, a new window device is opened.}
+\item{append}{Logical. If TRUE, append to existing plot}
+\item{multicolor}{Logical. If TRUE, a separate color is used for each data point, as provided by the 'col' parameter of the theme}
 \item{...}{Additional parameters passed to the function create.empty.plot. Also used to quickly override the theme.}
 }
 

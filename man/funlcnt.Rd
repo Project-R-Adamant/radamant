@@ -32,17 +32,17 @@ func.line.cnt(package = NULL, plot = TRUE, ...)
 }
 
 \arguments{ 
-\item{x}{Package name or a list of functions.}
 \item{package}{CHARACTER. Single name of the package to load or array list of function names.}
-\item{plot}{LOGICAL. If TRUE, results are plotted on bar charts.}
+\item{x}{An object of class "modularity".}
+\item{plot}{Logical. If TRUE, results are plotted on bar charts.}
 \item{qtz.type}{CHARACTER. qtz.type = "Linear" | "Log" | "None". Partial match on the value is attempted.}
-\item{qtz.nbins}{INTEGER. Number of bins to be computed. Used only when qtz.type is "Linear" or "Log" (Default = 30).}
-\item{qtz.cutoff}{Used only when qtz.type = "Log" (Default = 30). More granular binning below the cutoff point.}
-\item{theme.params}{A valid RAdamant Theme. See setThemeAttr for details. (DEFAULT = getCurrentTheme())}
-\item{overrides}{List of parameters used to override the theme. Only parameters that match those defined by the theme are overridden (DEFAULT = list(...))}
+\item{qtz.nbins}{Integer. Number of bins to be computed. Used only when qtz.type is "Linear" or "Log" (Default: 30).}
+\item{qtz.cutoff}{Used only when qtz.type = "Log" (Default: 30). More granular binning below the cutoff point.}
+\item{theme.params}{A valid RAdamant Theme. See setThemeAttr for details. (Default: getCurrentTheme())}
+\item{overrides}{List of parameters used to override the theme. Only parameters that match those defined by the theme are overridden (Default: list(...))}
 \item{border}{Color used for the border line of the barplot.}
-\item{savepng}{LOGICAL. If true, charts are saved to png file.}
-\item{savepath}{The path where png files are saved (DEFAULT = getwd()).}
+\item{savepng}{Logical. If true, charts are saved to png file.}
+\item{savepath}{The path where png files are saved (Default: getwd()).}
 \item{save.width}{The image width of the png file. See png for details.}
 \item{save.height}{The image height of the png file. See png for details.}
 \item{save.resolution}{The image resolution of the png file. See png for details.}
@@ -53,9 +53,9 @@ func.line.cnt(package = NULL, plot = TRUE, ...)
 The parameter "qtz.type" controls the type of quantization used to set the bin size for the bar chart of the Code Length Distribution. \cr
 Values:
 \itemize{
-	\item{If "Linear", qtz.nbins equispaced intervarls are computed.}
-	\item{If "Log", qtz.nbins log-spaced intervals are computed based on qtz.cutoff.}
-	\item{In any other case the bin size is set to 1.}
+    \item{If "Linear", qtz.nbins equispaced intervarls are computed.}
+    \item{If "Log", qtz.nbins log-spaced intervals are computed based on qtz.cutoff.}
+    \item{In any other case the bin size is set to 1.}
 }
 The parameter "qtz.cutoff" controls how bins are computed when qtz.type = "Log": qtz.nbins equispaced intervals are computed on a log(x/qtz.cutoff) scale. \cr
 This creates more intervals/bins in the range 0 < x < qtz.cutoff.

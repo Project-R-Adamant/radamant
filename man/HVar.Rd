@@ -4,20 +4,33 @@
 
 \title{Historical Value at Risk}
 
-\description{Compute historical VaR on each column of the input matrix}
+\description{
+Compute historical VaR on each column of the input matrix. 
+If input is a Financial Series object (class 'fs'), then 'Close' data are processed.
+}
 
 \usage{hVaR(X, p = 0.05, centered = FALSE)}
 
 \arguments{
-\item{X}{ Input matrix/sequence. Sequences are treated as one column matrices.}
-\item{p}{ vector of probabilities (DEFAULT = 0.05)}
-\item{centered}{ LOGICAL. If TRUE, input data are standardised}
+\item{X}{Input matrix/sequence. Sequences are treated as one column matrices.}
+\item{p}{vector of probabilities (Default: 0.05)}
+\item{centered}{Logical. If TRUE, input data are standardised prior to compute VaR.}
 }
 
-\value{A matrix length(p) by NCOL(X) of computed quantiles}
+\value{A matrix length(p) by NCOL(X) of computed historical VaR}
 
 \author{RAdamant Development Team \email{team@r-adamant.org}}
 
-\note{TO BE COMPLETED}
+\examples{
+# Load sample Financial series data
+data(ex_fs);
+# Compute Historical VaR (5% confidence level) on 1-day Returns
+hVaR(Ret(ex_fs));
+
+# Generate some random data
+X = cbind(rnorm(1000), rnorm(1000, sd = 2))
+# Compute multiple Historical VaR (1%, 2.5%, 5% confidence levels)
+hVaR(X, p = c(1, 2.5, 5)/100);
+}
 
 

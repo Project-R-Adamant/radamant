@@ -3,9 +3,14 @@
 \title{Price Volume trend indicator}
 \description{Compute Price Volume trend indicator (Technical Analysis)}
 \usage{pvt(Close, Volume, lag = 5, plot = FALSE, ...) }
-\arguments{\item{Close}{ VECTOR. Close price.}\item{Volume}{ VECTOR. Asset traded
-Volume.}\item{lag}{ INTEGER. Number of lag periods.}\item{plot}{ LOGICAL. If TRUE plot is
-returned.}\item{...}{ Further arguments to or from other methods.}}
+\arguments{
+\item{Close}{Vector. Close price.}
+\item{Volume}{Vector. Asset traded
+Volume.}
+\item{lag}{Integer. Number of lag periods.}
+\item{plot}{Logical. If TRUE plot is
+returned.}
+\item{...}{ Further arguments to or from other methods.}}
 
 
 

@@ -13,7 +13,7 @@ get.row.names(X, default = "")
 \arguments{ 
 \item{X}{ Input matrix.}
 \item{default}{ LOGICAL vector. Each entry determines the sort direction of the respective column of
-X. Recycled if necessary. (DEFAULT = FALSE).}
+X. Recycled if necessary. (Default: FALSE).}
 }
 
 \details{Sequences are treated as one column matrices. \cr

@@ -12,7 +12,7 @@ movSd(X, win.size = 1, ...)
 movVar(X, win.size = 1, ...) }
 \arguments{
 \item{X}{ Matrix of data series (one column per variable). }
-\item{win.size}{ Vector of data window sizes that will be used for the calculations (DEFAULT = 1).}
+\item{win.size}{ Vector of data window sizes that will be used for the calculations (Default: 1).}
 \item{...}{ Additional parameters accepted by the function movApply}
 }
 \details{For financial time series (class = 'fs'), only 'Close' column is processed.}

@@ -10,7 +10,7 @@
 
 \arguments{
 \item{X}{ Input matrix.}
-\item{decreasing}{ LOGICAL. Decreasing order.}
+\item{decreasing}{Logical. Decreasing order.}
 \item{...}{ Further arguments to or from other methods.}
 }
 

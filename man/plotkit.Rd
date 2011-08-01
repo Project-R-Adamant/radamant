@@ -10,37 +10,37 @@
 
 \usage{ 
 draw.grid(X
-	, base = NULL
-	, theme.params = getCurrentTheme()
-	, method = c("equispaced", "sampling")
-	) 
+    , base = NULL
+    , theme.params = getCurrentTheme()
+    , method = c("equispaced", "sampling")
+    ) 
 
 draw.legend(legend = ""
-	, theme.params = getCurrentTheme()
-	, overrides = list(...)
-	, ...
-	) 
+    , theme.params = getCurrentTheme()
+    , overrides = list(...)
+    , ...
+    ) 
 
 draw.x.axis(X
-	, base = NULL
-	, xlabels = NULL
-	, theme.params = getCurrentTheme()
-	, show.labels = TRUE
-	, show.ticks = TRUE
-	, ...
-	) 
-	
+    , base = NULL
+    , xlabels = NULL
+    , theme.params = getCurrentTheme()
+    , show.labels = TRUE
+    , show.ticks = TRUE
+    , ...
+    ) 
+    
 draw.x.title(xtitle = "", theme.params = getCurrentTheme())
 
 draw.y.axis(X
-	, ylabels = NULL
-	, theme.params = getCurrentTheme()
-	, side = 1
-	, show.labels = TRUE
-	, show.ticks = TRUE
-	, ...
-	) 
-	
+    , ylabels = NULL
+    , theme.params = getCurrentTheme()
+    , side = 1
+    , show.labels = TRUE
+    , show.ticks = TRUE
+    , ...
+    ) 
+    
 draw.y.title(ytitle = "", theme.params = getCurrentTheme(), side = 1)
 
 }
@@ -48,15 +48,15 @@ draw.y.title(ytitle = "", theme.params = getCurrentTheme(), side = 1)
 \arguments{
 \item{X}{Matrix of data series being plotted (y-values). One column per series.}
 \item{base}{Corresponding x-values (common to all series) associated to the entries of X. If NULL, then base = 1:NROW(X). }
-\item{theme.params}{A valid RAdamant Theme. See setThemeAttr for details. (DEFAULT = getCurrentTheme())}
-\item{overrides}{List of parameters used to override the theme. Only parameters that match those defined by the theme are overridden (DEFAULT = list(...))}
+\item{theme.params}{A valid RAdamant Theme. See setThemeAttr for details. (Default: getCurrentTheme())}
+\item{overrides}{List of parameters used to override the theme. Only parameters that match those defined by the theme are overridden (Default: list(...))}
 \item{legend}{Vector of legend texts}
 \item{xlabels}{Labels for the x-axis}
 \item{ylabels}{Labels for the y-axis}
 \item{xtitle}{Title for the x-axis}
 \item{ytitle}{Title for the y-axis}
-\item{show.labels}{LOGICAL. If TRUE, labels are showed.}
-\item{show.ticks}{LOGICAL. If TRUE, tickmarks are showed.}
+\item{show.labels}{Logical. If TRUE, labels are showed.}
+\item{show.ticks}{Logical. If TRUE, tickmarks are showed.}
 \item{side}{The side (1 = left, 2 = right) where the y-axis labels and title are plotted.} 
 \item{method}{Controls how the x-coordinates of the grid vertical lines are computed. \cr
 If method = "equispaced", N = getThemeAttr("x.ticks", exact = TRUE) points between min(base) and max(base) are computed. \cr

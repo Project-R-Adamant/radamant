@@ -12,8 +12,8 @@ kaiser(N, normalized = TRUE, alpha = 3)
 
 \arguments{ 
 \item{N}{Window length.}
-\item{normalized}{LOGICAL. If TRUE (default), window is normalised to have unitary norm.}
-\item{alpha}{Shape factor (DEFAULT = 3).}
+\item{normalized}{Logical. If TRUE (default), window is normalised to have unitary norm.}
+\item{alpha}{Shape factor (Default: 3).}
 }
 
 \value{An object of the class 'Window'. It is a simple sequence of N samples of the Kaiser window.}

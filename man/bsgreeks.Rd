@@ -36,20 +36,53 @@ sigma = 0.2
 maty = 0.5
 yield = 0.03
 
-# calculate BS price for a call option assuming normal distribution of prices
-bs1 = BS.price(under, strike, rfr, sigma, maty, yield, calc.type = "standard" , opt.type = "call") 
-# same example assuming gamma-reciprocal distribution of prices
-bs2 = BS.price(under, strike, rfr, sigma, maty, yield, calc.type = "gammarec" , opt.type = "call") 
+# calculate BS price for a call option 
+# assuming normal distribution of prices
+bs1 = BS.price(under
+		, strike
+		, rfr
+		, sigma
+		, maty
+		, yield
+		, calc.type = "standard"
+		, opt.type = "call") 
+
+# assuming gamma-reciprocal distribution of prices
+bs2 = BS.price(under
+		, strike
+		, rfr
+		, sigma
+		, maty
+		, yield
+		, calc.type = "gammarec"
+		, opt.type = "call") 
 
 # calculate greeks for object bs1 of class "BS.price"
 BS.greeks(bs1)
 class(bs1)
-# ... or alternatively passing the same BS paramaters used for price calculation the results are the same
-BS.greeks(under=under, strike=strike, rfr=rfr, sigma=sigma, maty=maty, yield=yield, opt.type = "call", calc.type = "standard" )
+
+# ... or alternatively passing the same BS paramaters
+#  used for price calculation the results are the same
+BS.greeks(under=under
+	, strike=strike
+	, rfr=rfr
+	, sigma=sigma
+	, maty=maty
+	, yield=yield
+	, opt.type = "call"
+	, calc.type = "standard" )
 
 # Same examples as above for different calculation type
 BS.greeks(bs2)
 class(bs2)
-BS.greeks(under=under, strike=strike, rfr=rfr, sigma=sigma, maty=maty, yield=yield, opt.type = "call", calc.type = "gammarec")
+BS.greeks(under=under
+	, strike=strike
+	, rfr=rfr
+	, sigma=sigma
+	, maty=maty
+	, yield=yield
+	, opt.type = "call"
+	, calc.type = "gammarec")
 }
+
 

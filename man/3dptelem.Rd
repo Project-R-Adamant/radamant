@@ -7,8 +7,11 @@
 \description{Add elements to 3D Plot }
 \usage{ 
 lines3d(x, y, z, pmat = getProjectionMatrix(), ...) 
+
 points3d(x, y, z, pmat = getProjectionMatrix(), ...) 
+
 rect3d(xrange, yrange, z, pmat = getProjectionMatrix(), ...) 
+
 text3d(x, y, z, pmat = getProjectionMatrix(), ...)
 }
 \arguments{

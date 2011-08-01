@@ -23,15 +23,16 @@ Group of utility functions for themes management.\cr
 
 \usage{
 loadThemes(env = getOption("RAdamant")
-			, path = paste(library(help = RAdamant)$path, "themes", sep = "/")
-			)
+	, path = paste(library(help = RAdamant)$path, "themes", sep = "/"))
 
 getTheme(which = 1, env = getOption("RAdamant"))
 
 getCurrentTheme(env = getOption("RAdamant"))
 setCurrentTheme(which = 1, env = getOption("RAdamant"))
 
-getThemeAttr(what = NULL, env = getOption("RAdamant"), exact.match = FALSE)
+getThemeAttr(what = NULL
+	, env = getOption("RAdamant")
+	, exact.match = FALSE)
 setThemeAttr(..., env = getOption("RAdamant"))
 
 }
@@ -43,7 +44,7 @@ setThemeAttr(..., env = getOption("RAdamant"))
 \item{what}{The name of the theme attribute to be returned. 
 Partial match is possible (depending on exact.match), in which case multiple attributes are returned.
 }
-\item{exact.match}{LOGICAL. If TRUE, exact match of the attribute name is performed}
+\item{exact.match}{Logical. If TRUE, exact match of the attribute name is performed}
 \item{...}{Any theme attributes can be modified, using 'name = value' or by passing a list of such tagged values.}
 }
 

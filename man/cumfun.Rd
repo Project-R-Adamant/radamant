@@ -14,11 +14,11 @@ matrix.
 \usage{cumMax(X, lag = 0, padding = NA, na.rm = FALSE) }
 \arguments{ 
 \item{X}{ Input matrix/sequence}
-\item{lag}{ vector of integer lags. If lag >= 0 data are shifted to the right, else to the left.
-(DEFAULT = 0)}
-\item{padding}{ value used to initialise the output matrix (DEFAULT = NA)}
-\item{na.rm}{ LOGICAL. If TRUE, N-lag entries are removed from the output. Also NA in the input are
-replaced by -Inf (DEFAULT = FALSE)}
+\item{lag}{ Vector of integer lags. If lag >= 0 data are shifted to the right, else to the left.
+(Default: 0)}
+\item{padding}{ Value used to initialise the output matrix (Default: NA)}
+\item{na.rm}{Logical. If TRUE, N-lag entries are removed from the output. Also NA in the input are
+replaced by -Inf (Default: FALSE)}
 }
 \details{Sequences are treated as one-column matrices}
 \value{A matrix of cumulative maximums of X. Number of rows depends on the na.rm parameter. Number

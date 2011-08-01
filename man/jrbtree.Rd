@@ -35,22 +35,39 @@ maty, yield, life, ret.steps = FALSE) }
 \seealso{ \code{\link{BS.price}}, \code{\link{StepMat}}, \code{\link{CRR.BinTree}}  }
 
 \examples{
-	# set option parameters
-	under = 105
-	strike = 95
-	rfr = 0.08
-	sigma = 0.2
-	maty = 0.5
-	yield = 0.03
-	life = 0.5
+    # set option parameters
+    under = 105
+    strike = 95
+    rfr = 0.08
+    sigma = 0.2
+    maty = 0.5
+    yield = 0.03
+    life = 0.5
 
-	# estimate option price using Jarrow and Rudd Binomial Tree (10 steps)
-	jrt = JR.BinTree(Nsteps=10, p=0.5, under, strike, rfr, sigma, maty, yield, life)
-	jrt$Values
-	# ... confront results with B&S method 
-	BS.price(under, strike, rfr, sigma, maty, yield)
-	# get step matrix
-	jrt = JR.BinTree(Nsteps=10, p=0.5, under, strike, rfr, sigma, maty, yield, life, ret.steps=TRUE)
-	jrt$Price_Path
+    # estimate option price using Jarrow and Rudd Binomial Tree (10 steps)
+    jrt = JR.BinTree(Nsteps=10
+                        , p=0.5
+                        , under
+                        , strike
+                        , rfr
+                        , sigma
+                        , maty
+                        , yield
+                        , life)
+    jrt$Values
+    # ... confront results with B&S method 
+    BS.price(under, strike, rfr, sigma, maty, yield)
+    # get step matrix
+    jrt = JR.BinTree(Nsteps=10
+                        , p=0.5
+                        , under
+                        , strike
+                        , rfr
+                        , sigma
+                        , maty
+                        , yield
+                        , life
+                        , ret.steps=TRUE)
+    jrt$Price_Path
 }
 

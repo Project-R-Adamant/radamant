@@ -28,19 +28,20 @@ A matrix containing the four moments (one for each row):
 \author{RAdamant Development Team \email{team@r-adamant.org}}
 
 \examples{
-	# Set BS paramaters
-	under = 105
-	strike = 95
-	rfr = 0.08
-	sigma = 0.2
-	maty = 0.5
-	yield = 0.03
-	# calculate BS price
-	bs = BS.price(under, strike, rfr, sigma, maty, yield)
-	# calculate moments for object bs of class "BS.price"
-	BS.moments(bs)
-	# ... or alternatively passing the same BS paramaters used for price calculation the results are the same
-	BS.moments(NULL, under, rfr, sigma, yield, maty)
+    # Set BS paramaters
+    under = 105
+    strike = 95
+    rfr = 0.08
+    sigma = 0.2
+    maty = 0.5
+    yield = 0.03
+    # calculate BS price
+    bs = BS.price(under, strike, rfr, sigma, maty, yield)
+    # calculate moments for object bs of class "BS.price"
+    BS.moments(bs)
+    # ... or alternatively passing the same BS paramaters used for price 
+    # calculation, the results are the same
+    BS.moments(NULL, under, rfr, sigma, yield, maty)
 
 }
 

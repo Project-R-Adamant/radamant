@@ -13,7 +13,7 @@ specgram(X, win.size = max(1, NROW(X)/20), plot = TRUE, ...)
 \arguments{ 
 \item{X}{Matrix of data series (one column per variable).}
 \item{win.size}{The size of the window used to compute the FFT}
-\item{plot}{LOGICAL. If TRUE, spectrogram is plotted.}
+\item{plot}{Logical. If TRUE, spectrogram is plotted.}
 \item{...}{Additional parameters passed to splitWindow, FFT and plot.specgram}
 }
 
@@ -36,8 +36,8 @@ A forward sliding window of length win.size is used to split the input data into
 The sliding of the window is controlled by the 'by' parameter of the splitWindow function (default: by = 1). \cr
 The 'by' parameter should take values between 1 and win.size:
 \itemize{
-	\item{when by = win.size, the input data is split into Nwindows = ceiling(NRowX/win.size) non-overlapping adjacent blocks.}
-	\item{when by = 1, then Nwindows = NRowX - win.size + 1 overlapping segments are computed.}
+    \item{when by = win.size, the input data is split into Nwindows = ceiling(NRowX/win.size) non-overlapping adjacent blocks.}
+    \item{when by = 1, then Nwindows = NRowX - win.size + 1 overlapping segments are computed.}
 }
 }
 

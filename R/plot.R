@@ -1,3 +1,19 @@
+#######################################################################################################################
+# Copyright (C) 2011  RAdmant Development Team
+# email: team@r-adamant.org
+# web: http://www.r-adamant.org
+#
+# This library is free software;
+# you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation;
+# either version 2 of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with this program;
+# if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA.
+#######################################################################################################################
 # Logit transform
 logit = function(x, adjust = 0.00005) {
     # Cap values within the interval [adjust, l-adjust]
@@ -736,7 +752,7 @@ draw.grid = function(X
     if(is.null(base)) {
         grid.v = round(seq(1, N, len = min(N, N.ticks), na.rm = TRUE));
     } else {
-		if(grepl(method[1], "equispaced")) {
+		if(grepl(method, "equispaced")) {
 			# Draw equally spaced vertical lines in the x-axis range
 			Logger(message = "Draw equally spaced vertical lines in the x-axis range", from = "draw.grid", line = 15, level = 1);
 			grid.v = seq(min(base, na.rm = TRUE), max(base, na.rm = TRUE), len = min(N, N.ticks), na.rm = TRUE);

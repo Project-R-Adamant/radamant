@@ -17,13 +17,13 @@ fw3(X, plot = FALSE, ...)
 }
 \arguments{ 
 \item{X}{ Matrix of data series (one column per variable).}
-\item{plot}{ LOGICAL. Return plot.}
+\item{plot}{Logical. Return plot.}
 \item{...}{ Additional parameters accepted by function movav.}
 }
 \details{ For financial time series (class = 'fs'), only 'Close' column is processed.}
 \value{A object of class 'ma' with attributes type = "FW1/2/3" and 'weights' given by the FW1/2/3
 filter weights: \cr
-	- matrix of size NROW(X) by NCOL(X) where each column is the moving average of the corresponding
+    - matrix of size NROW(X) by NCOL(X) where each column is the moving average of the corresponding
 column of X.
  }
 \author{ RAdamant Development Team \email{team@r-adamant.org} }

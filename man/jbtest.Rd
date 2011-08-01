@@ -7,7 +7,7 @@ JB.test(X, plot.hist=FALSE)
 }
 \arguments{ 
 \item{X}{ Matrix of data series (one column per variable)}
-\item{plot.hist}{ LOGICAL. Return histogram.}
+\item{plot.hist}{Logical. Return histogram.}
 }
 \value{Matrix of Jaques-Brera scores and P-Value}
 \author{RAdamant Development Team \email{team@r-adamant.org} }

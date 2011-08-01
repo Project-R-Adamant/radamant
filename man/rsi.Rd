@@ -9,8 +9,8 @@
 
 \arguments{
 \item{X}{ X}
-\item{lag}{ INTEGER. Number of lag periods.}
-\item{plot}{ LOGICAL. If TRUE plot is returned.}
+\item{lag}{Integer. Number of lag periods.}
+\item{plot}{Logical. If TRUE plot is returned.}
 \item{...}{ Further arguments to or from other methods.}
 }
 

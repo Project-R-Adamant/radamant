@@ -20,7 +20,7 @@ Each value in the input data will be replaced with the corresponding Weight of E
 }
 
 \value{A matrix with the same number of rows of the input data and number of columns given by: \cr
-	Number of categorical variables + Number of numerical variables * Number of segments.
+    Number of categorical variables + Number of numerical variables * Number of segments.
 }
 
 \author{RAdamant Development Team \email{team@r-adamant.org} }

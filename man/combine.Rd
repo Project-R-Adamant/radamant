@@ -38,9 +38,16 @@ ENI = get.fs("E", SName = "Eni", from = StartDate);
 Portfolio = combine(ACME, ABTL, CNAF, BIIB, SONY, ENI);
 Portfolio[1:10, ]
 # Combine Close and Volume data from each series
-Portfolio2 = combine(ACME, ABTL, CNAF, BIIB, SONY, ENI, which = c("Close", "Volume"));
+Portfolio2 = combine(ACME
+                            , ABTL
+                            , CNAF
+                            , BIIB
+                            , SONY
+                            , ENI
+                            , which = c("Close", "Volume")
+                            );
 Portfolio2[1:10, ]
-	
+    
 }
 
 \author{RAdamant Development Team \email{team@r-adamant.org}}

@@ -7,29 +7,29 @@
 
 \usage{
 cbarplot(X
-	, main = NULL
-	, xtitle = ""
-	, ytitle = ""
-	, xlabels = NULL
-	, ylabels = NULL
-	, yrange = NULL
-	, show.xlabels = TRUE
-	, show.ylabels = TRUE
-	, show.xticks = FALSE
-	, show.yticks = FALSE
-	, grid = TRUE
-	, grid.method = "sampling"
-	, show.legend = TRUE
-	, legend = NULL
-	, legend.col = theme.params[["col"]]
-	, beside = FALSE
-	, density = NULL
-	, border = "transparent"
-	, multicolor = FALSE
-	, theme.params = getCurrentTheme()
-	, overrides = list(...)
-	, ...					
-	)
+    , main = NULL
+    , xtitle = ""
+    , ytitle = ""
+    , xlabels = NULL
+    , ylabels = NULL
+    , yrange = NULL
+    , show.xlabels = TRUE
+    , show.ylabels = TRUE
+    , show.xticks = FALSE
+    , show.yticks = FALSE
+    , grid = TRUE
+    , grid.method = "sampling"
+    , show.legend = TRUE
+    , legend = NULL
+    , legend.col = theme.params[["col"]]
+    , beside = FALSE
+    , density = NULL
+    , border = "transparent"
+    , multicolor = FALSE
+    , theme.params = getCurrentTheme()
+    , overrides = list(...)
+    , ...                    
+    )
 }
 
 \arguments{ 
@@ -40,19 +40,19 @@ cbarplot(X
 \item{xlabels}{Labels for x-axis tick marks}
 \item{ylabels}{Labels for left y-axis tick marks}
 \item{yrange}{y-axis range}
-\item{show.xlabels}{LOGICAL. If TRUE, x-axis labels are plotted}
-\item{show.ylabels}{LOGICAL. If TRUE, y-axis labels are plotted}
-\item{show.xticks}{LOGICAL. If TRUE, x-axis ticks are plotted}
-\item{show.yticks}{LOGICAL. If TRUE, y-axis ticks are plotted}
-\item{grid}{LOGICAL. If TRUE, a grid is plotted.}
+\item{show.xlabels}{Logical. If TRUE, x-axis labels are plotted}
+\item{show.ylabels}{Logical. If TRUE, y-axis labels are plotted}
+\item{show.xticks}{Logical. If TRUE, x-axis ticks are plotted}
+\item{show.yticks}{Logical. If TRUE, y-axis ticks are plotted}
+\item{grid}{Logical. If TRUE, a grid is plotted.}
 \item{grid.method}{One of "sampling", "equispaced". See draw.grid for details.}
-\item{show.legend}{LOGICAL. If TRUE, legend is added to the plot.}
+\item{show.legend}{Logical. If TRUE, legend is added to the plot.}
 \item{legend}{Vector of text for the legend}
 \item{legend.col}{Colors for the elements in the legend.}
-\item{beside}{LOGICAL. If FALSE, the columns of X are stacked, if TRUE the columns are portrayed as juxtaposed bars. Used when NCOL(X) > 1.}
+\item{beside}{Logical. If FALSE, the columns of X are stacked, if TRUE the columns are portrayed as juxtaposed bars. Used when NCOL(X) > 1.}
 \item{density}{A vector giving the density of shading lines for the color filling of the bars. See barplot for details.}
 \item{border}{The color to be used for the border of the bars. See barplot for details.}
-\item{multicolor}{LOGICAL. If TRUE, a separate color is used for each data point, as provided by the 'col' parameter of the theme.}
+\item{multicolor}{Logical. If TRUE, a separate color is used for each data point, as provided by the 'col' parameter of the theme.}
 \item{theme.params}{RAdamant graphics theme.}
 \item{overrides}{List of attributes for the theme override.}
 \item{...}{Alternative way to quickly override the theme.}

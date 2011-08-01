@@ -9,23 +9,43 @@
 \code{scalMin}: Scaled min on each column of the input matrix
 }
 \usage{
-scalApply(X, lag = 0, padding = NA, na.rm = FALSE, func = NULL, ...)
-scalMax(X, lag = 1, padding = -Inf, na.rm = FALSE, func = NULL) 
-scalMin(X, lag = 1, padding = Inf, na.rm = FALSE, func = NULL) 
+scalApply(X
+        , lag = 0
+        , padding = NA
+        , na.rm = FALSE
+        , func = NULL
+        , ...
+        )
+        
+scalMax(X
+        , lag = 1
+        , padding = -Inf
+        , na.rm = FALSE
+        , func = NULL
+        ) 
+        
+scalMin(X
+        , lag = 1
+        , padding = Inf
+        , na.rm = FALSE
+        , func = NULL
+        ) 
 }
 \arguments{ 
 \item{X}{ Input matrix/sequence}
-\item{lag}{ vector of integer lags. If lag >= 0 data are shifted to the right, else to the left.
-(DEFAULT = 0)}
-\item{padding}{ value used to initialise the output matrix (DEFAULT = NA)}
-\item{na.rm}{ LOGICAL. If TRUE, N-lag entries are removed from the output (DEFAULT = FALSE)}
-\item{func}{ function applied to the data (DEFAULT = NULL)}
+\item{lag}{ vector of integer lags. If lag >= 0 data are shifted to the right, else to the left.(Default: 0)}
+\item{padding}{ value used to initialise the output matrix (Default: NA)}
+\item{na.rm}{ Logical. If TRUE, N-lag entries are removed from the output (Default: FALSE)}
+\item{func}{ function applied to the data (Default: NULL)}
 \item{...}{ Additional parameters accepted by the function 'func'}
 }
+
 \details{Sequences are treated as one-column matrices.}
-\value{A matrix where func / max / min has been applied on each pair (X[n, i], X[n-lag,
-i]) for each column i of X. Number of rows depends on the na.rm parameter. Number of columns is
-NCOL(X)}
+
+\value{
+A matrix where func/max/min has been applied on each pair (X[n, i], X[n-lag,i]) for each column i of X. \cr
+Number of rows depends on the na.rm parameter. Number of columns is NCOL(X)
+}
 \author{RAdamant Development Team \email{team@r-adamant.org} }
 
 

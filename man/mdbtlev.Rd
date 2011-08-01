@@ -14,7 +14,7 @@ getDebugTraceLevel(env = getOption("RAdamant"))
 
 \arguments{
 \item{level}{The level of nesting (level >= 1). See details.}
-\item{env}{The environment where the info is stored (DEFAULT = getOption("RAdamant")).}
+\item{env}{The environment where the info is stored (Default: getOption("RAdamant")).}
 }
 
 \value{
@@ -41,7 +41,8 @@ setConsoleLogging(TRUE);
 setDebugTraceLevel(1);
 cplot(1:10);
 
-# Set high level of trace debugging (up the 10th level of inner function call)
+# Set high level of trace debugging 
+# (up to the 5-th level of inner function call)
 setDebugTraceLevel(5);
 cplot(1:10);
 

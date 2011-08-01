@@ -12,7 +12,7 @@ blackman(N, normalized = TRUE, alpha = 0.16)
 
 \arguments{ 
 \item{N}{Window length.}
-\item{normalized}{LOGICAL. If TRUE (default), window is normalised to have unitary norm.}
+\item{normalized}{Logical. If TRUE (default), window is normalised to have unitary norm.}
 \item{alpha}{Shape factor (DEFAULT = 0.16). Determines the smoothing of the window's sidelobes.}
 }
 

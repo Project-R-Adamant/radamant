@@ -20,7 +20,7 @@ Score.card(X, Y, nseg = 2, col.classes=NULL)
 
 \arguments{
 \item{X}{ DATA.FRAME / MATRIX of regressors.} 
-\item{Y}{ VECTOR. Target variable in 0-1 format.}
+\item{Y}{Vector. Target variable in 0-1 format.}
 \item{nseg}{ INTEGER / VECTOR. Number of segments to factorise numerical variables.}
 \item{col.classes}{ Vector. Indicate the format to use for each variable (Numeric / Character). If NULL the original input formats are maintained.}
 \item{x, object}{ an object of class "scorecard"}
@@ -35,9 +35,9 @@ Score.card(X, Y, nseg = 2, col.classes=NULL)
 }
 
 \value{The function returns an object of class "scorecard" containing:\cr
-	\item{Scorecard}{: data frame containing the score card results ("Variable", "Segment", "WoE", "Est.Coef", "Wald-Z", "P-Val", "Ods_ratio", "Score", "Round.Score");}
-	\item{Model}{: an object of class "glm" - "lm" with the results of logistic model (see \code{\link{glm}});}
-	\item{WeightOfEvidence}{: A matrix containing the results of Weight of Evidence calculation (see \code{\link{WeightEvid}});}
+    \item{Scorecard}{: data frame containing the score card results ("Variable", "Segment", "WoE", "Est.Coef", "Wald-Z", "P-Val", "Ods_ratio", "Score", "Round.Score");}
+    \item{Model}{: an object of class "glm" - "lm" with the results of logistic model (see \code{\link{glm}});}
+    \item{WeightOfEvidence}{: A matrix containing the results of Weight of Evidence calculation (see \code{\link{WeightEvid}});}
 }
 
 \details{

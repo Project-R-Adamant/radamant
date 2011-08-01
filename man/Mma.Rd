@@ -6,9 +6,8 @@ window size win.size[j].}
 \usage{mma(X, win.size = NROW(X), plot = FALSE, ...) }
 \arguments{ 
 \item{X}{ Matrix of data series (one column per variable).}
-\item{win.size}{ vector of moving average window sizes (lags) to be applied on the data X. (DEFAULT
-= NROW(X)). }
-\item{plot}{ LOGICAL. Return plot.}
+\item{win.size}{ vector of moving average window sizes (lags) to be applied on the data X. (Default: NROW(X)). }
+\item{plot}{Logical. Return plot.}
 \item{...}{ Additional parameters accepted by function ema.}
 }
 \details{ For financial time series (class = 'fs'), only 'Close' column is processed. \cr

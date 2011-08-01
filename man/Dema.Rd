@@ -8,8 +8,12 @@ size win.size[j] }
 
 \usage{dema(X, win.size = NROW(X), plot = FALSE, ...) }
 
-\arguments{\item{X}{ X}\item{win.size}{ win.size}\item{plot}{ LOGICAL. If TRUE plot is
-returned.}\item{...}{ Further arguments to or from other methods.}}
+\arguments{
+\item{X}{ X}
+\item{win.size}{ win.size}
+\item{plot}{Logical. If TRUE plot is
+returned.}
+\item{...}{ Further arguments to or from other methods.}}
 
 \details{For financial time series (class = 'fs'), only 'Close' column is processed. \cr
 DEMA is a weighted combination of EMA: 2*EMA(X) - EMA(EMA(X)). \cr

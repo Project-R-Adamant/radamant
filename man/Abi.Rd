@@ -11,7 +11,7 @@
 \arguments{ 
 \item{X}{ Input numerical series}
 \item{lag}{ Number of lags}
-\item{plot}{ LOGICAL. Return plot.}
+\item{plot}{ Logical. Return plot.}
 \item{...}{ Further arguments to or from other methods}
 }
 

@@ -5,7 +5,7 @@
 \usage{impulse(N, value = 1) }
 \arguments{ 
 \item{N}{ Length of the impulse}
-\item{value}{ value of the impulse (Default = 1)}}
+\item{value}{ value of the impulse (Default: 1)}}
 \value{Impulse sequence of specified length}
 \author{ RAdamant Development Team \email{team@r-adamant.org} }
 

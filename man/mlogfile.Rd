@@ -13,7 +13,7 @@ getLogFile(env = getOption("RAdamant"))
 
 \arguments{
 \item{logfile}{String. The full path to the log file.}
-\item{env}{The environment where the info is stored (DEFAULT = getOption("RAdamant")).}
+\item{env}{The environment where the info is stored (Default: getOption("RAdamant")).}
 }
 
 \value{

@@ -8,12 +8,25 @@
 \description{Get portfolio Beta}
 
 \usage{
-PtfRet(PTF, w = NULL, glob = TRUE, calc.ret = FALSE, ...) 
+PtfRet(PTF
+    , w = NULL
+    , glob = TRUE
+    , calc.ret = FALSE
+    , ...
+    ) 
 
-PtfVar(PTF, w = NULL, glob = TRUE, 
-vol = FALSE, calc.ret = FALSE, ...)
+PtfVar(PTF
+    , w = NULL
+    , glob = TRUE
+    , vol = FALSE
+    , calc.ret = FALSE
+    , ...
+    )
 
-PtfBeta(beta, w = NULL, glob = TRUE) 
+PtfBeta(beta
+    , w = NULL
+    , glob = TRUE
+    ) 
 }
 
 \arguments{
@@ -31,17 +44,27 @@ PtfBeta(beta, w = NULL, glob = TRUE)
 \examples{
 # load example portfolio
 data(ex_ptf)
+
 # results for each series 
 PtfRet(ex_ptf, glob=FALSE)
 PtfVar(ex_ptf, glob=FALSE)
+
 # results for the whole portfolio
 PtfRet(ex_ptf, glob=TRUE)
 PtfVar(ex_ptf, glob=TRUE)
 
 # Example with a series of prices instead of returns
 data(EuStockMarkets)
-PtfRet(PTF = EuStockMarkets, w=c(0.3, 0.4, 0.2, 0.1), calc.ret=TRUE)
-PtfRet(PTF = EuStockMarkets, w=c(0.3, 0.4, 0.2, 0.1), glob = FALSE, calc.ret=TRUE)
+PtfRet(PTF = EuStockMarkets
+    , w = c(0.3, 0.4, 0.2, 0.1)
+    , calc.ret = TRUE
+    )
+    
+PtfRet(PTF = EuStockMarkets
+    , w = c(0.3, 0.4, 0.2, 0.1)
+    , glob = FALSE
+    , calc.ret = TRUE
+    )
 
 }
 

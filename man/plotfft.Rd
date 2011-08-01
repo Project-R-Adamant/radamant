@@ -19,19 +19,18 @@
     , new.device = FALSE 
     , ... 
     ) 
-
 }
 
 \arguments{ 
 \item{x}{Instance of class 'FFT'.}
-\item{theme.params}{theme parameters list (DEFAULT: getCurrentTheme()).}
-\item{overrides}{List of parameters to override the theme. Only parameters that match those defined by the theme are overridden (DEFAULT: list(...)).}
-\item{shaded}{LOGICAL. If TRUE, the modulus of x is shaded.}
-\item{show.periodicity}{LOGICAL. If TRUE, Periods (1/frequencies) are showed instead of frequencies on the x-axis (DEFAULT = FALSE).}
-\item{show.legend}{LOGICAL. If TRUE, legend is added to the plot (DEFAULT = FALSE)}
+\item{theme.params}{RAdamant graphics theme (Default: getCurrentTheme()).}
+\item{overrides}{List of parameters to override the theme. Only parameters that match those defined by the theme are overridden (Default: list(...)).}
+\item{shaded}{Logical. If TRUE, the modulus of x is shaded.}
+\item{show.periodicity}{Logical. If TRUE, Periods (1/frequencies) are showed instead of frequencies on the x-axis (Default: FALSE).}
+\item{show.legend}{Logical. If TRUE, legend is added to the plot (Default: FALSE).}
 \item{zoom}{ Zoom}
-\item{semilog}{ Semilog}
-\item{new.device}{ new.device}
+\item{semilog}{Logical. If TRUE, the modulus of the FFT is shown on a dB scale.}
+\item{new.device}{Logical. If TRUE, a new plotting device is opened.}
 \item{...}{Additional parameters passed to the cplot function. Also used to quickly specify theme overrides.}
 }
 
@@ -51,14 +50,34 @@ Xf = FFT(ex_fs, plot = FALSE)
 # Plot full spectrum
 plot(Xf)
 
-# Plot falf spectrum (right side) and use blackman windowing, remove area shading
-plot(Xf, half = TRUE, window = blackman, shaded = FALSE)
+# Plot half spectrum
+plot(Xf
+    # Plot half spectrum (right side)
+    , half = TRUE
+    # Use Blackman window
+    , window = blackman
+    # Remove area shading
+    , shaded = FALSE)
 
 # Show periodicity instead of frequency, and use hamming window
-plot(Xf, half = TRUE, window = hamming, show.periodicity = TRUE)
+plot(Xf
+    , half = TRUE
+    , window = hamming
+    , show.periodicity = TRUE)
 
-# Use kaiser window, zoom in to show only 10% of the half frequency spectrum, use semilog axis (decibel)
-plot(Xf, half = TRUE, window = kaiser, show.periodicity = TRUE, zoom = 10, semilog = TRUE)
+# Plot with other options 
+plot(Xf
+    # Half spectrum
+    , half = TRUE
+    # Kaiser Window
+    , window = kaiser
+    , # Show cycles instead of frequencies
+    , show.periodicity = TRUE
+    # Zoom in to show only 10% of the half spectrum
+    , zoom = 10
+    # Use semilog axis (decibel)
+    , semilog = TRUE
+    )
 
 }
 

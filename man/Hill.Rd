@@ -4,21 +4,19 @@
 
 \title{Hill function}
 
-\description{Hill function: Approximated gamma parameter of the Generalised Pareto distribution}
+\description{Approximation of the shape parameter (xi) of the Generalised Pareto distribution.}
 
 \usage{
-Hill(X, trsh)
+Hill(X, trsh = hVaR(X))
 }
 
 \arguments{
-\item{X}{ Input matrix/sequence. Sequences are treated as one column matrices.}
-\item{trsh}{ vector of probability threshold (interval [0, 1])}
+\item{X}{Input matrix/sequence. Sequences are treated as one column matrices.}
+\item{trsh}{Vector of NCOL(X) thresholds used to identify the tail data for the estimation.}
 }
 
-\value{ A matrix length(trsh) by NCOL(X) of computed quantiles}
-
+\value{ A matrix 1 by NCOL(X) of computed shape parameters}
 \author{RAdamant Development Team \email{team@r-adamant.org}}
 
-\note{TO BE COMPLETED}
 
 

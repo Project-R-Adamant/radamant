@@ -14,7 +14,7 @@ getDebugLevel(env = getOption("RAdamant"))
 
 \arguments{
 \item{level}{The level of debug required (level >= 0). See details.}
-\item{env}{The environment where the info is stored (DEFAULT = getOption("RAdamant")).}
+\item{env}{The environment where the info is stored (Default: getOption("RAdamant")).}
 }
 
 \value{
@@ -42,9 +42,10 @@ setDebugTraceLevel(1);
 # Enable Console logging
 setConsoleLogging(TRUE);
 
-# Compute FFT on some random two-colums matrix. Prints nothing because FFT.default has no logging message
+# Compute FFT on some random two-colums matrix. 
 x = FFT(matrix(cumsum(rnorm(256)), 128, 2), plot = FALSE)
-plot(x, shaded = FALSE) # Prints nothing because plot.default has no logging message
+# Prints nothing because FFT.default has no logging message
+plot(x, shaded = FALSE)
 
 # Increase Traceback level
 setDebugTraceLevel(2);
@@ -53,7 +54,8 @@ plot(x, shaded = FALSE)
 
 # Increase Debug level
 setDebugLevel(2);
-# Now prints additional logging info for plot.FFT (from code executed inside a loop)
+# Now prints additional logging info for plot.FFT 
+# (from code executed inside a loop)
 plot(x, shaded = FALSE) 
 
 }

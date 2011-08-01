@@ -1,4 +1,20 @@
 #######################################################################################################################
+# Copyright (C) 2011  RAdmant Development Team
+# email: team@r-adamant.org
+# web: http://www.r-adamant.org
+#
+# This library is free software;
+# you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation;
+# either version 2 of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with this program;
+# if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA.
+#######################################################################################################################
+#######################################################################################################################
 # FUNCTION: impulse
 #
 # SUMMARY:
@@ -11,6 +27,8 @@
 #  Impulse sequence of specified length
 #######################################################################################################################
 impulse = function(N, value = 1) {
+	# Compute Impulse function
+	Logger(message = "Compute Impulse function", from = "impulse", line = 2, level = 1);
 	c(value, rep(0, N-1))
 }
 #######################################################################################################################
@@ -151,6 +169,8 @@ movApply = function(X, win.size = 1, padding = NA, rm.transient = FALSE, func = 
 #   
 #######################################################################################################################
 movMax = function(X, win.size = 1, ...) {
+	# Compute Moving Max
+	Logger(message = "Compute Moving Max", from = "movMax", line = 2, level = 1);
 	movApply(X, win.size = win.size, padding = -Inf, func = max, ...);
 }
 #######################################################################################################################
@@ -169,6 +189,8 @@ movMax = function(X, win.size = 1, ...) {
 #   
 #######################################################################################################################
 movMin = function(X, win.size = 1, ...) {
+	# Compute Moving Min
+	Logger(message = "Compute Moving Min", from = "movMin", line = 2, level = 1);
 	movApply(X, win.size = win.size, func = min, ...);
 }
 #######################################################################################################################
@@ -187,6 +209,8 @@ movMin = function(X, win.size = 1, ...) {
 #   
 #######################################################################################################################
 movSd = function(X, win.size = 1, ...) {
+	# Compute Moving Standard Deviation
+	Logger(message = "Compute Moving Standard Deviation", from = "movSd", line = 2, level = 1);
 	movApply(X, win.size = win.size, func = sd, ...);
 }
 #######################################################################################################################
@@ -205,6 +229,8 @@ movSd = function(X, win.size = 1, ...) {
 #   
 #######################################################################################################################
 movVar = function(X, win.size = 1, ...) {
+	# Compute Moving Variance
+	Logger(message = "Compute Moving Variance", from = "movVar", line = 2, level = 1);
 	movApply(X, win.size = win.size, func = var, ...);
 }
 #######################################################################################################################
@@ -224,7 +250,11 @@ movVar = function(X, win.size = 1, ...) {
 #  - matrix of size NROW(X) by NCOL(X)*length(win.size) where each column is the moving average of length win.size[i] of the corresponding column of X.
 #   
 #######################################################################################################################
-Movav = function(X, ...) UseMethod("Movav")
+Movav = function(X, ...) {
+	# Generic Movav Method
+	Logger(message = "Generic Movav Method", from = "Movav", line = 2, level = 1);
+	UseMethod("Movav")
+}
 Movav.default = function(X, win.size = NULL, func = NULL, padding = 0, rm.transient = TRUE, normalize.weights = FALSE, type = "MA", desc = "Moving Average", plot = FALSE, ...) {
 	if(length(win.size) == 0)
 		stop("Argument 'win.size' has zero length.");
@@ -377,41 +407,39 @@ ss.sym = function(X, F = NULL, G = NULL, H = NULL, D = NULL, init = 0, SLen = if
 	# Init the system state S
 	Logger(message = "Init the system state S", from = "ss.sym", line = 40, level = 1);
 	St = matrix(init, nrow = SLen, ncol = 1);
-#	for(n in seq(1, N, len = N)) {
-Logger(message = "for(n in seq(1, N, len = N)) {", from = "ss.sym", line = 42, level = 1);
 	n = 0;
 	while(n < N) {
 		n = n + 1;
 		# Compute State->State transform (allows for non linear transform of the type F(St,X))
-		Logger(message = "Compute State->State transform (allows for non linear transform of the type F(St,X))", from = "ss.sym", line = 46, level = 2);
+		Logger(message = "Compute State->State transform (allows for non linear transform of the type F(St,X))", from = "ss.sym", line = 45, level = 2);
 		if(is.function(F)) {
 			Fs = F(St, X, n = n, ...);
 		} else {
 			Fs = F %*% St;
 		}
 		# Compute Input->State transform
-		Logger(message = "Compute Input->State transform", from = "ss.sym", line = 52, level = 2);
+		Logger(message = "Compute Input->State transform", from = "ss.sym", line = 51, level = 2);
 		if(is.function(G)) {
 			Gx = G(X, n = n, ...);
 		} else {
 			Gx = G %*% t(X[n, , drop = FALSE]);
 		}
 		# Compute State->Output transform (allows for non linear transform of the type H(St,X))
-		Logger(message = "Compute State->Output transform (allows for non linear transform of the type H(St,X))", from = "ss.sym", line = 58, level = 2);
+		Logger(message = "Compute State->Output transform (allows for non linear transform of the type H(St,X))", from = "ss.sym", line = 57, level = 2);
 		if(is.function(H)) {
 			Hs = H(St, X, n = n, ...);
 		} else {
 			Hs = H %*% St;
 		}
 		# Compute Input->Output transform
-		Logger(message = "Compute Input->Output transform", from = "ss.sym", line = 64, level = 2);
+		Logger(message = "Compute Input->Output transform", from = "ss.sym", line = 63, level = 2);
 		if(is.function(D)) {
 			Dx = D(X, n = n, ...);
 		} else {
 			Dx = D %*% t(X[n, , drop = FALSE]);
 		}
 		# Update state
-		Logger(message = "Update state", from = "ss.sym", line = 70, level = 2);
+		Logger(message = "Update state", from = "ss.sym", line = 69, level = 2);
 		St = Fs + Gx;
 		res[n, ] = Hs + Dx;
 	}
@@ -421,10 +449,10 @@ Logger(message = "for(n in seq(1, N, len = N)) {", from = "ss.sym", line = 42, l
 	attr(res, "H") = H;
 	attr(res, "D") = D;
 	# Cleanup memory
-	Logger(message = "Cleanup memory", from = "ss.sym", line = 79, level = 1);
+	Logger(message = "Cleanup memory", from = "ss.sym", line = 78, level = 1);
 	cleanup(keep = "res");
 	# Return result
-	Logger(message = "Return result", from = "ss.sym", line = 81, level = 1);
+	Logger(message = "Return result", from = "ss.sym", line = 80, level = 1);
 	res
 }
 #######################################################################################################################
@@ -444,6 +472,8 @@ Logger(message = "for(n in seq(1, N, len = N)) {", from = "ss.sym", line = 42, l
 #   
 #######################################################################################################################
 sma = function(X, win.size = 10, plot = FALSE, ...) {
+	# Compute SMA
+	Logger(message = "Compute SMA", from = "sma", line = 2, level = 1);
 	Movav(X
 			, win.size = win.size
 			, type = "SMA"
@@ -470,6 +500,8 @@ sma = function(X, win.size = 10, plot = FALSE, ...) {
 #   
 #######################################################################################################################
 tma = function(X, win.size = 10, plot = FALSE, ...) {
+	# Compute TMA
+	Logger(message = "Compute TMA", from = "tma", line = 2, level = 1);
 	f = function(w) {
 		wint = as.integer(w);
 		if(wint %% 2 == 0) {
@@ -505,6 +537,8 @@ tma = function(X, win.size = 10, plot = FALSE, ...) {
 #   
 #######################################################################################################################
 wma = function(X, win.size = 10, plot = FALSE, ...) {
+	# Compute WMA
+	Logger(message = "Compute WMA", from = "wma", line = 2, level = 1);
 	Movav(X
 			, win.size = win.size
 			, type = "WMA"
@@ -565,11 +599,9 @@ ema = function(X, win.size = NROW(X), plot = FALSE, ...) {
 	W = length(win.size);
 	# Equivalent window size (time required to have a decay of 86.4% => exp(-1)/exp(0))
 	Logger(message = "Equivalent window size (time required to have a decay of 86.4% => exp(-1)/exp(0))", from = "ema", line = 26, level = 1);
-	#win.size = round(log(0.1353352832, 1-lambda));
-	Logger(message = "win.size = round(log(0.1353352832, 1-lambda));", from = "ema", line = 27, level = 1);
 	lambda = 2/(win.size + 1);
 	# Compute simple moving average
-	Logger(message = "Compute simple moving average", from = "ema", line = 29, level = 1);
+	Logger(message = "Compute simple moving average", from = "ema", line = 28, level = 1);
 	res = matrix(NA, nrow = N, ncol = V*W);
 	colnames(res) = as.character(apply(as.matrix(paste("EMA", win.size, sep = "_"))
 										, 1
@@ -579,7 +611,7 @@ ema = function(X, win.size = NROW(X), plot = FALSE, ...) {
 								);
 	rownames(res) = get.row.names(X);
 	# Compute exponential moving average (IIR filter h[n] = lambda * (1-lambda)^n)
-	Logger(message = "Compute exponential moving average (IIR filter h[n] = lambda * (1-lambda)^n)", from = "ema", line = 38, level = 1);
+	Logger(message = "Compute exponential moving average (IIR filter h[n] = lambda * (1-lambda)^n)", from = "ema", line = 37, level = 1);
 	v = 0;
 	while(v < V) {
 		v = v + 1;
@@ -594,17 +626,17 @@ ema = function(X, win.size = NROW(X), plot = FALSE, ...) {
 	attr(res, "desc") = "Exponential Moving Average";
 	attr(res, "lambda") = lambda;
 	# Plot Results if required
-	Logger(message = "Plot Results if required", from = "ema", line = 52, level = 1);
+	Logger(message = "Plot Results if required", from = "ema", line = 51, level = 1);
 	if(plot)
 		plot(x=res
 			, fs = if(fs.flag) Y else X
 			, ...
 			);
 	# Cleanup memory
-	Logger(message = "Cleanup memory", from = "ema", line = 58, level = 1);
+	Logger(message = "Cleanup memory", from = "ema", line = 57, level = 1);
 	cleanup(keep = "res");
 	# Return result
-	Logger(message = "Return result", from = "ema", line = 60, level = 1);
+	Logger(message = "Return result", from = "ema", line = 59, level = 1);
 	res
 }
 #######################################################################################################################
@@ -626,10 +658,10 @@ ema = function(X, win.size = NROW(X), plot = FALSE, ...) {
 #   
 #######################################################################################################################
 dema = function(X, win.size = NROW(X), plot = FALSE, ...) {
-	# Compute ema 
-	Logger(message = "Compute ema ", from = "dema", line = 2, level = 1);
 	ema1 = ema(X, win.size = win.size, ...);
 	ema2 = ema(ema1, win.size = win.size, ...);
+	# Compute DEMA
+	Logger(message = "Compute DEMA", from = "dema", line = 4, level = 1);
 	res = 2 * ema1 - ema2;
 	colnames(res) = gsub("EMA", "DEMA", colnames(res));
 	attr(res, "type") = "DEMA";
@@ -665,12 +697,14 @@ dema = function(X, win.size = NROW(X), plot = FALSE, ...) {
 #   
 #######################################################################################################################
 gdema = function(X, win.size = NROW(X), alpha = 0.7, plot = FALSE, ...) {
+	# Compute GDEMA
+	Logger(message = "Compute GDEMA", from = "gdema", line = 2, level = 1);
 	res = alpha * dema(X, win.size = win.size, ...) + (1-alpha) * ema(X, win.size = win.size, ...);
 	colnames(res) = gsub("DEMA", "GDEMA", colnames(res));
 	attr(res, "type") = "GDEMA";
 	attr(res, "desc") = "Generalised Exponential Moving Average";
 	# Plot results if required
-	Logger(message = "Plot results if required", from = "gdema", line = 6, level = 1);
+	Logger(message = "Plot results if required", from = "gdema", line = 7, level = 1);
 	if(plot)
 		plot(res, X, ...);
 	res
@@ -694,11 +728,11 @@ gdema = function(X, win.size = NROW(X), alpha = 0.7, plot = FALSE, ...) {
 #   
 #######################################################################################################################
 tema = function(X, win.size = NROW(X), plot = FALSE, ...) {
-	# Compute ema 
-	Logger(message = "Compute ema ", from = "tema", line = 2, level = 1);
 	ema1 = ema(X, win.size = win.size, ...);
 	ema2 = ema(ema1, win.size = win.size, ...);
 	ema3 = ema(ema2, win.size = win.size, ...);
+	# Compute TEMA
+	Logger(message = "Compute TEMA", from = "tema", line = 5, level = 1);
 	res = 3 * ema1 - 3 * ema2 + ema3;
 	colnames(res) = gsub("EMA", "TEMA", colnames(res));
 	attr(res, "type") = "TEMA";
@@ -736,19 +770,21 @@ tema = function(X, win.size = NROW(X), plot = FALSE, ...) {
 ttma = function(X, win.size = NROW(X), alpha = 0.7, plot = FALSE, ...) {
 	gd1 = gdema(X, win.size = win.size, alpha = alpha, ...);
 	gd2 = gdema(gd1, win.size = win.size, alpha = alpha, ...);
+	# Compute TTMA 
+	Logger(message = "Compute TTMA ", from = "ttma", line = 4, level = 1);
 	res = gdema(gd2, win.size = win.size, alpha = alpha, ...);
 	colnames(res) = gsub("GDEMA", "TTMA", colnames(res));
 	attr(res, "type") = "TTMA";
 	attr(res, "desc") = "T3 Moving Average";
 	# Plot Results if required
-	Logger(message = "Plot Results if required", from = "ttma", line = 8, level = 1);
+	Logger(message = "Plot Results if required", from = "ttma", line = 9, level = 1);
 	if(plot)
 		plot(res, X, ...);
 	# Cleanup memory
-	Logger(message = "Cleanup memory", from = "ttma", line = 11, level = 1);
+	Logger(message = "Cleanup memory", from = "ttma", line = 12, level = 1);
 	cleanup(keep = "res");
 	# Return result
-	Logger(message = "Return result", from = "ttma", line = 13, level = 1);
+	Logger(message = "Return result", from = "ttma", line = 14, level = 1);
 	res
 }
 #######################################################################################################################
@@ -921,7 +957,6 @@ rema = function(X, win.size = NROW(X), alpha = 0.5, plot = FALSE, ...) {
 		w = 0;
 		while(w < W) {
 			w = w + 1;
-			#res[, 1:V + V*(w-1)] = filter(X, filter = c((1-lambda[w] + 2*alpha), -alpha) / (1 + alpha), method = "recursive") * lambda[w] / (1 + alpha);
 			res[, v + V*(w-1)] = filter(X[, v, drop = FALSE] * lambda[w] / (1 + alpha)
 										, filter = c((1-lambda[w] + 2*alpha), -alpha) / (1 + alpha)
 										, method = "recursive"
@@ -935,17 +970,17 @@ rema = function(X, win.size = NROW(X), alpha = 0.5, plot = FALSE, ...) {
 	attr(res, "lambda") = lambda;
 	attr(res, "alpha") = alpha;
 	# Plot Results if required
-	Logger(message = "Plot Results if required", from = "rema", line = 59, level = 1);
+	Logger(message = "Plot Results if required", from = "rema", line = 58, level = 1);
 	if(plot)
 		plot(x=res
 			, fs = if(fs.flag) Y else X
 			, ...
 			);
 	# Cleanup memory
-	Logger(message = "Cleanup memory", from = "rema", line = 65, level = 1);
+	Logger(message = "Cleanup memory", from = "rema", line = 64, level = 1);
 	cleanup(keep = "res");
 	# Return result
-	Logger(message = "Return result", from = "rema", line = 67, level = 1);
+	Logger(message = "Return result", from = "rema", line = 66, level = 1);
 	res
 }
 #######################################################################################################################
@@ -997,11 +1032,9 @@ emat = function(X, win.size = NROW(X), alpha = 0.1, plot = FALSE, ...) {
 	W = length(win.size);
 	# Equivalent window size (time required to have a decay of 86.4% => exp(-1)/exp(0))
 	Logger(message = "Equivalent window size (time required to have a decay of 86.4% => exp(-1)/exp(0))", from = "emat", line = 25, level = 1);
-	#win.size = round(log(0.1353352832, 1-lambda));
-	Logger(message = "win.size = round(log(0.1353352832, 1-lambda));", from = "emat", line = 26, level = 1);
 	lambda = 2/(win.size + 1);
 	# Compute simple moving average
-	Logger(message = "Compute simple moving average", from = "emat", line = 28, level = 1);
+	Logger(message = "Compute simple moving average", from = "emat", line = 27, level = 1);
 	res = matrix(NA, nrow = N, ncol = V*W);
 	colnames(res) = as.character(apply(as.matrix(paste("EMAT", win.size, sep = "_"))
 										, 1
@@ -1011,30 +1044,26 @@ emat = function(X, win.size = NROW(X), alpha = 0.1, plot = FALSE, ...) {
 								);
 	rownames(res) = get.row.names(X);
 	# Compute on each value of lambda
-	Logger(message = "Compute on each value of lambda", from = "emat", line = 37, level = 1);
-#	for(w in seq(1, W, len = W)) {
-Logger(message = "for(w in seq(1, W, len = W)) {", from = "emat", line = 38, level = 1);
+	Logger(message = "Compute on each value of lambda", from = "emat", line = 36, level = 1);
 	w = 0;
 	while(w < W) {
 		w = w + 1;
 		# Declare State -> State matrix
-		Logger(message = "Declare State -> State matrix", from = "emat", line = 42, level = 2);
+		Logger(message = "Declare State -> State matrix", from = "emat", line = 40, level = 2);
 		F = rbind(rep(1-lambda[w], 2)
 					, 0:1 - alpha*lambda[w]
 				);
 		# Declare Input -> State matrix
-		Logger(message = "Declare Input -> State matrix", from = "emat", line = 46, level = 2);
+		Logger(message = "Declare Input -> State matrix", from = "emat", line = 44, level = 2);
 		G = matrix(lambda[w]*c(1, alpha), nrow = 2, ncol = 1);
 		# Declare State -> Output matrix
-		Logger(message = "Declare State -> Output matrix", from = "emat", line = 48, level = 2);
+		Logger(message = "Declare State -> Output matrix", from = "emat", line = 46, level = 2);
 		H = matrix(c(1, 0), nrow = 1, ncol = 2);
 		# Declare Input -> Output matrix
-		Logger(message = "Declare Input -> Output matrix", from = "emat", line = 50, level = 2);
+		Logger(message = "Declare Input -> Output matrix", from = "emat", line = 48, level = 2);
 		D = 0;
 		# Compute on each serie
-		Logger(message = "Compute on each serie", from = "emat", line = 52, level = 2);
-#		for(v in seq(1, V, len = V))
-Logger(message = "for(v in seq(1, V, len = V))", from = "emat", line = 53, level = 2);
+		Logger(message = "Compute on each serie", from = "emat", line = 50, level = 2);
 		v = 0;
 		while(v < V) {
 			v = v + 1;
@@ -1047,17 +1076,17 @@ Logger(message = "for(v in seq(1, V, len = V))", from = "emat", line = 53, level
 	attr(res, "lambda") = lambda;
 	attr(res, "alpha") = alpha;
 	# Plot Results if required
-	Logger(message = "Plot Results if required", from = "emat", line = 65, level = 1);
+	Logger(message = "Plot Results if required", from = "emat", line = 62, level = 1);
 	if(plot)
 		plot(x=res
 			, fs = if(fs.flag) Y else X
 			, ...
 			);
 	# Cleanup memory
-	Logger(message = "Cleanup memory", from = "emat", line = 71, level = 1);
+	Logger(message = "Cleanup memory", from = "emat", line = 68, level = 1);
 	cleanup(keep = "res");
 	# Return result
-	Logger(message = "Return result", from = "emat", line = 73, level = 1);
+	Logger(message = "Return result", from = "emat", line = 70, level = 1);
 	res
 }
 #######################################################################################################################
@@ -1270,15 +1299,17 @@ dma = function(X, fast.win = 5, slow.win = 28, plot = FALSE, ...) {
 #   
 #######################################################################################################################
 sinma = function(X, win.size = 10, plot = FALSE, ...) {
+	# Compute SINMA 
+	Logger(message = "Compute SINMA ", from = "sinma", line = 2, level = 1);
 	Movav(X
-			, win.size = win.size
-			, type = "SINMA"
-			, desc = "Sin Weighted Moving Average"
-			, func = function(w) sin(pi * (1:w)/(w+1))
-			, normalize.weights = TRUE
-			, plot = plot
-			, ...
-			)
+		, win.size = win.size
+		, type = "SINMA"
+		, desc = "Sin Weighted Moving Average"
+		, func = function(w) sin(pi * (1:w)/(w+1))
+		, normalize.weights = TRUE
+		, plot = plot
+		, ...
+		)
 }
 #######################################################################################################################
 # FUNCTION: fw1
@@ -1295,6 +1326,8 @@ sinma = function(X, win.size = 10, plot = FALSE, ...) {
 #   
 #######################################################################################################################
 fw1 = function(X, plot = FALSE, ...) {
+	# Compute Front Weighted 32 Day Moving Average
+	Logger(message = "Compute Front Weighted 32 Day Moving Average", from = "fw1", line = 2, level = 1);
 	res = .genmovav(X
 				, weights = c(rep(0, 17), rep(0.02, 8), rep(0.01, 8))
 				, type = "FW1"
@@ -1322,6 +1355,8 @@ fw1 = function(X, plot = FALSE, ...) {
 #   
 #######################################################################################################################
 fw2 = function(X, plot = FALSE, ...){
+	# Compute Front Weighted 18 Day Moving Average
+	Logger(message = "Compute Front Weighted 18 Day Moving Average", from = "fw2", line = 2, level = 1);
 	res = .genmovav(X
 				, weights = c(rep(0, 2), rep(0.07, 4), rep(0.06, 2), rep(0.031, 9), 0.03)
 				, type = "FW2"
@@ -1349,6 +1384,8 @@ fw2 = function(X, plot = FALSE, ...){
 #   
 #######################################################################################################################
 fw3 = function(X, plot = FALSE, ...) {
+	# Compute Front Weighted 2 Day Moving Average
+	Logger(message = "Compute Front Weighted 2 Day Moving Average", from = "fw3", line = 2, level = 1);
 	res = .genmovav(X
 				, weights = c(0.079, 0.07)
 				, type = "FW3"
@@ -1378,6 +1415,8 @@ fw3 = function(X, plot = FALSE, ...) {
 #   
 #######################################################################################################################
 epma = function(X, win.size = 10, plot = FALSE, ...) {
+	# Compute EPMA
+	Logger(message = "Compute EPMA", from = "epma", line = 2, level = 1);
 	Movav(X
 		, win.size = win.size
 		, type = "EPMA"
@@ -1445,8 +1484,6 @@ mndma = function(X, win.size = 50, plot = FALSE, ...) {
 	# Declare output
 	Logger(message = "Declare output", from = "mndma", line = 31, level = 1);
 	res = sma(X, win.size = win.size, ...);
-#	for (i in 1:dim(res)[2])
-Logger(message = "for (i in 1:dim(res)[2])", from = "mndma", line = 33, level = 1);
 	I = dim(res)[2];
 	i = 0;
 	while(i < I) {
@@ -1458,7 +1495,7 @@ Logger(message = "for (i in 1:dim(res)[2])", from = "mndma", line = 33, level = 
 	attr(res, "type") = "MNDMA";
 	attr(res, "desc") = "Multiple N-Day Moving Average";
 	# Plot Results if required
-	Logger(message = "Plot Results if required", from = "mndma", line = 44, level = 1);
+	Logger(message = "Plot Results if required", from = "mndma", line = 43, level = 1);
 	if(plot)
 		plot(x=res
 			, fs = if(fs.flag) Y else X
@@ -1549,14 +1586,6 @@ ama = function(X, ar.ord = 1, ma.ord = 1, func = NULL, padding = 0, type = "AMA"
 			res[n, v] = func(y = res[max(n-ar.ord, 1):max(n-1, 1), v], x = X[max(n-ma.ord+1, 1):n, v], n  = n, v = v, ...);
 		}
 	}
-#	for(v in seq(1, V, len = V))
-Logger(message = "for(v in seq(1, V, len = V))", from = "ama", line = 53, level = 1);
-#		for(n in seq(1, N, len = N)) {
-Logger(message = "for(n in seq(1, N, len = N)) {", from = "ama", line = 54, level = 1);
-#			res[n, v] = func(y = res[max(n-ar.ord, 1):max(n-1, 1), v], x = X[max(n-ma.ord+1, 1):n, v], n  = n, v = v, ...);
-Logger(message = "res[n, v] = func(y = res[max(n-ar.ord, 1):max(n-1, 1), v], x = X[max(n-ma.ord+1, 1):n, v], n  = n, v = v, ...);", from = "ama", line = 55, level = 1);
-#		}
-Logger(message = "}", from = "ama", line = 56, level = 1);
 	class(res) = "Movav";
 	attr(res, "ar.ord") = ar.ord;
 	attr(res, "ma.ord") = ma.ord;
@@ -1564,17 +1593,17 @@ Logger(message = "}", from = "ama", line = 56, level = 1);
 	attr(res, "type") = type;
 	attr(res, "desc") = "Adaptive Moving Average";
 	# Plot Results if required
-	Logger(message = "Plot Results if required", from = "ama", line = 63, level = 1);
+	Logger(message = "Plot Results if required", from = "ama", line = 59, level = 1);
 	if(plot)
 		plot(x=res
 			, fs = if(fs.flag) Y else X
 			, ...
 			);
 	# Cleanup memory
-	Logger(message = "Cleanup memory", from = "ama", line = 69, level = 1);
+	Logger(message = "Cleanup memory", from = "ama", line = 65, level = 1);
 	cleanup(keep = "res");
 	# Return result
-	Logger(message = "Return result", from = "ama", line = 71, level = 1);
+	Logger(message = "Return result", from = "ama", line = 67, level = 1);
 	res
 }
 #######################################################################################################################
@@ -1663,19 +1692,17 @@ kama = function(X, fast.win = 2, slow.win = 30, lag = 5, keep.lambda = FALSE, ke
 	rownames(res) = get.row.names(X);
 	# Compute KAMA
 	Logger(message = "Compute KAMA", from = "kama", line = 56, level = 1);
-#	for(w in seq(1, W, len = W)) {
-Logger(message = "for(w in seq(1, W, len = W)) {", from = "kama", line = 57, level = 1);
 	w = 0;
 	while(w < W) {
 		w = w + 1;
 		# Compute Efficiency Ratio
-		Logger(message = "Compute Efficiency Ratio", from = "kama", line = 61, level = 2);
+		Logger(message = "Compute Efficiency Ratio", from = "kama", line = 60, level = 2);
 		ER[, 1:V + (w-1)*V] = abs(Diff(X, lag = lag[w], padding = 0)) / movApply(abs(Diff(X, lag = 1, padding = 0)), win.size = lag[w], func = sum);
 		# Compute smoothing factor
-		Logger(message = "Compute smoothing factor", from = "kama", line = 63, level = 2);
+		Logger(message = "Compute smoothing factor", from = "kama", line = 62, level = 2);
 		lambda[, 1:V + (w-1)*V] = (ER[, 1:V + (w-1)*V]*(lambda.fast[w]-lambda.slow[w]) + lambda.slow[w])^2;
 		# Compute KAMA
-		Logger(message = "Compute KAMA", from = "kama", line = 65, level = 2);
+		Logger(message = "Compute KAMA", from = "kama", line = 64, level = 2);
 		res[, 1:V + (w-1)*V] = ama(X, ar.ord = 1, ma.ord = 1, func = kfunc, lambda = lambda[, 1:V + (w-1)*V, drop = FALSE]);
 	}
 	class(res) = "Movav";
@@ -1689,17 +1716,17 @@ Logger(message = "for(w in seq(1, W, len = W)) {", from = "kama", line = 57, lev
 	if(keep.ER)
 		attr(res, "ER") = ER;
 	# Plot Results if required
-	Logger(message = "Plot Results if required", from = "kama", line = 78, level = 1);
+	Logger(message = "Plot Results if required", from = "kama", line = 77, level = 1);
 	if(plot)
 		plot(x=res
 			, fs = if(fs.flag) Y else X
 			, ...
 			);
 	# Cleanup memory
-	Logger(message = "Cleanup memory", from = "kama", line = 84, level = 1);
+	Logger(message = "Cleanup memory", from = "kama", line = 83, level = 1);
 	cleanup(keep = "res");
 	# Return result
-	Logger(message = "Return result", from = "kama", line = 86, level = 1);
+	Logger(message = "Return result", from = "kama", line = 85, level = 1);
 	res;
 }
 #######################################################################################################################
@@ -1789,39 +1816,35 @@ frama = function(X, win.size = 10, tau = 4.6, keep.lambda = FALSE, keep.ER = FAL
 	rownames(res) = get.row.names(X);
 	# Compute FRAMA
 	Logger(message = "Compute FRAMA", from = "frama", line = 57, level = 1);
-#	for(w in seq(1, W, len = W)) {
-Logger(message = "for(w in seq(1, W, len = W)) {", from = "frama", line = 58, level = 1);
 	w = 0;
 	while(w < W) {
 		w = w + 1;
 		# Moving Max over the current window
-		Logger(message = "Moving Max over the current window", from = "frama", line = 62, level = 2);
+		Logger(message = "Moving Max over the current window", from = "frama", line = 61, level = 2);
 		M1 = movMax(X, win.size = win.size[w]);
 		# Moving Min over the current window
-		Logger(message = "Moving Min over the current window", from = "frama", line = 64, level = 2);
+		Logger(message = "Moving Min over the current window", from = "frama", line = 63, level = 2);
 		m1 = movMin(X, win.size = win.size[w]);
 		# Moving Max over the past window
-		Logger(message = "Moving Max over the past window", from = "frama", line = 66, level = 2);
+		Logger(message = "Moving Max over the past window", from = "frama", line = 65, level = 2);
 		M2 = Lag(M1, lag = win.size[w], padding = 0);
 		# Moving Min over the past window
-		Logger(message = "Moving Min over the past window", from = "frama", line = 68, level = 2);
+		Logger(message = "Moving Min over the past window", from = "frama", line = 67, level = 2);
 		m2 = Lag(m1, lag = win.size[w], padding = 0);
 		# Moving Max over a double sized window
-		Logger(message = "Moving Max over a double sized window", from = "frama", line = 70, level = 2);
+		Logger(message = "Moving Max over a double sized window", from = "frama", line = 69, level = 2);
 		M3 = movMax(X, win.size = 2*win.size[w]);
 		# Moving Min over a double sized window
-		Logger(message = "Moving Min over a double sized window", from = "frama", line = 72, level = 2);
+		Logger(message = "Moving Min over a double sized window", from = "frama", line = 71, level = 2);
 		m3 = movMin(X, win.size = 2*win.size[w]);
 		# Compute Efficiency Ratio
-		Logger(message = "Compute Efficiency Ratio", from = "frama", line = 74, level = 2);
+		Logger(message = "Compute Efficiency Ratio", from = "frama", line = 73, level = 2);
 		ER[, 1:V + (w-1)*V] = 0.5*(M1 - m1 + M2 - m2)/(M3 - m3);
 		# Compute smoothing factor
-		Logger(message = "Compute smoothing factor", from = "frama", line = 76, level = 2);
+		Logger(message = "Compute smoothing factor", from = "frama", line = 75, level = 2);
 		lambda[, 1:V + (w-1)*V] = exp(tau*log(ER[, 1:V + (w-1)*V]));
 		# Compute FRAMA
-		Logger(message = "Compute FRAMA", from = "frama", line = 78, level = 2);
-		#res[, 1:V + (w-1)*V] = ama(X, ar.ord = 1, ma.ord = 1, func = kfunc, ER = ER[, 1:V + (w-1)*V, drop = FALSE], w = w, tau = tau);
-		Logger(message = "res[, 1:V + (w-1)*V] = ama(X, ar.ord = 1, ma.ord = 1, func = kfunc, ER = ER[, 1:V + (w-1)*V, drop = FALSE], w = w, tau = tau);", from = "frama", line = 79, level = 2);
+		Logger(message = "Compute FRAMA", from = "frama", line = 77, level = 2);
 		res[, 1:V + (w-1)*V] = ama(X, ar.ord = 1, ma.ord = 1, func = kfunc, lambda = lambda[, 1:V + (w-1)*V, drop = FALSE], w = w);
 	}
 	class(res) = "Movav";
@@ -1834,16 +1857,16 @@ Logger(message = "for(w in seq(1, W, len = W)) {", from = "frama", line = 58, le
 	if(keep.ER)
 		attr(res, "ER") = ER;
 	# Plot Results if required
-	Logger(message = "Plot Results if required", from = "frama", line = 91, level = 1);
+	Logger(message = "Plot Results if required", from = "frama", line = 89, level = 1);
 	if(plot)
 		plot(x=res
 			, fs = if(fs.flag) Y else X
 			, ...
 			);
 	# Cleanup memory
-	Logger(message = "Cleanup memory", from = "frama", line = 97, level = 1);
+	Logger(message = "Cleanup memory", from = "frama", line = 95, level = 1);
 	cleanup(keep = "res");
 	# Return result
-	Logger(message = "Return result", from = "frama", line = 99, level = 1);
+	Logger(message = "Return result", from = "frama", line = 97, level = 1);
 	res;
 }

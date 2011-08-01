@@ -4,7 +4,7 @@
 \alias{Jensen.Capm}
 \title{Jensen index}
 \description{
-\code{Jensen}: Calculate Jensen index for a portfolio \cr
+\code{Jensen}: Calculate Jensen index for a portfolio.
 \code{Jensen.Capm}: Get Jensen index from an object of class "Capm".
 }
 \usage{

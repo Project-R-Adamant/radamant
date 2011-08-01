@@ -14,8 +14,8 @@ af = 3, plot = TRUE, ...) }
 \item{W}{ Initial vector of weights.}
 \item{R}{ Vector of PTF returns.}
 \item{SIGMA}{ PTF sample covariance matrix.}
-\item{af}{ Numeric (range: 0,1). Adversion factor (Default = 3)}
-\item{plot}{ LOGICAL. If TRUE plot is returned.}
+\item{af}{ Numeric (range: 0,1). Adversion factor (Default: 3)}
+\item{plot}{Logical. If TRUE plot is returned.}
 \item{...}{Further arguments to or from other methods.}
 }
 

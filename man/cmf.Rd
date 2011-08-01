@@ -4,9 +4,14 @@
 \description{Compute Chaikin Money Flow (Technical Analysis)}
 \usage{cmf(Close, Low, High, Volume, plot = FALSE, ...) }
 
-\arguments{ \item{Close}{ VECTOR. Close price.}\item{Low}{ VECTOR. Low price.}\item{High}{ VECTOR.
+\arguments{ \item{Close}{Vector. Close price.}
+\item{Low}{Vector. Low price.}
+\item{High}{Vector.
 High
-price.}\item{Volume}{ Volume}\item{plot}{ LOGICAL. If TRUE plot is returned.}\item{...}{ Further
+price.}
+\item{Volume}{ Volume}
+\item{plot}{Logical. If TRUE plot is returned.}
+\item{...}{ Further
 arguments to or from other
 methods}}
 

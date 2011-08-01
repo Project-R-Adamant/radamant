@@ -13,7 +13,11 @@ oscil(X, ...)
 }
 
 
-\arguments{ \item{X}{ X}\item{Y}{ Y}\item{pc}{ pc}\item{type}{ type}\item{...}{ Further arguments to
+\arguments{ \item{X}{ X}
+\item{Y}{ Y}
+\item{pc}{ pc}
+\item{type}{ type}
+\item{...}{ Further arguments to
 or from other methods}}
 
 \author{RAdamant Development Team \email{team@r-adamant.org}}

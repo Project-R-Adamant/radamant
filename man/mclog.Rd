@@ -8,13 +8,15 @@ Control whether logging info is printed to console.
 }
 
 \usage{
-setConsoleLogging(consoleLogging = TRUE, env = getOption("RAdamant"))
+setConsoleLogging(consoleLogging = TRUE
+                  , env = getOption("RAdamant"))
+                  
 getConsoleLogging(env = getOption("RAdamant"))
 }
 
 \arguments{
-\item{consoleLogging}{LOGICAL. If TRUE, log information are also sent to console.}
-\item{env}{The environment where the info is stored (DEFAULT = getOption("RAdamant")).}
+\item{consoleLogging}{Logical. If TRUE, log information are also sent to console.}
+\item{env}{The environment where the info is stored (Default: getOption("RAdamant")).}
 }
 
 \value{

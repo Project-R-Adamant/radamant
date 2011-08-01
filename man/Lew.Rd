@@ -8,12 +8,12 @@ func = NULL, is.cumulative = TRUE, ...) }
 \arguments{ 
 \item{X}{ Input matrix/sequence}
 \item{lag}{ vector of integer lags. If lag >= 0 data are shifted to the right, else to the left.
-(DEFAULT = 0)}
-\item{padding}{ value used to initialise the output matrix (DEFAULT = NA)}
-\item{na.rm}{ LOGICAL. If TRUE, N-lag entries are removed from the output (DEFAULT = FALSE)}
-\item{func}{ function applied to the extending data window (DEFAULT = NULL)}
-\item{is.cumulative}{ LOGICAL. If TRUE it the function provided must be cumulative by itself (like
-cummax, cummin, etc..) (DEFAULT = TRUE)}
+(Default: 0)}
+\item{padding}{ value used to initialise the output matrix (Default: NA)}
+\item{na.rm}{Logical. If TRUE, N-lag entries are removed from the output (Default: FALSE)}
+\item{func}{ function applied to the extending data window (Default: NULL)}
+\item{is.cumulative}{Logical. If TRUE it the function provided must be cumulative by itself (like
+cummax, cummin, etc..) (Default: TRUE)}
 \item{...}{ Additional parameters accepted by the function 'func'}
 }
 \details{ Sequences are treated as one-column matrices}

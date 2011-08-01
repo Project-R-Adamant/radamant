@@ -21,13 +21,13 @@ hroi(X
 
 \arguments{
 \item{X}{Input matrix of data to be plotted.}
-\item{lag}{The maximum lag used to compute returns (DEFAULT = 1).}
+\item{lag}{The maximum lag used to compute returns (Default: 1).}
 \item{mode}{Controls how the lags are computed. See details.}
-\item{autolag.start}{Starting lag value for the case where mode = "auto" (DEFAULT = 1). See details.}
-\item{range.step}{Lag increment used for the case where mode = "range" (DEFAULT = 1). See details.}
-\item{log}{LOGICAL. If TRUE, log returns are computed. DEFAULT = TRUE.}
+\item{autolag.start}{Starting lag value for the case where mode = "auto" (Default: 1). See details.}
+\item{range.step}{Lag increment used for the case where mode = "range" (Default: 1). See details.}
+\item{log}{Logical. If TRUE, log returns are computed. DEFAULT = TRUE.}
 \item{VaR.type}{The distribution used for VaR calculation. See \code{\link{VaR}} for details.}
-\item{p}{The confidence interval used for VaR calculation. (DEFAULT = 0.05)}
+\item{p}{The confidence interval used for VaR calculation. (Default: 0.05)}
 \item{...}{Additional parameters passed to the VaR function.}
 }
 

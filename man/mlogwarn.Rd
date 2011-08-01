@@ -12,8 +12,8 @@ getLogWarning(env = getOption("RAdamant"))
 }
 
 \arguments{
-\item{showWarning}{LOGICAL. If TRUE, a warning is generated if the log buffer is full and no logfile is available.}
-\item{env}{The environment where the info is stored (DEFAULT = getOption("RAdamant")).}
+\item{showWarning}{Logical. If TRUE, a warning is generated if the log buffer is full and no logfile is available.}
+\item{env}{The environment where the info is stored (Default: getOption("RAdamant")).}
 }
 
 \value{

@@ -11,15 +11,15 @@
 \usage{
 BS.price(under, ...)
 \method{BS.price}{default}(under
-	, strike
-	, rfr
-	, sigma
-	, maty
-	, yield
-	, calc.type =c("standard","lognorm","gammarec")
-	, opt.type = c("call", "put")
-	, ...) 
-\method{print}{BS.price}(x, mod, ...)	
+    , strike
+    , rfr
+    , sigma
+    , maty
+    , yield
+    , calc.type =c("standard","lognorm","gammarec")
+    , opt.type = c("call", "put")
+    , ...) 
+\method{print}{BS.price}(x, mod, ...)    
 }
 
 \arguments{ 
@@ -68,10 +68,24 @@ maty = 0.5
 yield = 0.03
 
 # calculate BS price for a call option assuming normal distribution of prices
-bs1 = BS.price(under, strike, rfr, sigma, maty, yield, calc.type = "standard" , opt.type = "call") 
+bs1 = BS.price(under
+                    , strike
+                    , rfr
+                    , sigma
+                    ,maty
+                    , yield
+                    , calc.type = "standard"
+                    , opt.type = "call") 
 bs1
 # same example assuming gamma-reciprocal distribution of prices
-bs2 = BS.price(under, strike, rfr, sigma, maty, yield, calc.type = "gammarec" , opt.type = "call") 
+bs2 = BS.price(under
+                    , strike
+                    , rfr
+                    , sigma
+                    , maty
+                    , yield
+                    , calc.type = "gammarec"
+                    , opt.type = "call") 
 bs2
 }
 

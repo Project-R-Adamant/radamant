@@ -17,17 +17,36 @@
 
 \usage{
 
-Ret(X, lag = 1, log = FALSE, mode = "selected", na.rm = FALSE, plot = FALSE, ...) 
+Ret(X
+    , lag = 1
+    , log = FALSE
+    , mode = "selected"
+    , na.rm = FALSE
+    , plot = FALSE
+    , ...) 
 
-Lag(X, lag = 1, na.rm = FALSE, padding = NA) 
+Lag(X
+    , lag = 1
+    , na.rm = FALSE
+    , padding = NA) 
 
-Diff(X, lag = 1, padding = NA, na.rm = FALSE) 
+Diff(X
+    , lag = 1
+    , padding = NA
+    , na.rm = FALSE) 
 
-MDiff(X, lag = 1, padding = NA, 
-mode = c("auto", "range", "selected"), na.rm = FALSE) 
+MDiff(X
+      , lag = 1
+      , padding = NA
+      , mode = c("auto", "range", "selected")
+      , na.rm = FALSE) 
 
-MLag(X, lag = 1, na.rm = FALSE, padding = NA, 
-mode = c("auto", "range", "selected"), autolag.start = 1) 
+MLag(X
+    , lag = 1
+    , na.rm = FALSE
+    , padding = NA
+    , mode = c("auto", "range", "selected")
+    , autolag.start = 1) 
 }
 
 \arguments{ 
@@ -92,17 +111,32 @@ res[1:10, ,drop=FALSE]
 
 ## PLOT RESULTS
 # calculation and plot for single series
-Ret(x[,1],  lag = 5, mode = "selected", plot=TRUE,  style="bar", main="Returns - 5 Lags")
+Ret(x[,1]
+    , lag = 5
+    , mode = "selected"
+    , plot=TRUE
+    , style="bar"
+    , main="Returns - 5 Lags")
 
 # calculation and plot for multiple series
 par(mfrow=c(2,2))
-Ret(x,  lag = 5, mode = "selected", plot=TRUE,  style="bar", main="Returns - 5 Lags")
+Ret(x
+    , lag = 5
+    , mode = "selected"
+    , plot=TRUE
+    , style="bar"
+    , main="Returns - 5 Lags")
 
 \dontrun{
 # get APPLE financial series 
 symbol.lookup("Apple") 
 APPLE = get.fs("AAPL", from=as.Date("2008-06-01"), to=as.Date("2011-04-01"));
-RAPPLE = Ret(APPLE, mode = "selected", plot = TRUE, style = "bar",  ylab.fmt = .3, na.rm = TRUE)
+RAPPLE = Ret(APPLE
+                , mode = "selected"
+                , plot = TRUE
+                , style = "bar"
+                ,  ylab.fmt = .3
+                , na.rm = TRUE)
 RAPPLE;
 }
 

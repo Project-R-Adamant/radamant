@@ -6,8 +6,16 @@
 
 \description{Option evaluation with Cox, Rossand and Rubinstein Binomial Tree}
 
-\usage{CRR.BinTree(Nsteps, under, strike, rfr, 
-sigma, maty, yield, life, ret.steps = FALSE) }
+\usage{CRR.BinTree(Nsteps
+					, under
+					, strike
+					, rfr
+					, sigma
+					, maty
+					, yield
+					, life
+					, ret.steps = FALSE) 
+				}
 
 \arguments{
 \item{Nsteps}{ Nsteps}
@@ -33,23 +41,39 @@ sigma, maty, yield, life, ret.steps = FALSE) }
 \seealso{ \code{\link{BS.price}}, \code{\link{StepMat}}, \code{\link{JR.BinTree}}  }
 
 \examples{
-	# set option parameters
-	under = 105
-	strike = 95
-	rfr = 0.08
-	sigma = 0.2
-	maty = 0.5
-	yield = 0.03
-	life = 0.5
+    # set option parameters
+    under = 105
+    strike = 95
+    rfr = 0.08
+    sigma = 0.2
+    maty = 0.5
+    yield = 0.03
+    life = 0.5
 
-	# estimate option price using Jarrow and Rudd Binomial Tree
-	crr = CRR.BinTree(Nsteps=10, under, strike, rfr, sigma, maty, yield, life, ret.steps=TRUE)
-	crr$Values
-	# ... confront results with B&S method 
-	BS.price(under, strike, rfr, sigma, maty, yield)
-	# get step matrix
-	crr = CRR.BinTree(Nsteps=10, under, strike, rfr, sigma, maty, yield, life, ret.steps=TRUE)
-	crr$Price_Path
+    # estimate option price using Jarrow and Rudd Binomial Tree
+    crr = CRR.BinTree(Nsteps=10
+                            , under
+                            , strike
+                            , rfr
+                            , sigma
+                            , maty
+                            , yield
+                            , life
+                            , ret.steps=TRUE)
+    crr$Values
+    # ... confront results with B&S method 
+    BS.price(under, strike, rfr, sigma, maty, yield)
+    # get step matrix
+    crr = CRR.BinTree(Nsteps=10
+                            , under
+                            , strike
+                            , rfr
+                            , sigma
+                            , maty
+                            , yield
+                            , life
+                            , ret.steps=TRUE)
+    crr$Price_Path
 }
 
 

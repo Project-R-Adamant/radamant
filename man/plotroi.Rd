@@ -3,7 +3,11 @@
 \title{Plot Return on Investment objects}
 \description{Plot method for class 'roi'.}
 \usage{
-\method{plot}{roi}(x, main = "Historical Return on Investment", xtitle = "Lag", ...) 
+\method{plot}{roi}(x
+    , main = "Historical Return on Investment"
+    , xtitle = "Lag"
+    , ...
+    ) 
 }
 
 \arguments{
@@ -23,11 +27,21 @@
 # Load sample financial series data
 data(ex_fs)
 
-# Analyse the performance of the returns (Close data) up to 200 days and plot results
-plot(hroi(ex_fs, lag = 200, log = FALSE), xlab.srt = 0)
+# Analyse the performance of the returns (Close data) 
+# Plot results on returns up to 200 days
+plot(hroi(ex_fs
+    , lag = 200
+    , log = FALSE)
+    , xlab.srt = 0
+    )
 
-# Analyse the performance of the returns (All data) up to 200 days and plot results
-plot(hroi(ex_fs[,], lag = 200, log = FALSE), xlab.srt = 0)
+# Analyse the performance of the returns (All data) 
+# Plot results on returns up to 200 days
+plot(hroi(ex_fs[,]
+    , lag = 200
+    , log = FALSE)
+    , xlab.srt = 0
+    )
 
 }
 

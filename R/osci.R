@@ -1,3 +1,19 @@
+#######################################################################################################################
+# Copyright (C) 2011  RAdmant Development Team
+# email: team@r-adamant.org
+# web: http://www.r-adamant.org
+#
+# This library is free software;
+# you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation;
+# either version 2 of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with this program;
+# if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA.
+#######################################################################################################################
 ###############################################################
 ### GENERAL METHODS FOR CLASS "OSCIL"
 ###############################################################
@@ -161,8 +177,6 @@ trf = function(Close, High = NULL, Low = NULL, lag = 1, average=TRUE, avg.lag=14
 					, abs(High - Lag(Close, lag = lag, padding = Inf))
 					, abs(Low - Lag(Close, lag = lag, padding = -Inf)) 
 					);
-#	for(v in seq(1, V, len = V)) {
-Logger(message = "for(v in seq(1, V, len = V)) {", from = "trf", line = 31, level = 1);
 	v = 0;
 	while(v < V) {
 		v = v + 1;
@@ -424,8 +438,6 @@ tlow = function(Close, Low = NULL, lag = 5, plot = TRUE, ...) {
 	res = matrix(NA, nrow = N, ncol = V);
 	colnames(res) = paste(get.col.names(Close), "TLOW", sep = "_");
 	rownames(res) = rownames(Close);
-#	for(v in seq(1, V, len = V))
-Logger(message = "for(v in seq(1, V, len = V))", from = "tlow", line = 15, level = 1);
 	v = 0;
 	while(v < V) {
 		v = v + 1;
@@ -459,8 +471,6 @@ thigh = function(Close, High = NULL, lag = 5, plot = TRUE, ...) {
 	res = matrix(NA, nrow = N, ncol = V);
 	colnames(res) = paste(get.col.names(Close), "THIGH", sep = "_");
 	rownames(res) = rownames(Close);
-#	for(v in seq(1, V, len = V))
-Logger(message = "for(v in seq(1, V, len = V))", from = "thigh", line = 15, level = 1);
 	v = 0;
 	while(v < V) {
 		v = v + 1;
@@ -509,8 +519,6 @@ wad = function(Close, High = NULL, Low = NULL, lag = 5, na.rm = FALSE, plot = TR
 	Logger(message = "Declare Output", from = "wad", line = 23, level = 1);
 	res = matrix(0, nrow = N, ncol = V);
 	colnames(res) = paste(get.col.names(Close), "WAD", sep = "_");
-#	for (v in seq(1, V, len = V)) {
-Logger(message = "for (v in seq(1, V, len = V)) {", from = "wad", line = 26, level = 1);
 	v = 0;
 	while(v < V) {
 		v = v + 1;
@@ -800,13 +808,9 @@ kvo = function(Close, High = NULL, Low = NULL, Vol = NULL, cumulative = FALSE, p
 	CM = matrix(0, nrow = N, ncol = V);
 	CM[1, ] = DM[1, ];
 	if(N > 1) {
-#		for(v in seq(1, V, len = V)) {
-Logger(message = "for(v in seq(1, V, len = V)) {", from = "kvo", line = 35, level = 1);
 		v = 0;
 		while(v < V) {
 			v = v + 1;
-#			for(n in 2:N)
-Logger(message = "for(n in 2:N)", from = "kvo", line = 39, level = 2);
 			n = 1;
 			while(n < N) {
 				n = n + 1;

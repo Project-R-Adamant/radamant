@@ -1,4 +1,20 @@
 #######################################################################################################################
+# Copyright (C) 2011  RAdmant Development Team
+# email: team@r-adamant.org
+# web: http://www.r-adamant.org
+#
+# This library is free software;
+# you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation;
+# either version 2 of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with this program;
+# if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA.
+#######################################################################################################################
+#######################################################################################################################
 # FUNCTION: .getLogCounter
 #
 # SUMMARY:
@@ -116,7 +132,6 @@
 		res = expression(under*exp(-yield*maty)*pnorm(log(under/strike) + (((rfr-yield) + 0.5*sigma^2)*maty) / (sigma*sqrt(maty))) - strike*exp(-rfr*maty)*pnorm(log(under/strike) + (((rfr-yield) + 0.5*sigma^2)*maty) / (sigma*sqrt(maty))- sigma*sqrt(maty)))
 	else
 		res = expression(under*exp(-yield*maty)*pnorm(-(log(under/strike) + (((rfr-yield) + 0.5*sigma^2)*maty) / (sigma*sqrt(maty)))) - strike*exp(-rfr*maty)*pnorm(-(log(under/strike) + (((rfr-yield) + 0.5*sigma^2)*maty) / (sigma*sqrt(maty))- sigma*sqrt(maty))) - under*exp(-yield*maty)+strike*exp(-rfr*maty))
-
 	res
 }
 # Edgeworth factor
@@ -314,3 +329,21 @@
 	}
 	invisible(RES);
 }
+#######################################################################################################################
+# FUNCTION: Gt
+#
+# SUMMARY:
+# T-Student conditional density
+#
+# PARAMETERS:
+# - df: Degrees of freedom
+# - phi: vector of sample quantiles
+#
+# RETURNS:
+#  The T-Student conditional density evaluated at the points given by phi
+#
+#######################################################################################################################
+".Gt" <- function(df, phi){
+	# Compute the T-Student Conditional PDF
+	((df-2)/(df-1))*dt(0,df) * sqrt((df)/(df-2)) * ( 1+(phi^2/(df-2)) )^((1-df)/2)
+}	

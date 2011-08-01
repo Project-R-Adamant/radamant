@@ -1,3 +1,19 @@
+#######################################################################################################################
+# Copyright (C) 2011  RAdmant Development Team
+# email: team@r-adamant.org
+# web: http://www.r-adamant.org
+#
+# This library is free software;
+# you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation;
+# either version 2 of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with this program;
+# if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA.
+#######################################################################################################################
 ## CRAMER'S V ##
 cramv = function(x, y) {
 	# Compute frequencies table
@@ -733,14 +749,14 @@ plot.univar = function(x, theme.params = getCurrentTheme(), overrides = list(...
                         , sum
                         , na.rm = TRUE
                         );
-        # Multiple plots on one window
-        Logger(message = "Multiple plots on one window", from = "plot.univar", line = 48, level = 2);
-         if(  ((v %% plots.per.window) ==1) || plots.per.window == 1 ) {
-            dev.new();
-            # Set the number  of plottable areas  in the window
-            Logger(message = "Set the number  of plottable areas  in the window", from = "plot.univar", line = 51, level = 2);
-            par(mfrow = plot.layout);
-         }
+		# Multiple plots on one window
+		Logger(message = "Multiple plots on one window", from = "plot.univar", line = 48, level = 2);
+		if(  ((v %% plots.per.window) ==1) || plots.per.window == 1 ) {
+			dev.new();
+			# Set the number  of plottable areas  in the window
+			Logger(message = "Set the number  of plottable areas  in the window", from = "plot.univar", line = 51, level = 2);
+			par(mfrow = plot.layout);
+		}
         # Univariate plot
         Logger(message = "Univariate plot", from = "plot.univar", line = 54, level = 2);
         cplot(plotdata
@@ -1272,7 +1288,7 @@ chist = function(x
 			)
 }
 get.predictors = function(mod) {
-	colnames(attr(mod$terms, "factors"))
+	colnames(attr(terms(mod), "factors"))
 }
 get.lm.weights = function (mod, pct = FALSE) {
 	# Get the number of regressors
@@ -1318,16 +1334,18 @@ predict.mreg = function(object, ...) {
 	# Declare output
 	Logger(message = "Declare output", from = "predict.mreg", line = 4, level = 1);
 	res = vector("list", Vy);
+	names(res) = attr(object, "Y.names");
 	vy = 0;
 	while(vy < Vy) {
 		vy = vy + 1;
 		# Compute prediction
-		Logger(message = "Compute prediction", from = "predict.mreg", line = 9, level = 2);
+		Logger(message = "Compute prediction", from = "predict.mreg", line = 10, level = 2);
 		res[[vy]] = predict.reg(object[[vy]], ...);
 	}
 	res
 }
 predict.reg = function(object
+						, na.rm = FALSE
 						, newdata = NULL
 						, ci = 0.95
 						, mode = c("response", "link")
@@ -1335,54 +1353,129 @@ predict.reg = function(object
 						, shaded = FALSE
 						, xlabels = NULL
 						, main = "Linear Model Prediction"
-						, col = getThemeAttr("col", exact = TRUE)[c(1, 2, 2)]
-						, shade.stripes = 1
-						, shade.col = getThemeAttr("col", exact = TRUE)[2]
-						, shade.density = 40
-						, shade.angle = 30
 						, legend = NULL
+						, theme.params = getCurrentTheme()
+						, aggregate = TRUE
 						, ...
 						) {
+	# Set default plotting parameters
+	Logger(message = "Set default plotting parameters", from = "predict.reg", line = 2, level = 1);
+	default.params = list(col = theme.params[["col"]][c(1, 2, 2)]
+						, shade.stripes = 1
+						, shade.col = theme.params[["col"]][2]
+						, shade.density = 40
+						, shade.angle = 30	
+						);
+	# Apply default parmaters to the theme
+	Logger(message = "Apply default parmaters to the theme", from = "predict.reg", line = 9, level = 1);
+	theme.params = override.list(what = theme.params, overrides = default.params);
 	if(any(class(object) == "reg")) {
 		# Extract Linear Model object
-		Logger(message = "Extract Linear Model object", from = "predict.reg", line = 3, level = 1);
+		Logger(message = "Extract Linear Model object", from = "predict.reg", line = 12, level = 1);
 		object = object$lm;
 	}
+	# Number of base (fitted) observations
+	Logger(message = "Number of base (fitted) observations", from = "predict.reg", line = 15, level = 1);
+	Nbase = NROW(fitted(object));
+	# Process the 'newdata' argument
+	Logger(message = "Process the 'newdata' argument", from = "predict.reg", line = 17, level = 1);
+	if(is.null(newdata) || length(dim(newdata)) < 3) {
+		# Only one scenario
+		Logger(message = "Only one scenario", from = "predict.reg", line = 19, level = 1);
+		scenarios = 1;
+	} else {
+		# Multiple scenarios (array)
+		Logger(message = "Multiple scenarios (array)", from = "predict.reg", line = 22, level = 1);
+		scenarios = dim(newdata)[3];
+	}
+	isArray = FALSE;
+	if(length(dim(newdata)) == 3) {
+		isArray = TRUE;
+	}
 	mode = match.arg(mode[1], choice = c("response", "link"));
-	res = NULL;
+	# Declare predition array
+	Logger(message = "Declare predition array", from = "predict.reg", line = 30, level = 1);
+	if(is.null(newdata)) {
+		res = array(NA, dim = c(Nbase, 3, scenarios));
+		dimnames(res) =  list(get.row.names(fitted(object))
+							, c("fit", "lwr", "upr")
+							, paste("Scenario", seq(1,scenarios), sep = "_")
+							);
+	} else {
+		res = array(NA, dim = c(NROW(newdata), 3, scenarios));
+		dimnames(res) =  list(get.row.names(newdata)
+							, c("fit", "lwr", "upr")
+							, paste("Scenario", seq(1,scenarios), sep = "_")
+							);
+	}
 	if(class(object)[1] == "lm") {
-		# Compute lm predition
-		Logger(message = "Compute lm predition", from = "predict.reg", line = 9, level = 1);
-		res = predict(object, newdata = newdata, se.fit = FALSE, interval = "confidence", level = ci);
-	} else if(class(object)[1] == "glm"){
-		base = predict(object, newdata = newdata, se.fit = TRUE, type = "link");
-		response = predict(object, newdata = newdata, se.fit = FALSE, type = "response");
+		n = 0;
+		while(n < scenarios) {
+			n = n + 1;
+			# Compute lm predition
+			Logger(message = "Compute lm predition", from = "predict.reg", line = 48, level = 2);
+			if(is.null(newdata)) {
+				res[, , n] = predict(object, se.fit = FALSE, interval = "confidence", level = ci);
+			} else {
+				if(isArray) {
+					newdata.df = as.data.frame(newdata[, , n]);
+				} else {
+					newdata.df = as.data.frame(newdata[,]);
+				}
+				colnames(newdata.df) = colnames(newdata);
+				res[, , n] = predict(object, newdata = newdata.df, se.fit = FALSE, interval = "confidence", level = ci);
+			}
+		}
+	} else if(class(object)[1] == "glm") {
+		base = vector("list", scenarios);
+		response = array(NA, dim = c(NROW(res), 1, scenarios));
 		# Threshold for Normal errors
-		Logger(message = "Threshold for Normal errors", from = "predict.reg", line = 14, level = 1);
+		Logger(message = "Threshold for Normal errors", from = "predict.reg", line = 64, level = 1);
 		trsh = qnorm((1+ci)/2);
 		# Extract model weights
-		Logger(message = "Extract model weights", from = "predict.reg", line = 16, level = 1);
+		Logger(message = "Extract model weights", from = "predict.reg", line = 66, level = 1);
 		w = weights(object);
 		if(is.null(w))
 			w = 1;
-		# Weighted Standard Errors
-		Logger(message = "Weighted Standard Errors", from = "predict.reg", line = 20, level = 1);
-		wse = sqrt(w) * base$se.fit;
-		# Define output
-		Logger(message = "Define output", from = "predict.reg", line = 22, level = 1);
-		res = matrix(NA, nrow = length(response), ncol = 3);
-		colnames(res) = c("fit", "lwr", "upr");
-		rownames(res) = if(is.null(newdata)) get.row.names(object$model) else get.row.names(newdata);
-		# Compute Confidence intervals
-		Logger(message = "Compute Confidence intervals", from = "predict.reg", line = 26, level = 1);
-		if(mode == "response") {
-			res[, 1] = response;
-			res[, 2] = object$family$linkinv(base$fit - trsh*wse);
-			res[, 3] = object$family$linkinv(base$fit + trsh*wse);
-		} else {
-			res[, 1] = base$fit;
-			res[, 2] = base$fit - trsh*wse;
-			res[, 3] = base$fit + trsh*wse;
+		n = 0;
+		while(n < scenarios) {
+			n = n + 1;
+			# Compute glm predition
+			Logger(message = "Compute glm predition", from = "predict.reg", line = 73, level = 2);
+			if(is.null(newdata)) {
+				base[[n]] = predict(object, se.fit = TRUE, type = "link");
+				response[, 1, n] = predict(object, se.fit = FALSE, type = "response");
+			} else {
+				if(isArray) {
+					newdata.df = as.data.frame(newdata[, , n]);
+				} else {
+					newdata.df = as.data.frame(newdata);
+				}
+				colnames(newdata.df) = colnames(newdata);
+				base[[n]] = predict(object, newdata = newdata.df, se.fit = TRUE, type = "link");
+				response[, 1, n] = predict(object, newdata = newdata.df, se.fit = FALSE, type = "response");
+			}
+			# Weighted Standard Errors
+			Logger(message = "Weighted Standard Errors", from = "predict.reg", line = 87, level = 2);
+			wse = sqrt(w) * base[[n]]$se.fit;
+			# Define output
+			Logger(message = "Define output", from = "predict.reg", line = 89, level = 2);
+			#res = matrix(NA, nrow = length(response), ncol = 3);
+			Logger(message = "res = matrix(NA, nrow = length(response), ncol = 3);", from = "predict.reg", line = 90, level = 2);
+			#colnames(res) = c("fit", "lwr", "upr");
+			#rownames(res) = if(is.null(newdata)) get.row.names(fitted(object)) else get.row.names(newdata);
+			Logger(message = "rownames(res) = if(is.null(newdata)) get.row.names(fitted(object)) else get.row.names(newdata);", from = "predict.reg", line = 92, level = 2);
+			# Compute Confidence intervals
+			Logger(message = "Compute Confidence intervals", from = "predict.reg", line = 93, level = 2);
+			if(mode == "response") {
+				res[, 1, n] = response[, , n];
+				res[, 2, n] = object$family$linkinv(base[[n]]$fit - trsh*wse);
+				res[, 3, n] = object$family$linkinv(base[[n]]$fit + trsh*wse);
+			} else {
+				res[, 1, n] = base[[n]]$fit;
+				res[, 2, n] = base[[n]]$fit - trsh*wse;
+				res[, 3, n] = base[[n]]$fit + trsh*wse;
+			}
 		}
 	} else {
 		warning("Only objects of class 'lm' and 'glm' are currently supported.")
@@ -1391,43 +1484,125 @@ predict.reg = function(object
 	if(plot) {
 		if(is.null(legend)) {
 			# Set default Legend
-			Logger(message = "Set default Legend", from = "predict.reg", line = 42, level = 1);
+			Logger(message = "Set default Legend", from = "predict.reg", line = 110, level = 1);
 			ci.pct = sprintf("%.5g%%", ci*100);
 			legend = c(formula(object), paste("C.I.", ci.pct));
 		}
 		if(is.null(newdata)) {
-			fulldata = res;
+			fulldata = res[, , 1];
 		} else {
 			# Extract base fit
-			Logger(message = "Extract base fit", from = "predict.reg", line = 49, level = 1);
-			basefit = fitted(object);
-			# Create full matrix with base fit + prediction
-			Logger(message = "Create full matrix with base fit + prediction", from = "predict.reg", line = 51, level = 1);
-			fulldata = rbind(cbind(basefit, NA, NA)
-							, res);
-			fulldata[NROW(basefit), 2:3] = fulldata[NROW(basefit), 1];
+			Logger(message = "Extract base fit", from = "predict.reg", line = 117, level = 1);
+			basefit = cbind(fitted(object), NA, NA);
+			basefit[NROW(basefit), 2:3] = basefit[NROW(basefit), 1];
+			# Create full matrix structure with base fit + prediction
+			Logger(message = "Create full matrix structure with base fit + prediction", from = "predict.reg", line = 120, level = 1);
+			fulldata = rbind(basefit
+							, matrix(NA, nrow = NROW(res), ncol = 3));
 			rownames(fulldata) = c(get.row.names(object$model), rownames(res));
 		}
-		if(is.null(xlabels))
-			xlabels = rownames(fulldata);
-		# Plot Results
-		Logger(message = "Plot Results", from = "predict.reg", line = 59, level = 1);
-		cplot(fulldata, main = main, legend = legend, col = col, xlabels = xlabels, ...);
-		if(shaded) {
-			# Add shaded area
-			Logger(message = "Add shaded area", from = "predict.reg", line = 62, level = 1);
-			shade.plot(from = fulldata[, 2], to = fulldata[, 3]
-						, shade.stripes = shade.stripes
-						, shade.col = shade.col
-						, shade.density = shade.density
-						, shade.angle = shade.angle
-						, ...);
-			# Replot data points on top of the shade
-			Logger(message = "Replot data points on top of the shade", from = "predict.reg", line = 69, level = 1);
-			cplot(fulldata, append = TRUE, main = main, legend = legend, col = col, xlabels = xlabels, ...);
+		if(aggregate) {
+			# Scenarios will be aggregated.
+			Logger(message = "Scenarios will be aggregated.", from = "predict.reg", line = 126, level = 1);
+			if(isArray && scenarios > 1) {
+				# Declare aggregated matrix
+				Logger(message = "Declare aggregated matrix", from = "predict.reg", line = 128, level = 1);
+				res.aggr = matrix(NA, nrow = NROW(res), ncol = 3);
+				# Compute Average
+				Logger(message = "Compute Average", from = "predict.reg", line = 130, level = 1);
+				res.aggr[, 1] = apply(res[, 1, , drop = FALSE], 1:2, mean);
+				# Lower quantile
+				Logger(message = "Lower quantile", from = "predict.reg", line = 132, level = 1);
+				res.aggr[, 2] = apply(res[, 1, , drop = FALSE], 1:2, quantile, probs = 1-ci);
+				# Upper quantile
+				Logger(message = "Upper quantile", from = "predict.reg", line = 134, level = 1);
+				res.aggr[, 3] = apply(res[, 1, , drop = FALSE], 1:2, quantile, probs = ci);
+			} else {
+				res.aggr = res[, , 1];
+			}
+			scenarios = 1;
+		} 
+		# Get plot layout
+		Logger(message = "Get plot layout", from = "predict.reg", line = 141, level = 1);
+		plot.layout = get.plot.layout(N = scenarios, theme.params = theme.params, overrides = list(...));
+		plots.per.window = prod(plot.layout);
+		n = 0;
+		while(n < scenarios) {
+			n = n + 1;
+			if(!is.null(newdata)) {
+				if(aggregate) {
+					# Update full matrix with aggregated prediction
+					Logger(message = "Update full matrix with aggregated prediction", from = "predict.reg", line = 149, level = 2);
+					fulldata[NROW(basefit) + 1:NROW(res), ] = res.aggr;
+				} else {
+					# Update full matrix with current prediction
+					Logger(message = "Update full matrix with current prediction", from = "predict.reg", line = 152, level = 2);
+					fulldata[NROW(basefit) + 1:NROW(res), ] = res[, , n];
+				}
+			}
+			if(is.null(xlabels))
+				xlabels = rownames(fulldata);
+			if( ((n %% plots.per.window) ==1) || plots.per.window == 1 ) {
+				dev.new();
+				# Update plot layout
+				Logger(message = "Update plot layout", from = "predict.reg", line = 160, level = 2);
+				plot.layout = get.plot.layout(N = scenarios-n+1, theme.params = theme.params, overrides = list(...));
+				plots.per.window = prod(plot.layout);
+				# Set the number  of plottable areas in the window
+				Logger(message = "Set the number  of plottable areas in the window", from = "predict.reg", line = 163, level = 2);
+				if(n == 1) {
+					opar = par(mfrow = plot.layout);
+					on.exit(par(opar));
+				} else {
+					par(mfrow = plot.layout);
+				}
+			}
+			# Plot Results
+			Logger(message = "Plot Results", from = "predict.reg", line = 171, level = 2);
+			cplot(fulldata
+				, main = main
+				, legend = legend
+				, theme.params = theme.params
+				, xlabels = xlabels
+				, ...
+				);
+			if(shaded) {
+				# Add shaded area
+				Logger(message = "Add shaded area", from = "predict.reg", line = 180, level = 2);
+				shade.plot(from = fulldata[, 2], to = fulldata[, 3]
+							, theme.params = theme.params
+							, ...);
+				# Replot data points on top of the shade
+				Logger(message = "Replot data points on top of the shade", from = "predict.reg", line = 184, level = 2);
+				cplot(fulldata
+					, append = TRUE
+					, main = ""
+					, show.legend = FALSE
+					, show.xlabels = FALSE
+					, theme.params = theme.params
+					, ...
+					);
+			}
 		}
 	}
-	res
+	# Determine what to do with the NA entries
+	Logger(message = "Determine what to do with the NA entries", from = "predict.reg", line = 196, level = 1);
+	if(na.rm) {
+		# Remove NA entries (if any)
+		Logger(message = "Remove NA entries (if any)", from = "predict.reg", line = 198, level = 1);
+		idx = as.logical(rowMin(is.finite(res)));
+	} else {
+		# Keep NA entries (if any)
+		Logger(message = "Keep NA entries (if any)", from = "predict.reg", line = 201, level = 1);
+		idx = seq(1, NROW(res));
+	}
+	# Return result
+	Logger(message = "Return result", from = "predict.reg", line = 204, level = 1);
+	if(aggregate) {
+		res[idx, , 1]
+	} else {
+		res[idx, , , drop = FALSE]
+	}
 }
 dropn = function(mod, N = 1, ...) {
 	Nvars = length(get.predictors(mod));
@@ -1495,7 +1670,6 @@ decimals <- function(x, max.digits = 10, ...) {
 mreg = function(Y
 				, X
 				, xlabels = NULL
-				, tick.step = 1
 				, backtest = 0
 				, stress.idx = c()
 				, type = "simple" # simple | stepwise
@@ -1505,9 +1679,11 @@ mreg = function(Y
 				, intercept = TRUE
 				, family = gaussian
 				, weights = NULL
-				, plot = TRUE
 				, scope = NULL
 				, trace = FALSE
+				, plot = TRUE
+				, theme.params = getCurrentTheme()
+				, overrides = NULL
 				, ...
 				) {
     # Get Names for X and Y
@@ -1528,15 +1704,18 @@ mreg = function(Y
         dim(Y) = c(Ny, Vy);
 	if(Nx != Ny)
 		stop("Input arguments 'X' and 'Y' must have the same number of rows.");
+	# Check for NA entries
+	Logger(message = "Check for NA entries", from = "mreg", line = 17, level = 1);
+	validRows = as.logical(rowMin(is.finite(cbind(Y,X))));
 	# Recycle parameters
-	Logger(message = "Recycle parameters", from = "mreg", line = 17, level = 1);
+	Logger(message = "Recycle parameters", from = "mreg", line = 19, level = 1);
 	model = recycle(model, Vy);
 	type = recycle(type, Vy);
 	max.vars = recycle(max.vars, Vy);
 	backtest = recycle(backtest, Vy);
 	intercept = recycle(intercept, Vy);
 	# Extract family name
-	Logger(message = "Extract family name", from = "mreg", line = 23, level = 1);
+	Logger(message = "Extract family name", from = "mreg", line = 25, level = 1);
 	if(is.list(family)) {
 		tmp.family = rep("", Vy);
 		v = 0;
@@ -1556,49 +1735,53 @@ mreg = function(Y
 	}
 	family = recycle(tmp.family, Vy);
 	# Recycle weights parameter if necessary
-	Logger(message = "Recycle weights parameter if necessary", from = "mreg", line = 42, level = 1);
+	Logger(message = "Recycle weights parameter if necessary", from = "mreg", line = 44, level = 1);
 	if(!is.null(weights)) {
 		weights = matrix(weights, ncol = Vy);
 	}
     # Allocate output result
-    Logger(message = "Allocate output result", from = "mreg", line = 46, level = 1);
+    Logger(message = "Allocate output result", from = "mreg", line = 48, level = 1);
     res = vector("list", Vy);		
 	# Stress modelling
-	Logger(message = "Stress modelling", from = "mreg", line = 48, level = 1);
+	Logger(message = "Stress modelling", from = "mreg", line = 50, level = 1);
 	if(length(stress.idx) > 0) {
 		# Expand the regression matrix
-		Logger(message = "Expand the regression matrix", from = "mreg", line = 50, level = 1);
+		Logger(message = "Expand the regression matrix", from = "mreg", line = 52, level = 1);
 		regMat = cbind(X, matrix(0, nrow = Nx, ncol = Vx));
 		# Copy stress rows to the right side
-		Logger(message = "Copy stress rows to the right side", from = "mreg", line = 52, level = 1);
+		Logger(message = "Copy stress rows to the right side", from = "mreg", line = 54, level = 1);
 		regMat[stress.idx, (Vx+1):(2*Vx)] = X[stress.idx, , drop = FALSE];
 		# Set the left side of the stress rows to zero
-		Logger(message = "Set the left side of the stress rows to zero", from = "mreg", line = 54, level = 1);
+		Logger(message = "Set the left side of the stress rows to zero", from = "mreg", line = 56, level = 1);
 		regMat[stress.idx, 1:Vx] = 0;
 		# Assign column names
-		Logger(message = "Assign column names", from = "mreg", line = 56, level = 1);
+		Logger(message = "Assign column names", from = "mreg", line = 58, level = 1);
 		colnames(regMat) = c(X.names, paste(X.names, "Stress", sep = "_"));
 	} else {
 		# Take a copy
-		Logger(message = "Take a copy", from = "mreg", line = 59, level = 1);
+		Logger(message = "Take a copy", from = "mreg", line = 61, level = 1);
 		regMat = X;
 		colnames(regMat) = X.names;
 	}
 	# Create data frame structure to be used in the regression
-	Logger(message = "Create data frame structure to be used in the regression", from = "mreg", line = 63, level = 1);
+	Logger(message = "Create data frame structure to be used in the regression", from = "mreg", line = 65, level = 1);
 	fulldata.df = as.data.frame(cbind(NA, regMat));
+	# Disable warnings (will restored on exit)
+	Logger(message = "Disable warnings (will restored on exit)", from = "mreg", line = 67, level = 1);
+	owarn = options(warn = -1);
+	on.exit(options(owarn));
 	vy = 0;
 	while(vy < Vy) {
 		vy = vy + 1;
 		# Get regression function to be used
-		Logger(message = "Get regression function to be used", from = "mreg", line = 68, level = 2);
+		Logger(message = "Get regression function to be used", from = "mreg", line = 73, level = 2);
 		regfun = get(model[vy], mode = "function");
 		# Get current dependent variable
-		Logger(message = "Get current dependent variable", from = "mreg", line = 70, level = 2);
+		Logger(message = "Get current dependent variable", from = "mreg", line = 75, level = 2);
 		curr.Y = Y[, vy, drop = FALSE];
 		colnames(curr.Y) = Y.names[vy];
 		# Copy current dependent variable to the data frame structure
-		Logger(message = "Copy current dependent variable to the data frame structure", from = "mreg", line = 73, level = 2);
+		Logger(message = "Copy current dependent variable to the data frame structure", from = "mreg", line = 78, level = 2);
 		fulldata.df[, 1] = curr.Y;
 		colnames(fulldata.df)[1] = Y.names[vy];
 		if(intercept[vy]) {
@@ -1609,7 +1792,7 @@ mreg = function(Y
 			upperTerm = "~ . + 0";
 		}
 		# Pre-process weights for binomial family
-		Logger(message = "Pre-process weights for binomial family", from = "mreg", line = 83, level = 2);
+		Logger(message = "Pre-process weights for binomial family", from = "mreg", line = 88, level = 2);
 		if(is.null(weights)) {
 			if(family[vy] == "binomial" && model[vy] == "glm") {
 				curr.weights = matrix(10^decimals(min(curr.Y), ...), nrow = Nx, ncol = 1);
@@ -1619,76 +1802,129 @@ mreg = function(Y
 		} else {
 			curr.weights = weights[, vy, drop = FALSE];
 		}
+		# Create empty environment
+		Logger(message = "Create empty environment", from = "mreg", line = 98, level = 2);
+		env = new.env();
+		# Assign all variables needed for the regression
+		Logger(message = "Assign all variables needed for the regression", from = "mreg", line = 100, level = 2);
+		assign("regfun", regfun, envir = env);
+		assign("fulldata.df", fulldata.df, envir = env);
+		assign("valid.data.df", fulldata.df[validRows, , drop = FALSE], envir = env);
+		assign("curr.weights", curr.weights, envir = env);
+		assign("valid.weights", curr.weights[validRows, , drop = FALSE], envir = env);
+		assign("family", family[vy], envir = env);
+		assign("Yname", Y.names[vy], envir = env);
+		assign("lowerTerm", lowerTerm, envir = env);
+		assign("upperTerm", upperTerm, envir = env);
 		if(type[vy] == "simple") {
-			# Simple regression
-			Logger(message = "Simple regression", from = "mreg", line = 94, level = 2);
-			mod = regfun(as.formula(paste(Y.names[vy], upperTerm))
-						, data = fulldata.df
-						, weights = curr.weights
-						, family = family[vy]
-						, ...
-						);
+			# Set the formula
+			Logger(message = "Set the formula", from = "mreg", line = 111, level = 2);
+			evalq({curr.formula = as.formula(paste(Yname, upperTerm))}, envir = env);
+			# Run simple regression
+			Logger(message = "Run simple regression", from = "mreg", line = 113, level = 2);
+			evalq({mod = regfun(formula = curr.formula
+								, data = fulldata.df
+								, weights = curr.weights
+								, family = family
+								, na.action = na.exclude
+								, ...
+								)
+					}
+					, envir = env
+				);
 		} else {
 			# Check if the scope is available
-			Logger(message = "Check if the scope is available", from = "mreg", line = 102, level = 2);
+			Logger(message = "Check if the scope is available", from = "mreg", line = 125, level = 2);
 			if(is.null(scope)) {
+				# Set the lower formula
+				Logger(message = "Set the lower formula", from = "mreg", line = 127, level = 2);
+				evalq({formula.low = as.formula(paste(Yname, lowerTerm))}, envir = env);
+				# Set the upper formula
+				Logger(message = "Set the upper formula", from = "mreg", line = 129, level = 2);
+				evalq({formula.high = as.formula(paste(Yname, upperTerm))}, envir = env);
 				# Lower model
-				Logger(message = "Lower model", from = "mreg", line = 104, level = 2);
-				mod.lower = regfun(as.formula(paste(Y.names[vy], lowerTerm))
-									, data = fulldata.df
-									, weights = curr.weights
-									, family = family[vy]
-									, ...
-									);
+				Logger(message = "Lower model", from = "mreg", line = 131, level = 2);
+				evalq({mod.lower = regfun(formula = formula.low
+										, data = valid.data.df
+										, weights = valid.weights
+										, family = family
+										, ...
+										);
+						}
+					, envir = env
+					);	
 				# Upper model
-				Logger(message = "Upper model", from = "mreg", line = 111, level = 2);
-				mod.upper = regfun(as.formula(paste(Y.names[vy], upperTerm))
-									, data = fulldata.df
-									, weights = curr.weights
-									, family = family[vy]
+				Logger(message = "Upper model", from = "mreg", line = 141, level = 2);
+				evalq({mod.upper = regfun(formula = formula.high
+									, data = valid.data.df
+									, weights = valid.weights
+									, family = family
 									, ...
 									);
+						}
+					, envir = env
+					);	
 				# Set scope for stepwise model search
-				Logger(message = "Set scope for stepwise model search", from = "mreg", line = 118, level = 2);
-				curr.scope = list(lower = mod.lower, upper = mod.upper);
+				Logger(message = "Set scope for stepwise model search", from = "mreg", line = 151, level = 2);
+				evalq({curr.scope = list(lower = mod.lower, upper = mod.upper);}, envir = env);
 			} else {
-				curr.scope = scope;
+				assign("curr.scope", scope, envir = env);
 			}
 			# Stepwise regression
-			Logger(message = "Stepwise regression", from = "mreg", line = 123, level = 2);
-			mod = step(mod.upper, scope = curr.scope, trace = trace, ...);
+			Logger(message = "Stepwise regression", from = "mreg", line = 156, level = 2);
+			assign("trace", trace, envir = env);
+			evalq({mod = step(mod.upper, scope = curr.scope, trace = trace, ...);}, envir = env);
 			# Check the number of regressors used by the model
-			Logger(message = "Check the number of regressors used by the model", from = "mreg", line = 125, level = 2);
-			mod.used.vars = length(colnames(attr(mod$terms, "factors")));
+			Logger(message = "Check the number of regressors used by the model", from = "mreg", line = 159, level = 2);
+			evalq({mod.used.vars = length(colnames(attr(mod$terms, "factors")))}, envir = env);
+			mod.used.vars = get("mod.used.vars", envir = env);
 			if(mod.used.vars > max.vars[vy] && max.vars[vy] > 0) {
+				assign("max.vars", max.vars[vy], envir = env);
 				cat("\n*****************************************************************\n");
-				cat(paste("Performing Model Reduction for variable ", Y.names[vy], ": from ", mod.used.vars, " to ", max.vars, "\n", sep = ""));
+				cat(paste("Performing Model Reduction for variable ", Y.names[vy], ": from ", mod.used.vars, " to ", max.vars[vy], "\n", sep = ""));
 				flush.console();
-				mod = dropn(mod, N = mod.used.vars - max.vars[vy], ...);
+				evalq({mod = dropn(mod, N = mod.used.vars - max.vars, ...)}, envir = env);
 				cat("     => Evaluation completed!\n");
 				cat("*****************************************************************\n");
 			}
+			# Refit the model on the full dataset (including NA)
+			Logger(message = "Refit the model on the full dataset (including NA)", from = "mreg", line = 171, level = 2);
+			evalq({mod = regfun(formula = formula(mod)
+								, data = fulldata.df
+								, weights = curr.weights
+								, family = family
+								, na.action = na.exclude
+								, ...
+								);
+				}
+				, envir = env);
 		}
+		# Extract the model from the environment
+		Logger(message = "Extract the model from the environment", from = "mreg", line = 182, level = 2);
+		mod = get("mod", envir = env);
+		# Modify the call to reflect the actual function used
+		Logger(message = "Modify the call to reflect the actual function used", from = "mreg", line = 184, level = 2);
+		mod$call[[1]] = as.name(model[vy]);
 		# Get fitted values and confidence intervals
-		Logger(message = "Get fitted values and confidence intervals", from = "mreg", line = 136, level = 2);
+		Logger(message = "Get fitted values and confidence intervals", from = "mreg", line = 186, level = 2);
 		mod.fit = predict.reg(mod, ci = ci);
 		# Get model formula
-		Logger(message = "Get model formula", from = "mreg", line = 138, level = 2);
+		Logger(message = "Get model formula", from = "mreg", line = 188, level = 2);
 		mod.formula = formula(mod);
 		# Get model summary
-		Logger(message = "Get model summary", from = "mreg", line = 140, level = 2);
+		Logger(message = "Get model summary", from = "mreg", line = 190, level = 2);
 		mod.summary = summary(mod);
 		# Compute coefficients' weights
-		Logger(message = "Compute coefficients' weights", from = "mreg", line = 142, level = 2);
+		Logger(message = "Compute coefficients' weights", from = "mreg", line = 192, level = 2);
 		coeff.weights = get.lm.weights(mod);
 		# Compute residuals
-		Logger(message = "Compute residuals", from = "mreg", line = 144, level = 2);
+		Logger(message = "Compute residuals", from = "mreg", line = 194, level = 2);
 		mod.residuals = curr.Y - mod.fit[, "fit", drop = FALSE];
 		# Run back testing if required
-		Logger(message = "Run back testing if required", from = "mreg", line = 146, level = 2);
+		Logger(message = "Run back testing if required", from = "mreg", line = 196, level = 2);
 		if(abs(backtest[vy]) > 0) {
 			# Define development and validation data samples
-			Logger(message = "Define development and validation data samples", from = "mreg", line = 148, level = 2);
+			Logger(message = "Define development and validation data samples", from = "mreg", line = 198, level = 2);
 			if(backtest[vy] > 0) {
 				dev.idx = 1:backtest[vy];
 				test.idx = (backtest[vy]+1):Ny;
@@ -1697,22 +1933,38 @@ mreg = function(Y
 				test.idx = 1:abs(backtest[vy]);
 			}
 			# Model develoment data frame
-			Logger(message = "Model develoment data frame", from = "mreg", line = 156, level = 2);
-			dev.data.df = fulldata.df[dev.idx, drop = FALSE];
+			Logger(message = "Model develoment data frame", from = "mreg", line = 206, level = 2);
+			dev.data.df = fulldata.df[dev.idx, ,drop = FALSE];
 			# Model validation data frame
-			Logger(message = "Model validation data frame", from = "mreg", line = 158, level = 2);
-			test.data.df = fulldata.df[test.idx, drop = FALSE];
+			Logger(message = "Model validation data frame", from = "mreg", line = 208, level = 2);
+			test.data.df = fulldata.df[test.idx, ,drop = FALSE];
 			# Fit the model on the development sample
-			Logger(message = "Fit the model on the development sample", from = "mreg", line = 160, level = 2);
-			mod.dev = regfun(mod.formula, data = dev.data.df, ...);
+			Logger(message = "Fit the model on the development sample", from = "mreg", line = 210, level = 2);
+			assign("mod.formula", mod.formula, envir = env);
+			assign("dev.data.df", dev.data.df, envir = env);
+			evalq({mod.dev = regfun(formula = mod.formula
+									, data = dev.data.df
+									, na.action = na.exclude
+									, ...
+									);
+				}
+				, envir = env
+				);
+			mod.dev = get("mod.dev", envir = env);
+			# Compute prediction on the full data sample (development + validation)
+			Logger(message = "Compute prediction on the full data sample (development + validation)", from = "mreg", line = 222, level = 2);
 			fcast = predict.reg(mod.dev, newdata = fulldata.df, ci = ci);
+			# Compute residuals of the back-testing model
+			Logger(message = "Compute residuals of the back-testing model", from = "mreg", line = 224, level = 2);
 			fcast.residuals = curr.Y - fcast[, "fit", drop = FALSE];
 		} else {
+			# No back testing required
+			Logger(message = "No back testing required", from = "mreg", line = 227, level = 2);
 			fcast = NULL;
 			fcast.residuals = NULL;
 		}
 		# Construct result
-		Logger(message = "Construct result", from = "mreg", line = 168, level = 2);
+		Logger(message = "Construct result", from = "mreg", line = 231, level = 2);
 		res[[vy]] = list(lm = mod
 						, summary = mod.summary
 						, formula = mod.formula
@@ -1723,7 +1975,7 @@ mreg = function(Y
 						, residuals = mod.residuals
 						, linear.target = if(model[vy] == "lm") curr.Y else mod$family$linkfun(curr.Y) 
 						, linear.predictors = predict.reg(mod, ci = ci, mode = "link")
-						, linear.residuals = mod$residuals
+						, linear.residuals = as.matrix(residuals(mod))
 						, ci = ci
 						, model.type = model[vy]
 						, family = family[vy]
@@ -1734,18 +1986,27 @@ mreg = function(Y
 						, backtest = backtest[vy]
 					   );
 		# Assign class to the linear model object
-		Logger(message = "Assign class to the linear model object", from = "mreg", line = 189, level = 2);
+		Logger(message = "Assign class to the linear model object", from = "mreg", line = 252, level = 2);
 		class(res[[vy]]) = "reg";
+		attr(res[[vy]], "Y.name") = Y.names[vy];
+		attr(res[[vy]], "X.name") = X.names;
+		attr(res[[vy]], "validRows") = validRows;
+		attr(res[[vy]], "N") = Ny;
 	}
 	# Assign class to the result
-	Logger(message = "Assign class to the result", from = "mreg", line = 192, level = 1);
+	Logger(message = "Assign class to the result", from = "mreg", line = 259, level = 1);
 	class(res) = "mreg";
+	attr(res, "N") = Ny;
+	attr(res, "validRows") = validRows;
+	attr(res, "Y.names") = Y.names;
+	attr(res, "X.names") = X.names;
+	attr(res, "intercept") = intercept;
 	# Plot results if required
-	Logger(message = "Plot results if required", from = "mreg", line = 194, level = 1);
+	Logger(message = "Plot results if required", from = "mreg", line = 266, level = 1);
     if(plot)
-        plot(res, ...);
+        plot(res, theme.params = theme.params, overrides = overrides, ...);
 	# Return result
-	Logger(message = "Return result", from = "mreg", line = 197, level = 1);
+	Logger(message = "Return result", from = "mreg", line = 269, level = 1);
     res		
 }
 print.mreg = function(x, ...) {
@@ -1759,26 +2020,175 @@ print.mreg = function(x, ...) {
 	}
 }
 summary.mreg = function(object, ...) {
+	# Get number of regression model
+	Logger(message = "Get number of regression model", from = "summary.mreg", line = 2, level = 1);
 	V = length(object);
 	v = 0;
+	# Loop through each model
+	Logger(message = "Loop through each model", from = "summary.mreg", line = 5, level = 1);
 	while(v < V) {
 		v = v + 1;
+		# Compute summary
+		Logger(message = "Compute summary", from = "summary.mreg", line = 8, level = 2);
 		cat("\n===========================================\n");
 		summary(object[[v]])
 		cat("===========================================\n");
 	}
 }
+residuals.mreg = function(object, na.rm = FALSE, ...) {
+	# Get number of regression models
+	Logger(message = "Get number of regression models", from = "residuals.mreg", line = 2, level = 1);
+	V = length(object);
+	# Determine the number of rows to return
+	Logger(message = "Determine the number of rows to return", from = "residuals.mreg", line = 4, level = 1);
+	if(na.rm) {
+		# Remove NA entries
+		Logger(message = "Remove NA entries", from = "residuals.mreg", line = 6, level = 1);
+		N = sum(attr(object, "validRows"));
+	} else {
+		# Include NA entries (if any)
+		Logger(message = "Include NA entries (if any)", from = "residuals.mreg", line = 9, level = 1);
+		N = attr(object, "N");
+	}
+	res = matrix(NA, nrow = N, ncol = V);
+	colnames(res) = attr(object, "Y.names");
+	v = 0;
+	# Loop through each model
+	Logger(message = "Loop through each model", from = "residuals.mreg", line = 15, level = 1);
+	while(v < V) {
+		v = v + 1;
+		# Extract residuals
+		Logger(message = "Extract residuals", from = "residuals.mreg", line = 18, level = 2);
+		res[, v] = residuals(object[[v]], na.rm = na.rm, ...);
+	}
+	# Return result
+	Logger(message = "Return result", from = "residuals.mreg", line = 21, level = 1);
+	res
+}
+weights.mreg = function(object, na.rm = FALSE, ...) {
+	# Get number of regression models
+	Logger(message = "Get number of regression models", from = "weights.mreg", line = 2, level = 1);
+	V = length(object);
+	# Determine the number of rows to return
+	Logger(message = "Determine the number of rows to return", from = "weights.mreg", line = 4, level = 1);
+	if(na.rm) {
+		# Remove NA entries
+		Logger(message = "Remove NA entries", from = "weights.mreg", line = 6, level = 1);
+		N = sum(attr(object, "validRows"));
+	} else {
+		# Include NA entries (if any)
+		Logger(message = "Include NA entries (if any)", from = "weights.mreg", line = 9, level = 1);
+		N = attr(object, "N");
+	}
+	# Declare output matrix
+	Logger(message = "Declare output matrix", from = "weights.mreg", line = 12, level = 1);
+	res = matrix(NA, nrow = N, ncol = V);
+	colnames(res) = attr(object, "Y.names");
+	v = 0;
+	# Loop through each model
+	Logger(message = "Loop through each model", from = "weights.mreg", line = 16, level = 1);
+	while(v < V) {
+		v = v + 1;
+		# Extract residuals
+		Logger(message = "Extract residuals", from = "weights.mreg", line = 19, level = 2);
+		w = weights(object[[v]], na.rm = na.rm, ...);
+		if(!is.null(w))
+			res[, v] = w;
+	}
+	# Return result
+	Logger(message = "Return result", from = "weights.mreg", line = 24, level = 1);
+	res
+}
+coef.mreg = function(object, ...) {
+	# Get number of regression models
+	Logger(message = "Get number of regression models", from = "coef.mreg", line = 2, level = 1);
+	V = length(object);
+	# Extract attributes
+	Logger(message = "Extract attributes", from = "coef.mreg", line = 4, level = 1);
+	intercept = any(attr(object, "intercept"));
+	Y.names = attr(object, "Y.names");
+	X.names = attr(object, "X.names");
+	# Get total number of coefficients
+	Logger(message = "Get total number of coefficients", from = "coef.mreg", line = 8, level = 1);
+	Ncoeff = length(X.names) + intercept;
+	# Declare output
+	Logger(message = "Declare output", from = "coef.mreg", line = 10, level = 1);
+	res = matrix(0, nrow = Ncoeff, ncol = V);
+	colnames(res) = Y.names;
+	rownames(res) = c("(Intercept)"[intercept], X.names);
+	v = 0;
+	# Loop through each model
+	Logger(message = "Loop through each model", from = "coef.mreg", line = 15, level = 1);
+	while(v < V) {
+		v = v + 1;
+		# Add model coefficient to result
+		Logger(message = "Add model coefficient to result", from = "coef.mreg", line = 18, level = 2);
+		cf = coef(object[[v]], ...);
+		res[rownames(cf), v] = cf;
+	}
+	# Return result
+	Logger(message = "Return result", from = "coef.mreg", line = 22, level = 1);
+	res
+}
 print.reg = function(x, ...) {
+	# Show formula
+	Logger(message = "Show formula", from = "print.reg", line = 2, level = 1);
 	cat("Formula: ", deparse(x$formula), "\n");
 	show(x$lm)
 }
 summary.reg = function(object, ...) {
+	# Show summary
+	Logger(message = "Show summary", from = "summary.reg", line = 2, level = 1);
 	cat("Formula: ", deparse(object$formula), "\n");
 	show(object$summary)
 }
-norm.fit = function(x, n = 200, range = NULL, ...) {
-	mi = mean(x);
-	sigma = sd(x);
+residuals.reg = function(object, na.rm = FALSE, ...) {
+	# Determine the number of rows to return
+	Logger(message = "Determine the number of rows to return", from = "residuals.reg", line = 2, level = 1);
+	if(na.rm) {
+		# Remove NA entries
+		Logger(message = "Remove NA entries", from = "residuals.reg", line = 4, level = 1);
+		idx = attr(object, "validRows");
+	} else {
+		# Include NA entries (if any)
+		Logger(message = "Include NA entries (if any)", from = "residuals.reg", line = 7, level = 1);
+		idx = seq(1, attr(object, "N"));
+	}
+	# Extract regression residuals
+	Logger(message = "Extract regression residuals", from = "residuals.reg", line = 10, level = 1);
+	res = object$linear.residuals[idx, , drop = FALSE];
+	# Return result
+	Logger(message = "Return result", from = "residuals.reg", line = 12, level = 1);
+	res
+}
+weights.reg = function(object, na.rm = FALSE, ...) {
+	# Extract observation weights
+	Logger(message = "Extract observation weights", from = "weights.reg", line = 2, level = 1);
+	w = object$weights;
+	# Determine the number of rows to return
+	Logger(message = "Determine the number of rows to return", from = "weights.reg", line = 4, level = 1);
+	if(!is.null(w) && na.rm) {
+		# Remove NA entries
+		Logger(message = "Remove NA entries", from = "weights.reg", line = 6, level = 1);
+		idx = attr(object, "validRows");
+		w = w[idx, , drop = FALSE];
+	}
+	# Return result
+	Logger(message = "Return result", from = "weights.reg", line = 10, level = 1);
+	w
+}
+coef.reg = function(object, ...) {
+	# Extract Coefficients
+	Logger(message = "Extract Coefficients", from = "coef.reg", line = 2, level = 1);
+	res = as.matrix(coef(object$lm));
+	colnames(res) = attr(object, "Y.name");
+	# Return result
+	Logger(message = "Return result", from = "coef.reg", line = 5, level = 1);
+	res
+}
+norm.fit = function(x, n = 200, ...) {
+	mi = mean(x, na.rm = TRUE);
+	sigma = sd(x, na.rm = TRUE);
 	x = NULL;
 	y = NULL;
 	if(!is.null(n)) {
@@ -1807,19 +2217,18 @@ plot.reg = function(x
 					, theme.params = getCurrentTheme()
 					, overrides = list(...)
 					, ...) {
-	opar = par("mfrow");
+	opar = par(mfrow = c(2, 2));
 	on.exit(par(opar));
-	par(mfrow = c(2, 2));
 	# Extract model weights
-	Logger(message = "Extract model weights", from = "plot.reg", line = 5, level = 1);
+	Logger(message = "Extract model weights", from = "plot.reg", line = 4, level = 1);
 	weights = weights(x$lm);
 	if(is.null(weights))
 		weights = 1;
 	# Error term of the linear model (Residuals)
-	Logger(message = "Error term of the linear model (Residuals)", from = "plot.reg", line = 9, level = 1);
+	Logger(message = "Error term of the linear model (Residuals)", from = "plot.reg", line = 8, level = 1);
 	lin.err = sqrt(weights) * x$linear.residuals;
 	# Fitted Values of the linear model
-	Logger(message = "Fitted Values of the linear model", from = "plot.reg", line = 11, level = 1);
+	Logger(message = "Fitted Values of the linear model", from = "plot.reg", line = 10, level = 1);
 	lin.fit = x$linear.predictors;
 	mode = match.arg(mode, choice = c("response", "link"));
 	if(mode == "response") {
@@ -1836,7 +2245,7 @@ plot.reg = function(x
 	ci.pct = sprintf("%.5g%%", x$ci*100);
 	legend = c(Y.name, x$formula, paste("C.I.", ci.pct));
 	# Plot Fitted vs actual
-	Logger(message = "Plot Fitted vs actual", from = "plot.reg", line = 27, level = 1);
+	Logger(message = "Plot Fitted vs actual", from = "plot.reg", line = 26, level = 1);
 	cplot(plotmat
 		, col = theme.params[["col"]][c(1, 2, 3, 3)]
 		, legend = legend
@@ -1846,11 +2255,12 @@ plot.reg = function(x
 		, ...
 		)
 	# Residuals vs Fitted
-	Logger(message = "Residuals vs Fitted", from = "plot.reg", line = 36, level = 1);
+	Logger(message = "Residuals vs Fitted", from = "plot.reg", line = 35, level = 1);
 	cplot(lin.err
 		, base = lin.fit[, 1]
 		, type = "p"
 		, legend = "Residuals"
+		, theme.params = theme.params
 		, xtitle = "Fitted Values"
 		, main = "Residuals Analysis"
 		, xlab.srt = 0
@@ -1858,7 +2268,8 @@ plot.reg = function(x
 		);
 	# Add smoothed line
 	Logger(message = "Add smoothed line", from = "plot.reg", line = 46, level = 1);
-	smoothed = lowess(lin.fit[, 1], lin.err, f = 2/3, iter = 3);
+	validRows = is.finite(lin.err);
+	smoothed = lowess(lin.fit[validRows, 1], lin.err[validRows], f = 2/3, iter = 3);
 	cplot(smoothed$y, base = smoothed$x
 			, col = theme.params[["col"]][2]
 			, show.legend = FALSE
@@ -1866,21 +2277,23 @@ plot.reg = function(x
 			, ...
 			)
 	# Q-Q Plot
-	Logger(message = "Q-Q Plot", from = "plot.reg", line = 54, level = 1);
-	qq = qqnorm(lin.err, plot.it = FALSE)
+	Logger(message = "Q-Q Plot", from = "plot.reg", line = 55, level = 1);
+	qq = qqnorm(lin.err[validRows], plot.it = FALSE)
 	cplot(qq$y, base = qq$x
 			, type="p"
 			, main = "Normal Q-Q Plot"
 			, xtitle = "Theoretical Quantiles"
+			, theme.params = theme.params
 			, xlab.srt = 0
 			, show.legend = FALSE
 			)
 	qqline(qq$y, col = theme.params[["col"]][1])
 	# Residuals Distribution
-	Logger(message = "Residuals Distribution", from = "plot.reg", line = 64, level = 1);
+	Logger(message = "Residuals Distribution", from = "plot.reg", line = 66, level = 1);
 	chist(lin.err
 			, density = "normal"
 			, main = "Residuals Distribution"
+			, theme.params = theme.params
 			, ...
 			);
 }
@@ -2007,8 +2420,10 @@ splitWindow = function(N
 	colnames(res) = c("start.idx", "end.idx");
 	rownames(res) = paste(labels[start.idx], labels[end.idx], sep = " ~ ");
 	attr(res, "overlap") = overlap;
+	attr(res, "mode") = mode;
+	attr(res, "direction") = direction;
 	# Return result
-	Logger(message = "Return result", from = "splitWindow", line = 91, level = 1);
+	Logger(message = "Return result", from = "splitWindow", line = 93, level = 1);
 	res
 }
 sensAnalysis = function(X, ...) {
@@ -2020,7 +2435,7 @@ sensAnalysis.default = function(X
 								, ...
 								) {
 	if(!inherits(X, c("lm", "glm")))
-		stop("Default method expect input to be 'lm' or 'glm' object");
+		stop("Default method expects input to be 'lm' or 'glm' object");
 	if(length(coef(X)) == 0)
 		stop("Model has no intercept or regressors!");
 	# Number of data points
@@ -2075,51 +2490,181 @@ sensAnalysis.default = function(X
 	pvalues = coeffs;
 	# Extract Environment used for call evaluation
 	Logger(message = "Extract Environment used for call evaluation", from = "sensAnalysis.default", line = 47, level = 1);
-	env = environment(X$call[[2]]);
+	env = attr(terms(X), ".Environment");
 	# Assign to the environment variables needed for updating the call.
 	Logger(message = "Assign to the environment variables needed for updating the call.", from = "sensAnalysis.default", line = 49, level = 1);
 	assign("start.idx", start.idx, env = env);
 	assign("end.idx", end.idx, env = env);
+	# Disable warnings (will restored on exit)
+	Logger(message = "Disable warnings (will restored on exit)", from = "sensAnalysis.default", line = 52, level = 1);
+	owarn = options(warn = -1);
+	on.exit(options(owarn));
 	n = 0;
 	while(n < TotIterations) {
 		n = n + 1;
 		# Update environment
-		Logger(message = "Update environment", from = "sensAnalysis.default", line = 55, level = 2);
+		Logger(message = "Update environment", from = "sensAnalysis.default", line = 58, level = 2);
 		assign("n", n, env = env);
 		# Update the call
-		Logger(message = "Update the call", from = "sensAnalysis.default", line = 57, level = 2);
+		Logger(message = "Update the call", from = "sensAnalysis.default", line = 60, level = 2);
 		curr.call = update(X, subset = c(start.idx[n]:end.idx[n]), evaluate = FALSE);
 		# Evaluate the call (refit the model)
-		Logger(message = "Evaluate the call (refit the model)", from = "sensAnalysis.default", line = 59, level = 2);
+		Logger(message = "Evaluate the call (refit the model)", from = "sensAnalysis.default", line = 62, level = 2);
 		curr.mod = eval(curr.call, env);
 		# Extract coefficients
-		Logger(message = "Extract coefficients", from = "sensAnalysis.default", line = 61, level = 2);
+		Logger(message = "Extract coefficients", from = "sensAnalysis.default", line = 64, level = 2);
 		coeffs[n, ] = coef(curr.mod);
 		# Compute coefficient weights 
-		Logger(message = "Compute coefficient weights ", from = "sensAnalysis.default", line = 63, level = 2);
+		Logger(message = "Compute coefficient weights ", from = "sensAnalysis.default", line = 66, level = 2);
 		weights[n, ] = get.lm.weights(curr.mod, pct = TRUE);
 		# Extract P-Values
-		Logger(message = "Extract P-Values", from = "sensAnalysis.default", line = 65, level = 2);
-		pvalues[n, ] = coef(summary(curr.mod))[, 4];
+		Logger(message = "Extract P-Values", from = "sensAnalysis.default", line = 68, level = 2);
+		pval = coef(summary(curr.mod))[, 4, drop = FALSE];
+		pvalues[n, rownames(pval)] = pval;
 	}	
 	# Collate results
-	Logger(message = "Collate results", from = "sensAnalysis.default", line = 68, level = 1);
+	Logger(message = "Collate results", from = "sensAnalysis.default", line = 72, level = 1);
 	res = list(coeffs = coeffs
 				, weights = weights
 				, pvalues = pvalues
 				);
 	class(res) = "sensAnalysis";
+	attr(res, "direction") = attr(win.idx, "direction");
+	attr(res, "mode") = attr(win.idx, "mode");
+	attr(res, "hasIntercept") = hasIntercept;
 	# Plot results if required
-	Logger(message = "Plot results if required", from = "sensAnalysis.default", line = 74, level = 1);
+	Logger(message = "Plot results if required", from = "sensAnalysis.default", line = 81, level = 1);
 	if(plot)
 		plot(res, ...);
 	# Return result
-	Logger(message = "Return result", from = "sensAnalysis.default", line = 77, level = 1);
+	Logger(message = "Return result", from = "sensAnalysis.default", line = 84, level = 1);
 	res;
 }
 sensAnalysis.lm = function(X, ...) {
+	# Sensitivity Analysis for 'lm/glm' object. Call default implementation method.
+	Logger(message = "Sensitivity Analysis for 'lm/glm' object. Call default implementation method.", from = "sensAnalysis.lm", line = 2, level = 1);
 	sensAnalysis.default(X, ...);
 }
 sensAnalysis.reg = function(X, ...) {
+	# Sensitivity Analysis for 'reg' object. Call default implementation method.
+	Logger(message = "Sensitivity Analysis for 'reg' object. Call default implementation method.", from = "sensAnalysis.reg", line = 2, level = 1);
 	sensAnalysis.default(X$lm, ...);
+}
+sensAnalysis.mreg = function(X, ...) {
+	# Extract number of regression models
+	Logger(message = "Extract number of regression models", from = "sensAnalysis.mreg", line = 2, level = 1);
+	N = length(X);
+	# Declare output
+	Logger(message = "Declare output", from = "sensAnalysis.mreg", line = 4, level = 1);
+	res = vector("list", N);
+	n = 0;
+	# Perform sensitivity analysis on each model
+	Logger(message = "Perform sensitivity analysis on each model", from = "sensAnalysis.mreg", line = 7, level = 1);
+	while(n < N) {
+		n = n + 1
+		res[[n]] = sensAnalysis.reg(X[[n]], ...);
+	}
+	# Return result
+	Logger(message = "Return result", from = "sensAnalysis.mreg", line = 12, level = 1);
+	res
+}
+plot.sensAnalysis = function(x
+							, main = NULL
+							, xlabels = rownames(x$coeffs)
+							, xtitle = ""
+							, theme.params = getCurrentTheme()
+							, ...
+							) {
+	# Number of data points
+	Logger(message = "Number of data points", from = "plot.sensAnalysis", line = 2, level = 1);
+	N = NROW(x$coeffs);
+	# Extract number of regression coefficients
+	Logger(message = "Extract number of regression coefficients", from = "plot.sensAnalysis", line = 4, level = 1);
+	Ncoeffs = NCOL(x$coeffs);
+	onecoeff = Ncoeffs == 1;
+	# Extract Intercept Information Flag
+	Logger(message = "Extract Intercept Information Flag", from = "plot.sensAnalysis", line = 7, level = 1);
+	hasIntercept = attr(x, "hasIntercept");
+	# Extract margins parameters from the theme
+	Logger(message = "Extract margins parameters from the theme", from = "plot.sensAnalysis", line = 9, level = 1);
+	margins = theme.params[["one.side.margin"]];
+	if(is.null(main)) {
+		# Extract attributes 'mode' and 'direction'
+		Logger(message = "Extract attributes 'mode' and 'direction'", from = "plot.sensAnalysis", line = 12, level = 1);
+		direction = ifelse(attr(x, "direction") == "forward", "Forward", "Backward");
+		mode = ifelse(attr(x, "mode") == "SW", "Sliding Window", "Extended Window");
+		# Set plot title
+		Logger(message = "Set plot title", from = "plot.sensAnalysis", line = 15, level = 1);
+		main = paste("Sensitivity Analysis -", direction, mode);
+	}
+	# Loop through coefficients
+	Logger(message = "Loop through coefficients", from = "plot.sensAnalysis", line = 18, level = 1);
+	n = 0;
+	while(n < Ncoeffs) {
+		n = n + 1;
+		# Open graphics device
+		Logger(message = "Open graphics device", from = "plot.sensAnalysis", line = 22, level = 2);
+		dev.new();
+		if(onecoeff || (hasIntercept && n == 1)) {
+			# Plot only coefficient and P-value
+			Logger(message = "Plot only coefficient and P-value", from = "plot.sensAnalysis", line = 25, level = 2);
+			par(mfrow = c(2,1));
+		} else {
+			# Plot coefficients, weights and P-values
+			Logger(message = "Plot coefficients, weights and P-values", from = "plot.sensAnalysis", line = 28, level = 2);
+			par(mfrow = c(3,1));
+		}			
+		# Reduce margin from the bottom
+		Logger(message = "Reduce margin from the bottom", from = "plot.sensAnalysis", line = 31, level = 2);
+		theme.params[["one.side.margin"]][1] = 1;
+		# Plot Coefficients
+		Logger(message = "Plot Coefficients", from = "plot.sensAnalysis", line = 33, level = 2);
+		cplot(x$coeffs[, n, drop = FALSE]
+				, main = main
+				, theme.params = theme.params
+				, ytitle = "Coefficient"
+				, show.xlabels = FALSE
+				, ...
+				);
+		twoRows = (onecoeff || (hasIntercept && n == 1));
+		# Reduce margin from the top
+		Logger(message = "Reduce margin from the top", from = "plot.sensAnalysis", line = 42, level = 2);
+		theme.params[["one.side.margin"]][3] = 1;
+		if(twoRows) {
+			# Restore margin from the bottom
+			Logger(message = "Restore margin from the bottom", from = "plot.sensAnalysis", line = 45, level = 2);
+			theme.params[["one.side.margin"]][1] = margins[1];
+		}
+		# Plot P-Values and Significance thresholds
+		Logger(message = "Plot P-Values and Significance thresholds", from = "plot.sensAnalysis", line = 48, level = 2);
+		cplot(cbind(x$pvalues[, n, drop = FALSE], 0.001, 0.01, 0.05)
+				, main = ""
+				, theme.params = theme.params
+				, show.xlabels = twoRows
+				, xlabels = xlabels
+				, xtitle = ifelse(twoRows, xtitle, "")
+				, ytitle = "P-Value"
+				, legend = c(colnames(x$pvalues)[n], "C.I.: 0.1% (***)", "C.I.: 1% (**)", "C.I.: 5% (*)")
+				, ...
+				)
+		if(!twoRows) {
+			# Restore margin from the bottom
+			Logger(message = "Restore margin from the bottom", from = "plot.sensAnalysis", line = 60, level = 2);
+			theme.params[["one.side.margin"]][1] = margins[1];
+			# Plot Weights
+			Logger(message = "Plot Weights", from = "plot.sensAnalysis", line = 62, level = 2);
+			cplot(x$weights[, ifelse(hasIntercept, n-1, n), drop = FALSE]
+					, main = ""
+					, theme.params = theme.params
+					, xlabels = xlabels
+					, xtitle = xtitle
+					, ytitle = "Weights"
+					, ylab.suffix = "%"
+					, ...
+					)
+		}
+		# Restore all margins
+		Logger(message = "Restore all margins", from = "plot.sensAnalysis", line = 73, level = 2);
+		theme.params[["one.side.margin"]] = margins
+	}
 }

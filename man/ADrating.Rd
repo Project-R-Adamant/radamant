@@ -9,10 +9,10 @@
 \usage{ADrating(close, high, low, lag)}
 
 \arguments{
-\item{close}{ VECTOR. Close price.}
-\item{high}{ VECTOR. high price.}
-\item{low}{ VECTOR. Low price.}
-\item{lag}{ INTEGER. Number of lag periods.}
+\item{close}{ Vector. Close price.}
+\item{high}{ Vector. high price.}
+\item{low}{ Vector. Low price.}
+\item{lag}{ Integer. Number of lag periods.}
 }
 
 \author{RAdamant Development Team \email{team@r-adamant.org}}

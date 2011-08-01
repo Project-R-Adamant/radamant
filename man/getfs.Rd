@@ -16,12 +16,12 @@ get.fs(symbol = NULL
 }
 
 \arguments{
-\item{symbol}{Stock symbol to download.}
+\item{symbol}{The input stock symbol.}
 \item{SName}{Name that will be assigned to the time series. If NULL (default) the name is retrieved from Yahoo!}
-\item{from}{Date object. The start date of the time series (DEFAULT = as.Date("1950-01-01")).}
-\item{to}{Date object. The end date of the time series (DEFAULT = Sys.Date()).}
-\item{strip.spaces}{LOGICAL. If TRUE, spaces from SName are replaced with the value of strip.char (DEFAULT = TRUE).}
-\item{strip.char}{The character used to replaces spaces in SName (DEFAULT = ".").}
+\item{from}{Date object. The start date of the time series (Default: as.Date("1950-01-01")).}
+\item{to}{Date object. The end date of the time series (Default: Sys.Date()).}
+\item{strip.spaces}{Logical. If TRUE, spaces from SName are replaced with the value of strip.char (Default: TRUE).}
+\item{strip.char}{The character used to replaces spaces in SName (Default: ".").}
 }
 
 \value{

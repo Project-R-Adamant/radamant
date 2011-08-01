@@ -19,12 +19,12 @@ univar(Y
 \item{X}{Matrix containing all independent variables  (one column per variable)}
 \item{stress.period.idx}{Vector of positions specifing the stress regime. 
 If provided, the system will run a modified LS to capture the two regimes}
-\item{Y.logit}{LOGICAL. If TRUE, the dependent variable is transformed using the Logit transform. 
-Results are then transformed back using the inverse Logit. (DEFAULT: FALSE)}
-\item{Y.logit.adj}{Cut-off value. The range of the Y variable is restricted within the interval [Y.logit.adj, 1-Y.logit.adj] (DEFAULT: 0.00005)}
-\item{theme.params}{Theme parameters (DEFAULT: getCurrentTheme())}
-\item{plot}{LOGICAL. If TRUE, results are plotted.}
-\item{overrides}{List of parameters to override the theme. Must match by name the parameters defined by the theme (DEFAULT: list(...)).}
+\item{Y.logit}{Logical. If TRUE, the dependent variable is transformed using the Logit transform. 
+Results are then transformed back using the inverse Logit. (Default: FALSE)}
+\item{Y.logit.adj}{Cut-off value. The range of the Y variable is restricted within the interval [Y.logit.adj, 1-Y.logit.adj] (Default: 0.00005)}
+\item{theme.params}{Theme parameters (Default: getCurrentTheme())}
+\item{plot}{Logical. If TRUE, results are plotted.}
+\item{overrides}{List of parameters to override the theme. Must match by name the parameters defined by the theme (Default: list(...)).}
 \item{...}{Alternative way to quickly override theme parameters.}
 }
 
@@ -50,9 +50,11 @@ univar(Y, X
     , xlabels = parse(text = time.labels)
     # Remove x-labels rotation
     , xlab.srt = 0
-    # Set more space between x-labels and the x-axis line (10% of diff(par("usr")[3:4]))
+    # Set more space between x-labels and the x-axis line 
+        # (10% of diff(par("usr")[3:4]))
     , xlab.offset = 0.1
-    # Set more space between x-title and the x-axis line  (20% of diff(par("usr")[3:4]))
+    # Set more space between x-title and the x-axis line  
+        # (20% of diff(par("usr")[3:4]))
     , xtitle.offset = 0.2
     # Only 4 tickmarks on the y-axis
     , y.ticks = 4

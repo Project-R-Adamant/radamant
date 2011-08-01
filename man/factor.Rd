@@ -20,7 +20,7 @@ extrBreak(var, Factors)
 \arguments{
 \item{X}{ Numeric input matrix.}
 \item{nseg}{ INTEGER / VECTOR. Number of segments to factorise numerical variables.}
-\item{seg.type}{ CHARACTER. Type of segments to create. (Default = "equal frequencies")}
+\item{seg.type}{ CHARACTER. Type of segments to create. (Default: "equal frequencies")}
 \item{na.replace}{ CHARACTER / NUMERIC. Value to replace missing. \cr 
 If NULL missing values are not considered in the computation.}
 \item{var}{ Character. Name(s) of the variable(s) for which to extract the breaks.}

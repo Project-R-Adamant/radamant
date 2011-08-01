@@ -7,20 +7,32 @@
 \description{Workhorse function for 3D automatic plotting}
 
 \usage{
-cplot3d(x, y, z, fill = c("simple", "colormap", "gradient"), 
-main = "", xtitle = "", ytitle = "", ztitle = "", 
-xlim = range(x) + 0.1*diff(range(x))*c(-1, 1),
-ylim = range(y) + 0.1*diff(range(y))*c(-1, 1), 
-zlim = range(z, na.rm = TRUE) + 0.1*diff(range(z, na.rm = TRUE))*c(-1, 1), 
-pre = NULL, post = NULL, 
-theme.params = getCurrentTheme(),
-overrides = list(...), new.device = FALSE, 
-append = FALSE, axis = TRUE,
-xlabels = NULL, ylabels = NULL,
-zlabels = NULL,
-show.xlabels = TRUE, show.ylabels = TRUE, 
-show.zlabels = TRUE, show.xticks = TRUE, show.yticks = TRUE,
-show.zticks = TRUE, ...) 
+cplot3d(x, y, z
+		, fill = c("simple", "colormap", "gradient")
+		, main = ""
+		, xtitle = ""
+		, ytitle = ""
+		, ztitle = ""
+		, xlim = range(x) + 0.1*diff(range(x))*c(-1, 1)
+		, ylim = range(y) + 0.1*diff(range(y))*c(-1, 1)
+		, zlim = range(z, na.rm = TRUE) + 0.1*diff(range(z, na.rm = TRUE))*c(-1, 1)
+		, pre = NULL
+		, post = NULL
+		, theme.params = getCurrentTheme()
+		, overrides = list(...)
+		, new.device = FALSE
+		, append = FALSE
+		, axis = TRUE
+		, xlabels = NULL
+		, ylabels = NULL
+		, zlabels = NULL
+		, show.xlabels = TRUE
+		, show.ylabels = TRUE
+		, show.zlabels = TRUE
+		, show.xticks = TRUE
+		, show.yticks = TRUE
+		, show.zticks = TRUE
+		, ...) 
 }
 
 \arguments{ 

@@ -5,7 +5,8 @@
 \usage{
 \method{print}{sme}(x, ...) 
 }
-\arguments{ \item{x}{ OBJECT of class "sme".}\item{...}{ Further arguments to or from other
+\arguments{ \item{x}{ OBJECT of class "sme".}
+\item{...}{ Further arguments to or from other
 methods}}
 \author{RAdamant Development Team \email{team@r-adamant.org}}
 \note{TO BE COMPLETED}

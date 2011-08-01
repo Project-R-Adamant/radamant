@@ -9,10 +9,10 @@
 \item{keep}{ CHARACTER. Vector of variables to keep in memory.}
 \item{env}{ Environment from which objects are removed. Defaults to the environment from which this
 function is called.}
-\item{gc}{ LOGICAL. If TRUE, garbage collection is performed to release memory. (Default = TRUE)}
+\item{gc}{ Logical. If TRUE, garbage collection is performed to release memory. (Default = TRUE)}
 }
 
-\value{VOID}
+\value{Void}
 
 \author{RAdamant Development Team \email{team@r-adamant.org}}
 \note{TO BE COMPLETED}

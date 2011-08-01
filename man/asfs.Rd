@@ -25,6 +25,9 @@ The following attributes are attached to the object:
 # Load sample financial series data
 data(ex_fs)
 # Subset data and create another fs object
-as.fs(as.data.frame(ex_fs[1:10,]), SName = "My Financial Series", "My Symbol")
+as.fs(as.data.frame(ex_fs[1:10,])
+    , SName = "My Financial Series"
+    , Symbol = "My Symbol"
+    )
 
 }

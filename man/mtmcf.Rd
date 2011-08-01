@@ -20,10 +20,11 @@
 
 \arguments{ 
 \item{x}{ Instance of class 'mcf'}
-\item{theme.params}{ Theme parameters (DEFAULT: getCurrentTheme())}
-\item{xtitle}{ Title for the x-axis (DEFAULT: "Lag")}
-\item{ytitle}{ Title for the y-axis (DEFAULT: expression(rho))}
-\item{overrides}{ List of parameters to override the theme. Must match by name the parameters defined by the theme (DEFAULT: list(...))}
+\item{theme.params}{ Theme parameters (Default: getCurrentTheme())}
+\item{xtitle}{ Title for the x-axis (Default: "Lag")}
+\item{ytitle}{ Title for the y-axis (Default: expression(rho))}
+\item{overrides}{ List of parameters to override the theme. 
+                \cr Must match by name the parameters defined by the theme (Default: list(...))}
 \item{...}{Alternative way to quickly override theme parameters}
 }
 
@@ -31,7 +32,11 @@
 \examples{
 \dontrun{
 # Dow Jones
-DJ = get.fs("^DJI", SName = "DowJones", from=as.Date("2008-06-01"), to=as.Date("2009-04-01"));
+DJ = get.fs("^DJI"
+           , SName = "DowJones"
+           , from = as.Date("2008-06-01")
+           , to = as.Date("2009-04-01")
+           );
 # Compute Returns
 RDJ = Ret(DJ, na.rm = TRUE)
 

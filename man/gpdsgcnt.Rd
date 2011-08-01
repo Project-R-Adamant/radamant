@@ -5,7 +5,12 @@
 
 \usage{gpd.sigma.constraint(parms, type = c("left", "right", "both"), 
 Xtail, trsh = 0, ...) }
-\arguments{\item{parms}{ parms}\item{type}{ type}\item{Xtail}{ Xtail}\item{trsh}{ trsh}\item{...}{
+\arguments{
+\item{parms}{ parms}
+\item{type}{ type}
+\item{Xtail}{ Xtail}
+\item{trsh}{ trsh}
+\item{...}{
 Further arguments to or from other methods.}}
 \author{RAdamant Development Team \email{team@r-adamant.org}}
 \note{TO BE COMPLETED}

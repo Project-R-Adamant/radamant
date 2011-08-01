@@ -5,10 +5,9 @@
 size win.size[j].}
 \usage{ttma(X, win.size = NROW(X), alpha = 0.7, plot = FALSE, ...) }
 \arguments{ \item{X}{ Matrix of data series (one column per variable).}
-\item{win.size}{ vector of moving average window sizes (lags) to be applied on the data X. (DEFAULT
-= NROW(X)). }
-\item{alpha}{ weight in the interval [0, 1]. (DEFAULT: 0.7).}
-\item{plot}{ LOGICAL. Return plot.}
+\item{win.size}{ vector of moving average window sizes (lags) to be applied on the data X. (Default: NROW(X)). }
+\item{alpha}{ weight in the interval [0, 1]. (Default: 0.7).}
+\item{plot}{Logical. Return plot.}
 \item{...}{ Additional parameters accepted by function ema.}
 }
 \details{For financial time series (class = 'fs'), only 'Close' column is processed. \cr

@@ -6,9 +6,15 @@
 \usage{forcidx(X, Volume, lag = 5, sth = TRUE, 
 sth.lag = 13, mov = sma, plot = FALSE, ...) }
 
-\arguments{ \item{X}{ X}\item{Volume}{ Volume}\item{lag}{ INTEGER. Number of lag
-periods.}\item{sth}{ sth}
-\item{sth.lag}{ sth.lag}\item{mov}{ mov}\item{plot}{ LOGICAL. If TRUE plot is returned.}\item{...}{
+\arguments{ \item{X}{ X}
+\item{Volume}{ Volume}
+\item{lag}{Integer. Number of lag
+periods.}
+\item{sth}{ sth}
+\item{sth.lag}{ sth.lag}
+\item{mov}{ mov}
+\item{plot}{Logical. If TRUE plot is returned.}
+\item{...}{
 Further arguments to or from othermethods}}
 
 

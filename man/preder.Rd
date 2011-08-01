@@ -14,17 +14,23 @@
 
 \usage{
 pred_error(target, pred, pc = FALSE) 
+
 av_er(target, pred, pc=FALSE)
+
 abs_avdi(target, pred, pc=FALSE)
+
 mse(target, pred)
+
 sde(target, pred)
+
 track_sign(target, pred)
+
 track_sign_exp(target, pred)
 }
 
 \arguments{
-\item{target}{ VECTOR. Observed target value}
-\item{pred}{ VECTOR. Predicted values}
+\item{target}{Vector. Observed target value}
+\item{pred}{Vector. Predicted values}
 \item{pc}{ Logical. If TRUE return results in percentage}
 }
 

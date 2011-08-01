@@ -23,11 +23,11 @@ FFT(x, ...)
 
 \arguments{ 
 \item{x}{Matrix of data series (one column per variable).}
-\item{Fs}{Sampling frequency (DEFAULT: 1).}
-\item{half}{LOGICAL. If TRUE, half spectrum indices are computed.}
-\item{window}{Function or character name of the window used to smooth the data (DEFAULT: NULL. Results in rectangular window).}
-\item{plot}{LOGICAL. If TRUE, frequency spectrum is plotted.}
-\item{optimised}{LOGICAL. If TRUE, the number of FFT evaluation points is the next integer (power of 2) that allows the fast computation}
+\item{Fs}{Sampling frequency (Default: 1).}
+\item{half}{Logical. If TRUE, half spectrum indices are computed.}
+\item{window}{Function or character name of the window used to smooth the data (Default: NULL. Results in rectangular window).}
+\item{plot}{Logical. If TRUE, frequency spectrum is plotted.}
+\item{optimised}{Logical. If TRUE, the number of FFT evaluation points is the next integer (power of 2) that allows the fast computation}
 \item{...}{Additional parameters passed to the plot (in the default implementation)}
 }
 
@@ -48,17 +48,32 @@ data(ex_fs)
 FFT(ex_fs)
 
 # Frequency Analysis - Half spectrum (right side) and use blackman windowing, remove area shading
-FFT(ex_fs, half = TRUE, window = blackman, shaded = FALSE)
+FFT(ex_fs
+    , half = TRUE
+    , window = blackman
+    , shaded = FALSE)
 
 # Show periodicity instead of frequency, and use hamming window
-FFT(ex_fs, half = TRUE, window = hamming, show.periodicity = TRUE)
+FFT(ex_fs
+    , half = TRUE
+    , window = hamming
+    , show.periodicity = TRUE)
 
 # Use kaiser window, zoom in to show only 10% of the half frequency spectrum, use semilog axis (decibel)
-FFT(ex_fs, half = TRUE, window = kaiser, show.periodicity = TRUE, zoom = 10, semilog = TRUE)
+FFT(ex_fs
+    , half = TRUE
+    , window = kaiser
+    , show.periodicity = TRUE
+    , zoom = 10
+    , semilog = TRUE)
 
 # Multiple FFT on matrix input. 
 # Use Bartlet-Hann window, zoom in to show only 20% of the full frequency spectrum, use semilog axis (decibel)
-FFT(ex_fs[,], window = barthann, zoom = 20, semilog = TRUE, shaded = FALSE)
+FFT(ex_fs[,]
+    , window = barthann
+    , zoom = 20
+    , semilog = TRUE
+    , shaded = FALSE)
 
 }
 

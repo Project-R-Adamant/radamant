@@ -7,7 +7,7 @@ get.acf.ci(X, ci = 0.95)
 }
 \arguments{
 \item{X}{Instance of class 'acf' as returned by functions acf, pacf, ccf}
-\item{ci}{Confidence interval required (DEFAULT: 0.95)}
+\item{ci}{Confidence interval required (Default: 0.95)}
 }
 \value{
 A vector containing the two symmetrical confidence intervals.

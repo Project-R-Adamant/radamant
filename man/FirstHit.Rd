@@ -19,7 +19,7 @@ FirstHit(B, S0, mi, sigma, geom=FALSE, nsim=500, plot=FALSE)
 \item{sigma}{ Volatility value.}
 \item{geom}{ Logical. Type of BM to simulate, if TRUE simulate Geometric BM else Standard.}
 \item{nsim}{ Integer. Number of simulations; needed to produce the plot}
-\item{plot}{ LOGICAL. If TRUE plot with simulated BM and the barrier is returned.}
+\item{plot}{Logical. If TRUE plot with simulated BM and the barrier is returned.}
 }
 
 \value{
@@ -32,7 +32,8 @@ FirstHit(B, S0, mi, sigma, geom=FALSE, nsim=500, plot=FALSE)
 \seealso{ \code{\link{PDFHit}} }
 
 \examples{
-# Calculate the probability to hit the barrier 5 for increasing values of the drift.
+# Calculate the probability to hit the barrier 5 
+# for increasing values of the drift.
 ProbHit(B=1, S0=5, mi=0.05, sigma=1)
 ProbHit(B=1, S0=5, mi=0.1, sigma=1)
 ProbHit(B=1, S0=5, mi=0.3, sigma=1)
@@ -46,7 +47,8 @@ S0 = 0
 mi = 1
 FirstHit(B=3, S0=S0, mi=mi, sigma=0.5, geom=FALSE, nsim=500, plot=TRUE)
 
-# expected time before hitting a positive barrier (B=1) if the process has a negative drift ...
+# expected time before hitting a positive barrier (B=1) 
+# if the process has a negative drift ...
 FirstHit(B=1, S0=S0, mi=-1, sigma=0.5, geom=FALSE)
 # ... of course you will wait forever...
 

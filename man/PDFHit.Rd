@@ -6,7 +6,17 @@
 
 \description{Probability density function for first hitting barriers}
 
-\usage{PDFHit(t, B = 0, S0 = 0, mi, sigma, cumul = FALSE, plot = FALSE, ...) }
+\usage{
+PDFHit(t
+	, B = 0
+	, S0 = 0
+	, mi
+	, sigma
+	, cumul = FALSE
+	, plot = FALSE
+	, ...
+	) 
+}
 
 \arguments{
 \item{t}{ Vector. Time period.}
@@ -15,7 +25,7 @@
 \item{mi}{ Drift value.}
 \item{sigma}{ Volatility value.}
 \item{cumul}{ Logical. If TRUE cumulative probability distribution is computed.}
-\item{plot}{ LOGICAL. If TRUE plot is returned.}
+\item{plot}{Logical. If TRUE plot is returned.}
 \item{...}{ Further arguments to or from othermethods.}
 }
 
@@ -30,7 +40,14 @@ sigma = c(0.02, 0.06, 0.1, 0.15, 0.2, 0.25, 0.3)
 pdf = matrix(NA, 100, length(sigma))
 colnames(pdf) = paste("Sigma=",sigma)
 for(s in 1:length(sigma))
-	pdf[,s] = PDFHit(t=1:100, B=0, S0=1, mi=0, sigma = sigma[s], cumul=FALSE, plot=FALSE)
+    pdf[,s] = PDFHit(t=1:100
+                    , B=0
+                    , S0=1
+                    , mi=0
+                    , sigma = sigma[s]
+                    , cumul=FALSE
+                    , plot=FALSE
+                    )
 # plot different functions
 cplot(pdf, main="Density of Hitting probability")
 }

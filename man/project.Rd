@@ -35,16 +35,15 @@ draw.projections(X = 1:10, Y = X2, Y.fit = X1, type = "o");
 # Use a different baseline
 base = seq(-2, 2, len=10);
 cplot(cbind(X1, X2)
-		, base = base
-		# plot line and points for X1, only points for X2
-		, type = c("o", "p")
-		# The size of the points for X1 and X2
-		, cex = c(0.5, 0.8)
-		# Remove x-labels rotation
-		, xlab.srt = 0
-		);
+    , base = base
+    # plot line and points for X1, only points for X2
+    , type = c("o", "p")
+    # The size of the points for X1 and X2
+    , cex = c(0.5, 0.8)
+    # Remove x-labels rotation
+    , xlab.srt = 0
+    );
 draw.projections(X = base, Y = X2, Y.fit = X1);
-
 
 }
 

@@ -7,8 +7,8 @@ file.}
 
 \usage{
 func.comment.idx(control.df = 
-	data.frame(FNAME = c(), FCODE = c(), 
-	AREA = c(), SECTION = c(), CLASS = c()), 
+    data.frame(FNAME = c(), FCODE = c(), 
+    AREA = c(), SECTION = c(), CLASS = c()), 
 infile = NULL, incode = NULL, outfile = NULL, max.dgt = 3) }
 
 \arguments{
@@ -23,13 +23,13 @@ generated.}
 
 \details{
 This data frame is a list of function names:
-	\itemize{
-		\item{FNAME = Name of the function}
-		\item{FCODE = code identifier for the function. (a-Z)(0-9).}
-		\item{AREA = Macro area (Description) classification for the function.}
-		\item{SECTION = Section (Description) classification for the function (Sub-AREA)}
-		\item{CLASS = The class of the returned object.}
-	}
+    \itemize{
+        \item{FNAME = Name of the function}
+        \item{FCODE = code identifier for the function. (a-Z)(0-9).}
+        \item{AREA = Macro area (Description) classification for the function.}
+        \item{SECTION = Section (Description) classification for the function (Sub-AREA)}
+        \item{CLASS = The class of the returned object.}
+    }
 }
 
 \value{
@@ -40,19 +40,19 @@ by a special comment.
 \examples{
 #### EXAMPLE #####
 tst = data.frame(FNAME = c("sd", "lm")
-				, FCODE = c("SD", "LM")
-				, AREA = c("s5", "s2")
-				, SECTION = c("s1", "s1")
-				, CLASS = c("c1", "c2")
-				);
-				
+                , FCODE = c("SD", "LM")
+                , AREA = c("s5", "s2")
+                , SECTION = c("s1", "s1")
+                , CLASS = c("c1", "c2")
+                );
+                
 incode = rbind(paste("sd =", as.character(deparse(args(sd)))[1])
-				, as.matrix(deparse(body(sd)))
-				, ""
-				, ""
-				, paste("lm =", as.character(deparse(args(lm)))[1])
-				, as.matrix(deparse(body(lm)))
-			   )
+                , as.matrix(deparse(body(sd)))
+                , ""
+                , ""
+                , paste("lm =", as.character(deparse(args(lm)))[1])
+                , as.matrix(deparse(body(lm)))
+               )
 func.comment.idx(tst, incode = incode, max.dgt=3)
 }
 

@@ -14,9 +14,9 @@ cross.ccf(Y, X, lag.max = 10, ci = 0.95, plot = TRUE, ...)
 \arguments{ 
 \item{Y}{Matrix of data series (one column per variable)}
 \item{X}{Matrix of data series (one column per variable)}
-\item{lag.max}{Max lag to be computed by the cross correlation function (DEFAULT: 10)}
-\item{ci}{Confidence Interval (DEFAULT: 0.95)}
-\item{plot}{LOGICAL. If TRUE, results are plotted.}
+\item{lag.max}{Max lag to be computed by the cross correlation function (Default: 10)}
+\item{ci}{Confidence Interval (Default: 0.95)}
+\item{plot}{Logical. If TRUE, results are plotted.}
 \item{...}{Additional parameters accepted by the function plot.cross.ccf.}
 }
 

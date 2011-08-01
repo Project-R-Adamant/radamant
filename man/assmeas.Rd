@@ -16,21 +16,28 @@
 
 \usage{
 KendallTau(target, pred, ...) 
+
 GKgamma(target, pred, ...) 
+
 CalcPairs(target, pred, segm_fact = 0.002)
+
 SomerD(target, pred, ...)
 
 confusionM(target, ...)
+
 \method{confusionM}{default}(target, pred, th=0.5, ...) 
+
 \method{confusionM}{scorecard}(target, th=0.5, ...)
+
 accuracy(x, ...) 
+
 \method{accuracy}{scorecard}(x, th=0.5, ...) 
 
 }
 
 \arguments{
-\item{target}{ VECTOR. Observed target value}
-\item{pred}{ VECTOR. Predicted values}
+\item{target}{ Vector. Observed target value}
+\item{pred}{ Vector. Predicted values}
 \item{x}{ An object of class "scorecard"}
 \item{segm_fact}{ Segmentation factor used for pairs calculation}
 \item{th}{ Threshold value for the predicted values (Defaults = 0.5)}

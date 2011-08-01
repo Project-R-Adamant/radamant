@@ -11,9 +11,8 @@ of X[, i] and window size win.size[j].}
 
 \arguments{ 
 \item{X}{ Matrix of data series (one column per variable)}
-\item{win.size}{ Vector of moving average window sizes (lags) to be applied on the data X. (DEFAULT
-= NROW(X)).}
-\item{plot}{ LOGICAL. Return plot.}
+\item{win.size}{ Vector of moving average window sizes (lags) to be applied on the data X. (Default: NROW(X)).}
+\item{plot}{Logical. Return plot.}
 \item{...}{ Additional parameters accepted by the function sma}
 }
 
@@ -23,7 +22,7 @@ For financial time series (class = 'fs'), only 'Close' column is processed.
 
 \value{A object of class 'Movav' with attributes type = "MNDMA" and 'win.size' as from the
 corresponding input parameter: \cr
-	- matrix of size NROW(X) by NCOL(X)*length(win.size) where each column is the moving average of
+    - matrix of size NROW(X) by NCOL(X)*length(win.size) where each column is the moving average of
 length win.size[i] of the corresponding column of X.
 }
 

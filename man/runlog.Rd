@@ -7,7 +7,10 @@
 \code{error.handling}: Error handling function
 }
 \usage{
-write.log(log = matrix(NA, nrow = 0, ncol = 0), logfile = "runlog.log") 
+write.log(log = matrix(NA, nrow = 0, ncol = 0)
+          , logfile = "runlog.log"
+         ) 
+         
 error.handling(err)
 }
 \arguments{ 
@@ -18,9 +21,9 @@ error.handling(err)
 \details{
 Function \code{error.handling} is to be called ONLY inside a tryCatch statement. \cr
 It assigns three variables:\cr
-	- log.status = "Failed": the status of the execution is set to "Failed" \cr
-	- log.message: The error message generated inside the tryCatch \cr
-	- res = NA: the result is set to NA
+    - log.status = "Failed": the status of the execution is set to "Failed" \cr
+    - log.message: The error message generated inside the tryCatch \cr
+    - res = NA: the result is set to NA
 }
 \value{VOID}
 \author{RAdamant Development Team \email{team@r-adamant.org} }

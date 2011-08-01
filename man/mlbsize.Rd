@@ -13,7 +13,7 @@ getLogBufferSize(env = getOption("RAdamant"))
 
 \arguments{
 \item{size}{The capacity (number of records) of the log buffer.}
-\item{env}{The environment where the info is stored (DEFAULT = getOption("RAdamant")).}
+\item{env}{The environment where the info is stored (Default: getOption("RAdamant")).}
 \item{...}{Additional parameters passed to flushLogBuffer.}
 }
 
@@ -25,7 +25,8 @@ Returns the size of the current log buffer.
 # Retrieve current buffer size
 getLogBufferSize();
 
-# Set the size of the log buffer to 10 records (this will force a flush to file of the current content.)
+# Set the size of the log buffer to 10 records 
+# This will also force a flush to file of the current content.
 setLogBufferSize(10);
 }
 

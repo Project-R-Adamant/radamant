@@ -32,22 +32,22 @@ Matrix of Px1 dimensions with Implied volatility values. One row for each value 
 \seealso{ \code{\link{BS.greeks}}, \code{\link{uniroot}}}
 
 \examples{
-	# Set BS paramaters
-	under<- 100
-	strike <- 95
-	rfr<- 0.08
-	sigma <- 0.2
-	maty<-0.5
-	yield<- 0.03
-	calc.type<-"lognorm"
-	opt.type<-"call"
-	
-	# calculate implied volatility for single oberved price
-	P = 11
-	imp = BS.ImpVol(P, under, strike, rfr, sigma, maty, yield)
-	imp
-	# calculate implied volatility for multiple oberved prices
-	P = seq(9, 11, by=0.1)
-	imp = BS.ImpVol(P, under, strike, rfr, sigma, maty, yield)
-	imp
+    # Set BS paramaters
+    under<- 100
+    strike <- 95
+    rfr<- 0.08
+    sigma <- 0.2
+    maty<-0.5
+    yield<- 0.03
+    calc.type<-"lognorm"
+    opt.type<-"call"
+    
+    # calculate implied volatility for single oberved price
+    P = 11
+    imp = BS.ImpVol(P, under, strike, rfr, sigma, maty, yield)
+    imp
+    # calculate implied volatility for multiple oberved prices
+    P = seq(9, 11, by=0.1)
+    imp = BS.ImpVol(P, under, strike, rfr, sigma, maty, yield)
+    imp
 }
