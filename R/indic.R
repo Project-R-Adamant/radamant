@@ -145,14 +145,14 @@ buypre=function(Close, Low,  lag=5, plot=FALSE, ...){
 #  Vector of results 
 #######################################################################################################################	
 absrs = function(X, lag=14, na.rm=FALSE, plot=FALSE, ...){
-	if(class(Close) == "fs") {	
-		X = Y;
-		Y = X[, "Close", drop = FALSE];
-		colnames(Close) = attr(X, "SName");
+	if(class(X) == "fs") {	
+		Y = X;
+		X = Y[, "Close", drop = FALSE];
+		colnames(X) = attr(X, "SName");
 	}
 	# series name
 	Logger(message = "series name", from = "absrs", line = 7, level = 1);
-	name = deparse(substitute(X))
+	name = colnames(X)
 	# convert to matrix and apply names
 	Logger(message = "convert to matrix and apply names", from = "absrs", line = 9, level = 1);
 	if(!is.matrix(X)){
@@ -163,19 +163,26 @@ absrs = function(X, lag=14, na.rm=FALSE, plot=FALSE, ...){
 	}	
 	# get vector of performances
 	Logger(message = "get vector of performances", from = "absrs", line = 16, level = 1);
-	ret = Perf(X, 1, FALSE)
+	ret = ret1 = Diff(X, 1, na.rm=FALSE)
+	ret[1,] = ret1[1,] = 0
 	# calculate moving averages on two conditional vectors
 	Logger(message = "calculate moving averages on two conditional vectors", from = "absrs", line = 18, level = 1);
-	greater = ema(ret[ret>=0], lag)
-	lower = ema(ret[ret<0], lag)
-	# fill the gap length between vectors with NAs
-	Logger(message = "fill the gap length between vectors with NAs", from = "absrs", line = 21, level = 1);
-	cle = length(greater) - length(lower)
-	if(cle<0){
-		greater = c( rep(NA,abs(cle)), greater)
-	} else {  
-		lower = c( rep(NA,abs(cle)), lower)
-	}	
+	ret[ret < 0] = 0
+	greater = rep(0, NROW(ret)-lag)
+	greater[1] = sum(ret[1:lag], na.rm=TRUE) / lag
+	i = 2
+	while(i <= length(greater)){
+		greater[i] = sum((greater[i-1] * (lag-1)), ret[lag+i], na.rm=TRUE) / lag
+		i = i + 1
+	}
+	ret1[ret1 >= 0] = 0
+	lower = rep(0, NROW(ret1)-lag)
+	lower[1] = sum(ret1[1:lag], na.rm=TRUE) / lag
+	i = 2
+	while(i <= length(lower)){
+		lower[i] = sum((lower[i-1] * (lag-1)), ret1[lag+i], na.rm=TRUE) / lag
+		i = i + 1
+	}
 	if(na.rm)
 		res = (greater / (-lower))[-(1:lag),,drop=FALSE]
 	else
@@ -201,14 +208,14 @@ absrs = function(X, lag=14, na.rm=FALSE, plot=FALSE, ...){
 #  Vector of results 
 #######################################################################################################################	
 rsi = function(X, lag = 5, plot=FALSE, ...){
-	if(class(Close) == "fs") {	
-		X = Y;
-		Y = X[, "Close", drop = FALSE];
-		colnames(Close) = attr(X, "SName");
+	if(class(X) == "fs") {	
+		Y = X;
+		X = Y[, "Close", drop = FALSE];
+		colnames(X) = attr(X, "SName");
 	}
 	# series name
 	Logger(message = "series name", from = "rsi", line = 7, level = 1);
-	name = deparse(substitute(X))
+	name = colnames(X)
 	# convert to matrix and apply names
 	Logger(message = "convert to matrix and apply names", from = "rsi", line = 9, level = 1);
 	if(!is.matrix(X)){
@@ -219,12 +226,13 @@ rsi = function(X, lag = 5, plot=FALSE, ...){
 	}	
 	# calculate index based on absolute relative strenght
 	Logger(message = "calculate index based on absolute relative strenght", from = "rsi", line = 16, level = 1);
-	res = 100 * ( 1 / (1 + absrs(X, lag)) )
+	res = 100 - ( 100 / (1 + absrs(X, lag)) )
 	class(res) = "oscil";
 	attr(res, "type") = "ABSRS";
 	if(plot){
 		main = paste("Relative_Strenght_index ", name, sep="")
 		plot.oscil(res, X, main = main, ...)
+		abline(h=c(30,70), col="red")
 	}	
 	res
 }
@@ -242,9 +250,9 @@ rsi = function(X, lag = 5, plot=FALSE, ...){
 # RETURNS:
 #  Vector of results
 #######################################################################################################################	
-mass = function(High, Low, Close=NULL, lag=9, plot=FALSE, ...){
-	if(class(Close) == "fs") {	
-		X = Close;
+mass = function(High, Low, Close, lag=9, plot=FALSE, ...){
+	if(class(High) == "fs") {	
+		X = High;
 		Close = X[, "Close", drop = FALSE];
 		High = X[, "High", drop = FALSE];
 		Low = X[, "Low", drop = FALSE];
@@ -255,7 +263,7 @@ mass = function(High, Low, Close=NULL, lag=9, plot=FALSE, ...){
 	class(res) = "oscil";
 	attr(res, "type") = "MASS";
 	if(plot){
-		name = deparse(substitute(Close))
+		name = colnames(Close)
 		main = paste("Mass_index: ", name, " - ", "Lag_", lag, sep="")
 		plot.oscil(res, Close, main = main, ...)
 	}	
@@ -288,7 +296,7 @@ fullP=function(Close, Open, High, Low, plot=FALSE, ...){
 	}
 	res = (Open + High + Low + Close)/4;
 	if(plot){
-		name = deparse(substitute(Close))
+		name = colnames(Close)
 		main = paste("Full_Price: ", name, sep="")
 		cplot(res, main = main, ...)
 	}	
@@ -318,7 +326,7 @@ tyP=function(Close, High, Low, plot=FALSE, ...){
 	};
 	res = (High + Low + Close) / 3;
 	if(plot){
-		name = deparse(substitute(Close))
+		name = colnames(Close)
 		main = paste("Typical_Price: ", name, sep="")
 		cplot(res, main = main, ...)
 	};	
@@ -357,7 +365,7 @@ he_as = function(Close, Open, High, Low, plot=FALSE, ...){
 	class(res) = "oscil";
 	attr(res, "type") = "HEAS";
 	if(plot){
-		name = deparse(substitute(Close))
+		name = colnames(Close)
 		main = paste("Heikin_Ashi:", name)
 		cplot(cbind(res, Close), main = main, ...)
 	};
@@ -399,7 +407,7 @@ kelt = function(Close, High, Low, mult=2, plot=FALSE, ...){
 	class(res) = "oscil";
 	attr(res, "type") = "kelt";
 	if(plot){
-		name = deparse(substitute(Close))
+		name = colnames(Close)
 		main = paste("keltner_Channel: ", name, " - ", "Mult_", mult, sep="")
 		cplot(cbind(res, Close), main = main, ...)
 	};
@@ -442,7 +450,7 @@ erf = function(Close, High=NULL, Low=NULL, lag=13, plot=FALSE, ...){
 	class(res) = "oscil";
 	attr(res, "type") = "kelt";
 	if(plot){
-		name = deparse(substitute(Close))
+		name = colnames(Close)
 		main = paste("Elde_Ray_Force_index: ", name, " - ", "Lags_", lag, sep="")
 		plot.oscil(res[,c(1,3)], Close, main = main, ...)
 	};
@@ -475,7 +483,7 @@ erfi = function(X, Volume, lag=13, plot=FALSE, ...){
 	class(res) = "oscil";
 	attr(res, "type") = "erfv";
 	if(plot){
-		name = deparse(substitute(Close))
+		name = colnames(Close)
 		main = paste("Elde_Force_Volume_index: ", name, " - ", "Lags_", lag, sep="")
 		plot.oscil(res, Close, main = main, ...)
 	};
@@ -502,13 +510,14 @@ cmf=function(Close, Low, High, Volume, plot=FALSE, ...){
 		Close = X[, "Close", drop = FALSE];
 		High = X[, "High", drop = FALSE];
 		Low = X[, "Low", drop = FALSE];
+		Volume = X[, "Volume", drop = FALSE];
 		colnames(Close) = attr(X, "SName");
 	}
 	res = (clv(Close, Low, High) * Volume) / sma(Volume);
 	class(res) = "oscil";
 	attr(res, "type") = "CMF";
 	if(plot){
-		name = deparse(substitute(Close))
+		name = colnames(Close)
 		main = paste("Chaikin_Money_Flow: ", name, sep="")
 		plot.oscil(res, Close, main = main, ...)
 	};
@@ -533,7 +542,7 @@ Ch.vol=function(High, Low, Close, lag=5, plot=FALSE, ...){
 		X = High	
 		High = X[, "High", drop = FALSE];
 		Low = X[, "Low", drop = FALSE];
-		close = X[, "close", drop = FALSE];
+		Close = X[, "Close", drop = FALSE];
 		colnames(High) = colnames(Low) = attr(X, "SName");
 	}
 	# differnce High Low
@@ -546,7 +555,7 @@ Ch.vol=function(High, Low, Close, lag=5, plot=FALSE, ...){
 	class(res) = "oscil";
 	attr(res, "type") = "CHCOL";
 	if(plot){
-		name = deparse(substitute(Close))
+		name = colnames(Close)
 		main = paste("Chaikin_Volatility: ", name, " - ", "Lags_", lag, sep="")
 		plot.oscil(res, Close, main = main, ...)
 	};
@@ -568,8 +577,8 @@ Ch.vol=function(High, Low, Close, lag=5, plot=FALSE, ...){
 #  Vector of results 
 #######################################################################################################################	
 cci=function(High, Low, Close, lag=5, plot=FALSE, ...){
-	if(class(Close) == "fs"){
-		X = Close	
+	if(class(High) == "fs"){
+		X = High	
 		Close = X[, "Close", drop = FALSE]
 		High = X[, "High", drop = FALSE]
 		Low = X[, "Low", drop = FALSE]
@@ -588,7 +597,7 @@ cci=function(High, Low, Close, lag=5, plot=FALSE, ...){
 	class(res) = "oscil";
 	attr(res, "type") = "CCI";
 	if(plot){
-		name = deparse(substitute(Close))
+		name = colnames(Close)
 		main = paste("Commodity_Channel_index: ", name, " - ", "Lags_", lag, sep="")
 		plot.oscil(res, Close, main = main, ...)
 	};
@@ -610,8 +619,8 @@ cci=function(High, Low, Close, lag=5, plot=FALSE, ...){
 #  Vector of results 
 #######################################################################################################################	
 cci.v2 = function(High, Low, Close, lag=5, plot=FALSE, ...){
-	if(class(Close) == "fs"){
-		X = Close	
+	if(class(High) == "fs"){
+		X = High	
 		Close = X[, "Close", drop = FALSE]
 		High = X[, "High", drop = FALSE]
 		Low = X[, "Low", drop = FALSE]
@@ -628,7 +637,7 @@ cci.v2 = function(High, Low, Close, lag=5, plot=FALSE, ...){
 	class(res) = "oscil";
 	attr(res, "type") = "CCI2";
 	if(plot){
-		name = deparse(substitute(Close))
+		name = colnames(Close)
 		main = paste("Commodity_Channel_V2_index: ", name, " - ", "Lags_", lag, sep="")
 		plot.oscil(res, Close, main = main, ...)
 	};
@@ -650,14 +659,14 @@ cci.v2 = function(High, Low, Close, lag=5, plot=FALSE, ...){
 #  Vector of results
 #######################################################################################################################	
 cmof = function (X, lag=5, plot=FALSE, ...){ 
-	if(class(Close) == "fs") {	
+	if(class(X) == "fs") {	
 		Y = X;
 		X = Y[, "Close", drop = FALSE];
-		colnames(Close) = attr(Y, "SName");
+		colnames(X) = attr(Y, "SName");
 	}
 	# series name
 	Logger(message = "series name", from = "cmof", line = 7, level = 1);
-	name = deparse(substitute(X))
+	name = colnames(X)
 	# convert to matrix and apply names
 	Logger(message = "convert to matrix and apply names", from = "cmof", line = 9, level = 1);
 	if(!is.matrix(X)){
@@ -704,14 +713,14 @@ cmof = function (X, lag=5, plot=FALSE, ...){
 #  Vector of results
 #######################################################################################################################	
 vcmof = function(X, lag=5, plot=FALSE, ...){
-	if(class(Close) == "fs") {	
+	if(class(X) == "fs") {	
 		Y = X;
 		X = Y[, "Close", drop = FALSE];
-		colnames(Close) = attr(Y, "SName");
+		colnames(X) = attr(Y, "SName");
 	}
 	# series name
 	Logger(message = "series name", from = "vcmof", line = 7, level = 1);
-	name = deparse(substitute(X))
+	name = colnames(X)
 	# convert to matrix and apply names
 	Logger(message = "convert to matrix and apply names", from = "vcmof", line = 9, level = 1);
 	if(!is.matrix(X)){
@@ -749,14 +758,14 @@ vcmof = function(X, lag=5, plot=FALSE, ...){
 #  Vector of results
 #######################################################################################################################	
 vidyaf = function (X, lag=5, plot=FALSE, ...){
-	if(class(Close) == "fs") {	
+	if(class(X) == "fs") {	
 		Y = X;
 		X = Y[, "Close", drop = FALSE];
 		colnames(Close) = attr(Y, "SName");
 	};
 	# series name
 	Logger(message = "series name", from = "vidyaf", line = 7, level = 1);
-	name = deparse(substitute(X));
+	name = colnames(X);
 	# convert to matrix and apply names
 	Logger(message = "convert to matrix and apply names", from = "vidyaf", line = 9, level = 1);
 	if(!is.matrix(X)){
@@ -806,14 +815,14 @@ vidyaf = function (X, lag=5, plot=FALSE, ...){
 #  Vector of results
 #######################################################################################################################	
 vhff = function (X, lag=9, plot=FALSE, ...){ 	
-	if(class(Close) == "fs") {	
+	if(class(X) == "fs") {	
 		Y = X;
 		X = Y[, "Close", drop = FALSE];
 		colnames(Close) = attr(Y, "SName");
 	};
 	# series name
 	Logger(message = "series name", from = "vhff", line = 7, level = 1);
-	name = deparse(substitute(X));
+	name = colnames(X);
 	# convert to matrix and apply names
 	Logger(message = "convert to matrix and apply names", from = "vhff", line = 9, level = 1);
 	if(!is.matrix(X)){
@@ -856,8 +865,8 @@ vhff = function (X, lag=9, plot=FALSE, ...){
 #  Vector of results
 #######################################################################################################################	
 demark = function(High, Low, Close, lag=5, plot=FALSE, ...){
-	if(class(Close) == "fs") {	
-		Y = Close;
+	if(class(High) == "fs") {	
+		Y = High;
 		Close = Y[, "Close", drop = FALSE];
 		High = Y[, "High", drop = FALSE];
 		Low = Y[, "Low", drop = FALSE];
@@ -869,7 +878,7 @@ demark = function(High, Low, Close, lag=5, plot=FALSE, ...){
 	class(res) = "oscil";
 	attr(res, "type") = "DEM";
 	if(plot){
-		name = deparse(substitute(Close))
+		name = colnames(Close)
 		main = paste("Demark_index: ", name, " - ", "Lags_", lag, sep="")
 		plot.oscil(res, Close, main = main, ...)
 	};
@@ -906,7 +915,7 @@ tirLev = function(High, Low, Close, lag=5, plot=FALSE, ...){
 	class(res) = "oscil";
 	attr(res, "type") = "TIR";
 	if(plot){
-		name = deparse(substitute(High))
+		name = colnames(High)
 		main = paste("Tirone_levels: ", name, " - ", "Lags_", lag, sep="")
 		plot.oscil(res, Close, main = main, ...)
 	};
@@ -927,7 +936,7 @@ tirLev = function(High, Low, Close, lag=5, plot=FALSE, ...){
 #  Vector of results
 #######################################################################################################################	
 prbsar = function(Close, High, Low, accel=c(0.02,0.2), plot=FALSE, ...){
-	if(class(High) == "fs") {	
+	if(class(Close) == "fs") {	
 		X = Close;
 		Close = X[, "Close", drop = FALSE];
 		High = X[, "High", drop = FALSE];
@@ -936,12 +945,12 @@ prbsar = function(Close, High, Low, accel=c(0.02,0.2), plot=FALSE, ...){
 	}
 	# convert to matrix and apply names
 	Logger(message = "convert to matrix and apply names", from = "prbsar", line = 9, level = 1);
-	if(!is.matrix(X)){
-		X = as.matrix(X)
-		colnames(X) =  name
-	} else {
-		colnames(X) =  name
-	}
+	if(!is.matrix(Close))
+		Close = as.matrix(Close)
+	if(!is.matrix(High))
+		High = as.matrix(High)
+	if(!is.matrix(Low))
+		Low = as.matrix(Low)
 	## initialize variables
 	Logger(message = "initialize variables", from = "prbsar", line = 16, level = 1);
 	# stop-and-reverse (sar) vector
@@ -1020,9 +1029,9 @@ prbsar = function(Close, High, Low, accel=c(0.02,0.2), plot=FALSE, ...){
 	class(sar) = "oscil";
 	attr(sar, "type") = "PRBSAR";
 	if(plot){
-		name = deparse(substitute(Close))
+		name = colnames(Close)
 		main = paste("Parabolic_SAR: ", name, " - ", "Acc.fact_", accel, sep="")
-		plot.oscil(Osc = sar, Y = Close, ...)
+		plot.oscil(x = sar, Y = Close, ...)
 	};
 	sar;
 }	
@@ -1041,8 +1050,8 @@ prbsar = function(Close, High, Low, accel=c(0.02,0.2), plot=FALSE, ...){
 #  Vector of results
 #######################################################################################################################	
 mass.cum = function(High, Low, Close=NULL, lag=9, plot=FALSE, ...){  
-	if(class(Close) == "fs") {	
-		X = Close;
+	if(class(High) == "fs") {	
+		X = High;
 		Close = X[, "Close", drop = FALSE];
 		High = X[, "High", drop = FALSE];
 		Low = X[, "Low", drop = FALSE];
@@ -1060,9 +1069,9 @@ mass.cum = function(High, Low, Close=NULL, lag=9, plot=FALSE, ...){
 	class(res) = "oscil";
 	attr(res, "type") = "MASSC";
 	if(plot){
-		name = deparse(substitute(Close))
+		name = colnames(Close)
 		main = paste("Mass_Cumulative_index: ", name, " - ", "Lags_", lag, sep="")
-		plot.oscil(Osc = res, Y = Close, ...)
+		plot.oscil(x = res, Y = Close, ...)
 	};
 	res;
 }
@@ -1159,7 +1168,7 @@ Mflow = function(Close, High, Low, Volume, plot=FALSE, ...){
 	class(res) = "oscil";
 	attr(res, "type") = "MFLOW";
 	if(plot){
-		name = deparse(substitute(Close))
+		name = colnames(Close)
 		main = paste("Money_Flow: ", name, sep="")
 		plot.oscil(Osc = res, Y = Close, main=main, ...);
 	}
@@ -1213,7 +1222,7 @@ Mflow.ratio = function(Close, High, Low, Volume, plot=FALSE, ...){
 	class(res) = "oscil";
 	attr(res, "type") = "MFLRAT";
 	if(plot){
-		name = deparse(substitute(Close))
+		name = colnames(Close)
 		main = paste("Money_Flow_ratio: ", name, sep="")
 		plot.oscil(Osc = res, Y = Close, main=main, ...);
 	}
@@ -1252,8 +1261,8 @@ Mflow.ind = function(Close, High, Low, Volume, plot=FALSE, ...){
 	class(res) = "oscil";
 	attr(res, "type") = "MFLIND";
 	if(plot){
+		name = colnames(Close)
 		main = paste("Money_Flow_index: ", name, sep="")
-		name = deparse(substitute(Close))
 		plot.oscil(Osc = res, Y = Close, main=main, ...);
 	}
 	res;
@@ -1280,7 +1289,7 @@ kri = function(X, lag1=10, lag2=20, plot=FALSE, ...){
 	};
 	# series name
 	Logger(message = "series name", from = "kri", line = 7, level = 1);
-	name = deparse(substitute(X))
+	name = colnames(X)
 	# convert to matrix and apply names
 	Logger(message = "convert to matrix and apply names", from = "kri", line = 9, level = 1);
 	if(!is.matrix(X)){
@@ -1296,7 +1305,7 @@ kri = function(X, lag1=10, lag2=20, plot=FALSE, ...){
 	attr(res, "type") = "KRI";
 	if(plot){
 		main = paste("Kairi_Relative_Index: ", name, " - ", "Lags_", lag1, "/", lag2, sep="")
-		plot.oscil(Osc = res, Y = X, main = main, ...);
+		plot.oscil(x = res, Y = X, main = main, ...);
 	}
 	res;
 }	
@@ -1373,7 +1382,7 @@ AdvDec = function(X, lag=5, ret.idx=TRUE, plot=FALSE, ...){
 	}
 	# series name
 	Logger(message = "series name", from = "AdvDec", line = 7, level = 1);
-	name = deparse(substitute(X))
+	name = colnames(X)
 	# convert to matrix and apply names
 	Logger(message = "convert to matrix and apply names", from = "AdvDec", line = 9, level = 1);
 	if(!is.matrix(X)){
@@ -1427,7 +1436,7 @@ Abi = function(X, lag=5, plot=FALSE, ...){
 	}
 	# series name
 	Logger(message = "series name", from = "Abi", line = 7, level = 1);
-	name = deparse(substitute(X))
+	name = colnames(Close)
 	# convert to matrix and apply names
 	Logger(message = "convert to matrix and apply names", from = "Abi", line = 9, level = 1);
 	if(!is.matrix(X)){
@@ -1459,7 +1468,7 @@ Breadth = function(X, lag=5, plot=FALSE, ...){
 	}
 	# series name
 	Logger(message = "series name", from = "Breadth", line = 7, level = 1);
-	name = deparse(substitute(X))
+	name = colnames(X)
 	# convert to matrix and apply names
 	Logger(message = "convert to matrix and apply names", from = "Breadth", line = 9, level = 1);
 	if(!is.matrix(X)){
@@ -1491,7 +1500,7 @@ ADratio = function(X, lag=5, plot=FALSE, ...){
 	}
 	# series name
 	Logger(message = "series name", from = "ADratio", line = 7, level = 1);
-	name = deparse(substitute(X))
+	name = colnames(X)
 	# convert to matrix and apply names
 	Logger(message = "convert to matrix and apply names", from = "ADratio", line = 9, level = 1);
 	if(!is.matrix(X)){
@@ -1522,7 +1531,7 @@ Arms = function(X, Volume, lag, plot=FALSE, ...){
 	}
 	# series name
 	Logger(message = "series name", from = "Arms", line = 8, level = 1);
-	name = deparse(substitute(X))
+	name = colnames(X)
 	# convert to matrix and apply names
 	Logger(message = "convert to matrix and apply names", from = "Arms", line = 10, level = 1);
 	if(!is.matrix(X)){
@@ -1609,7 +1618,7 @@ Pchan = function(CLose, High, Low, lag=20, na.rm=TRUE, plot=FALSE, ...){
 	class(res) = "oscil";
 	attr(res, "type") = "PCHAN";
 	if(plot){
-		name = deparse(substitute(Close))
+		name = colnames(Close)
 		main = paste("Price_Channel: ", name, " - ", "Lag_", lag, sep="")
 		cplot(cbind(res,Close[-(1:lag)]), main = main, ...)
 	}
@@ -1650,7 +1659,7 @@ Ichkh = function(Close, High, Low, plot=FALSE, ...){
 	class(res) = "oscil";
 	attr(res, "type") = "ICHS";
 	if(plot){
-		name = deparse(substitute(X))
+		name = colnames(X)
 		main = paste("Ichimoku_Kinko_Hyo: ", name, sep="")
 		cplot(res, main = main, ...)
 	}
@@ -1666,7 +1675,7 @@ forcidx = function(X, Volume, lag=5, sth=TRUE, sth.lag=13, mov=sma, plot=FALSE, 
 	}
 	# series name
 	Logger(message = "series name", from = "forcidx", line = 8, level = 1);
-	name = deparse(substitute(X))
+	name = colnames(X)
 	# convert to matrix and apply names
 	Logger(message = "convert to matrix and apply names", from = "forcidx", line = 10, level = 1);
 	if(!is.matrix(X)){
@@ -1707,7 +1716,7 @@ ulcer = function(X, lag, plot=FALSE, ...){
 	}
 	# series name
 	Logger(message = "series name", from = "ulcer", line = 7, level = 1);
-	name = deparse(substitute(X));
+	name = colnames(X)
 	# convert to matrix and apply names
 	Logger(message = "convert to matrix and apply names", from = "ulcer", line = 9, level = 1);
 	if(!is.matrix(X)){
@@ -1760,7 +1769,7 @@ starc = function(Close, High=NULL, Low=NULL, atr.mult=2, lag=5, atr.lag=14, mov=
 	class(res) = "oscil";
 	attr(res, "type") = "STARC";
 	if(plot){
-		name = deparse(substitute(Close))
+		name = colnames(X)
 		main = paste("Stoller_Starc_Bands: ", name, " - ", "Lag_", lag, sep="")
 		cplot(cbind(res, Close), main = main, ...)
 	}
@@ -1776,7 +1785,7 @@ Perf = function(X, ini.per=1 ,cut=TRUE, plot=FALSE, ...){
 	}
 	# series name
 	Logger(message = "series name", from = "Perf", line = 7, level = 1);
-	name = deparse(substitute(X))
+	name = colnames(X)
 	# convert to matrix and apply names
 	Logger(message = "convert to matrix and apply names", from = "Perf", line = 9, level = 1);
 	if(!is.matrix(X)){

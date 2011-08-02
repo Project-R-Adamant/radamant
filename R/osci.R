@@ -39,11 +39,11 @@ oscil.default = function(X, Y, pc = FALSE, type = "oscil", ...) {
 	res
 }
 print.oscil = function(x, digits = 5, ...) {
-	if(is.list(X)){
-		X = lapply(X,round,5)
+	if(is.list(x)){
+		X = lapply(x,round,5)
 		print.default(X)
 	} else {
-		print.default(round(X, digits))
+		print.default(round(x, digits))
 	}	
 }
 plot.oscil = function(x
@@ -136,7 +136,7 @@ ppo = function(X, fast.lag = 10, slow.lag = 30, plot = TRUE, ...) {
 	Logger(message = "Remove EMA attributes", from = "ppo", line = 14, level = 1);
 	attr(res, "lambda") = NULL;
 	if(plot)
-		plot.oscil(X = res, Y = X, ...);
+		plot.oscil(x = res, Y = X, ...);
 	# clean up memory
 	Logger(message = "clean up memory", from = "ppo", line = 18, level = 1);
 	cleanup(keep = "res")
@@ -192,7 +192,7 @@ trf = function(Close, High = NULL, Low = NULL, lag = 1, average=TRUE, avg.lag=14
 	class(res) = "oscil";
 	attr(res, "type") = "TRF";
 	if(plot)
-		plot.oscil(X = res, Y = Close, ...);
+		plot.oscil(x = res, Y = Close, ...);
 	#clean up memory
 	Logger(message = "clean up memory", from = "trf", line = 47, level = 1);
 	cleanup(keep = "res")
@@ -243,7 +243,7 @@ acdi = function(Close, High = NULL, Low = NULL, Vol = NULL, plot = TRUE, ...) {
 	class(res) = "oscil";
 	attr(res, "type") = "ACDI";
 	if(plot)
-		plot.oscil(X = res, Y = Vol, ...);
+		plot.oscil(x = res, Y = Vol, ...);
 	#clean up memory
 	Logger(message = "clean up memory", from = "acdi", line = 40, level = 1);
 	cleanup(keep = "res");
@@ -287,7 +287,7 @@ clv = function(Close, High = NULL, Low = NULL, plot = TRUE, ...) {
 	class(res) = "oscil";
 	attr(res, "type") = "CLV";
 	if(plot)
-		plot.oscil(X = res, Y = Close, ...);
+		plot.oscil(x = res, Y = Close, ...);
 	#clean up memory
 	Logger(message = "clean up memory", from = "clv", line = 35, level = 1);
 	cleanup(keep = "res")
@@ -334,7 +334,7 @@ eom = function(Close, High = NULL, Low = NULL, Vol = NULL, plot = TRUE, ...) {
 	class(res) = "oscil";
 	attr(res, "type") = "EOM";
 	if(plot)
-		plot.oscil(X = res, Y = Close, ...);
+		plot.oscil(x = res, Y = Close, ...);
 	#clean up memory
 	Logger(message = "clean up memory", from = "eom", line = 36, level = 1);
 	cleanup(keep = "res")
@@ -384,7 +384,7 @@ rvi = function(Close, High = NULL, Low = NULL, Open = NULL, plot = TRUE, ...) {
 	class(res) = "oscil";
 	attr(res, "type") = "RVI";
 	if(plot)
-		plot.oscil(X = res, Y = Close, ...);
+		plot.oscil(x = res, Y = Close, ...);
 	#clean up memory
 	Logger(message = "clean up memory", from = "rvi", line = 39, level = 1);
 	cleanup(keep = "res");
@@ -413,7 +413,7 @@ wro = function(Close, High = NULL, Low = NULL, lag = 5, plot = TRUE, ...) {
 	class(res) = "oscil";
 	attr(res, "type") = "WRO";
 	if(plot)
-		plot.oscil(X = res, Y = Close, ...);
+		plot.oscil(x = res, Y = Close, ...);
 	#clean up memory
 	Logger(message = "clean up memory", from = "wro", line = 20, level = 1);
 	cleanup(keep = "res");
@@ -446,7 +446,7 @@ tlow = function(Close, Low = NULL, lag = 5, plot = TRUE, ...) {
 	class(res) = "oscil";
 	attr(res, "type") = "TLOW";
 	if(plot)
-		plot.oscil(X = res, Y = Close, ...);
+		plot.oscil(x = res, Y = Close, ...);
 	#clean up memory
 	Logger(message = "clean up memory", from = "tlow", line = 25, level = 1);
 	cleanup(keep = "res");
@@ -479,7 +479,7 @@ thigh = function(Close, High = NULL, lag = 5, plot = TRUE, ...) {
 	class(res) = "oscil";
 	attr(res, "type") = "THIGH";
 	if(plot)
-		plot.oscil(X = res, Y = Close, ...);
+		plot.oscil(x = res, Y = Close, ...);
 	#clean up memory
 	Logger(message = "clean up memory", from = "thigh", line = 25, level = 1);
 	cleanup(keep = "res");
@@ -534,7 +534,7 @@ wad = function(Close, High = NULL, Low = NULL, lag = 5, na.rm = FALSE, plot = TR
 	class(res) = "oscil";
 	attr(res, "type") = "WAD";
 	if(plot)
-		plot.oscil(X = res, Y = Close, ...);
+		plot.oscil(x = res, Y = Close, ...);
 	#clean up memory
 	Logger(message = "clean up memory", from = "wad", line = 41, level = 1);
 	cleanup(keep = c("res", "sel.idx"));
@@ -554,7 +554,7 @@ roc = function(X, lag = 5, pc = TRUE, plot = TRUE, ...) {
 	class(res) = "oscil";
 	attr(res, "type") = "ROC";
 	if(plot)
-		plot.oscil(X = res, Y = X, ...);
+		plot.oscil(x = res, Y = X, ...);
 	res
 }
 #################################
@@ -571,7 +571,7 @@ pro = function(Close, fast.lag = 5, slow.lag = 10, plot = TRUE, ...) {
 	class(res) = "oscil";
 	attr(res, "type") = "PRO";
 	if(plot)
-		plot.oscil(X = res, Y = Close, ...);
+		plot.oscil(x = res, Y = Close, ...);
 	res
 }
 #################################
@@ -588,7 +588,7 @@ mom = function(X, lag = 5, plot = TRUE, ...) {
 	class(res) = "oscil";
 	attr(res, "type") = "MOM";
 	if(plot)
-		plot.oscil(X = res, Y = X, ...);
+		plot.oscil(x = res, Y = X, ...);
 	res
 }
 #################################
@@ -623,7 +623,7 @@ ultima = function(Close, High = NULL, Low = NULL, lag = 1, win1 = 7, win2 = 14, 
 	class(res) = "oscil"
 	attr(res, "type") = "ULTIMA"
 	if(plot)
-		plot.oscil(X = res, Y = Close, ...);
+		plot.oscil(x = res, Y = Close, ...);
 	# clean up memory
 	Logger(message = "clean up memory", from = "ultima", line = 28, level = 1);
 	cleanup(keep = "res");
@@ -643,7 +643,7 @@ dpo = function(Close, lag = 5, plot = TRUE, ...) {
 	class(res) = "oscil";
 	attr(res, "type") = "DPO";
 	if(plot)
-		plot.oscil(X = res, Y = Close, ...);
+		plot.oscil(x = res, Y = Close, ...);
 	res
 }
 #################################
@@ -664,7 +664,7 @@ chaikin = function(Close, High = NULL, Low = NULL, Vol = NULL, fast.lag = 3, slo
 	class(res) = "oscil";
 	attr(res, "type") = "CHAIKIN";
 	if(plot)
-		plot.oscil(X = res, Y = Close, ...);
+		plot.oscil(x = res, Y = Close, ...);
 	res
 }
 ###########################
@@ -682,7 +682,7 @@ aroup = function(X, lag = 5, plot = TRUE, ...) {
 	class(res) = "oscil";
 	attr(res, "type") = "AROUP";
 	if(plot)
-		plot.oscil(X = res, Y = X, ...);
+		plot.oscil(x = res, Y = X, ...);
 	res
 }
 #############################
@@ -700,7 +700,7 @@ arodown = function(X, lag = 5, plot = TRUE, ...) {
 	class(res) = "oscil";
 	attr(res, "type") = "ARODOWN";
 	if(plot)
-		plot.oscil(X = res, Y = X, ...);
+		plot.oscil(x = res, Y = X, ...);
 	res
 }
 #############################
@@ -717,7 +717,7 @@ aroud = function(X, lag = 5, plot = TRUE, ...) {
 	class(res) = "oscil";
 	attr(res, "type") = "AROUD";
 	if(plot)
-		plot.oscil(X = res, Y = X, ...);
+		plot.oscil(x = res, Y = X, ...);
 	res
 }
 ##################################
@@ -734,7 +734,7 @@ aroon = function(X, lag = 5, plot = TRUE, ...) {
 	class(res) = "oscil";
 	attr(res, "type") = "AROON";
 	if(plot)
-		plot.oscil(X = res, Y = X, ...);
+		plot.oscil(x = res, Y = X, ...);
 	res
 }
 #######################
@@ -764,7 +764,7 @@ mcosc = function(X, fast.lag = 19, slow.lag = 39, hist.lag = 9, plot = TRUE, ...
 	class(res) = "oscil";
 	attr(res, "type") = "MCOSC";
 	if(plot)
-		plot.oscil(X = res, Y = X, ...);
+		plot.oscil(x = res, Y = X, ...);
 	res
 }
 #################################
@@ -839,7 +839,7 @@ kvo = function(Close, High = NULL, Low = NULL, Vol = NULL, cumulative = FALSE, p
 	class(res) = "oscil";
 	attr(res, "type") = "KVO";
 	if(plot)
-		plot.oscil(X = res, Y = Close, ...);
+		plot.oscil(x = res, Y = Close, ...);
 	#clean up memory
 	Logger(message = "clean up memory", from = "kvo", line = 66, level = 1);
 	cleanup(keep = "res");
@@ -879,7 +879,7 @@ macd = function(X, fast.lag = 12, slow.lag = 26, signal.lag = 14, plot = TRUE, .
 	class(res) = "oscil";
 	attr(res,"type") = "MACD"
 	if(plot)
-		plot.oscil(X = res, Y = X, ...);
+		plot.oscil(x = res, Y = X, ...);
 	#clean memory
 	Logger(message = "clean memory", from = "macd", line = 30, level = 1);
 	cleanup(keep = "res");
@@ -911,7 +911,7 @@ apo = function(X, fast.lag = 10, slow.lag = 30, plot = FALSE, ...) {
     if(plot){
 	name = deparse(substitute(X))
 	main = paste("Absolute_Price_oscillator: ", name, " - ", "Fast_", fast.lag, "Slow_", slow.lag, sep="")
-	plot.oscil(X = res, Y = X, main=main, ...)
+	plot.oscil(x = res, Y = X, main=main, ...)
 	}
     # clean up memory
     Logger(message = "clean up memory", from = "apo", line = 21, level = 1);
@@ -946,7 +946,7 @@ wildAvg = function(X, lag=5, plot=FALSE, ...){
 	attr(res, "win.size") = lag;
 	if(plot){	
 		main = paste("Wilder_MA:", name, " - ", "Lags_", lag, sep="")
-		plot(res,X, main=main, ...)
+		plot(res, X, main=main, ...)
 	}
 	res;
 }
@@ -1061,7 +1061,7 @@ BolBandB = function(Close, High, Low, fact=2, win.size=5, plot=FALSE, ...){
 	class(res) = "oscil";
 	attr(res, "type") = "BBB";
 	if(plot)
-		plot.oscil(X = res, Y = Close, ...);
+		plot.oscil(x = res, Y = Close, ...);
 	res;
 }
 # Bollinger bands - Fibonacci Ratio

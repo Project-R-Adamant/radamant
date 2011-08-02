@@ -2,7 +2,7 @@
 \alias{mass}
 \title{Mass indicator}
 \description{Compute Mass indicator (Technical Analysis)}
-\usage{mass(High, Low, Close = NULL, lag = 9, plot = FALSE, ...) }
+\usage{mass(High, Low, Close , lag = 9, plot = FALSE, ...) }
 \arguments{
 \item{High}{Vector. High price.}
 \item{Low}{Vector. Low price.}
